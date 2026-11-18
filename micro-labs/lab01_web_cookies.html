@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab 01 — HTML5, Links (_blank vs _self), DOM e Cookies</title>
+  <style>
+    :root { --bg: #f8fafc; --card: #ffffff; --primary: #1d4ed8; --warn: #d97706; --text: #0f172a; --muted: #475569; }
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+    body { margin: 0; padding: 20px; background: var(--bg); color: var(--text); line-height: 1.5; }
+    main { max-width: 900px; margin: 0 auto; display: grid; gap: 18px; }
+    header, section, footer { background: var(--card); border: 1px solid #cbd5e1; border-radius: 12px; padding: 18px; }
+    header { border-top: 5px solid var(--primary); }
+    nav { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+    .btn, a.btn {
+      display: inline-block; padding: 9px 14px; border-radius: 8px; border: none;
+      background: var(--primary); color: #fff; font-weight: 600; cursor: pointer; text-decoration: none; font-size: 14px;
+    }
+    .btn.sec { background: #0f766e; }
+    .btn.danger { background: #dc2626; }
+    .alert { background: #fffbeb; border-left: 4px solid var(--warn); padding: 10px 12px; border-radius: 6px; margin-top: 10px; }
+    pre { background: #0f172a; color: #e2e8f0; padding: 12px; border-radius: 8px; overflow-x: auto; font-size: 13px; }
+    input { padding: 8px 10px; border: 1px solid #94a3b8; border-radius: 6px; margin-right: 8px; }
+    .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+    code { background: #f1f5f9; padding: 2px 5px; border-radius: 4px; color: #be123c; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <small>ETEC DS • Micro-Lab 01 • Tags Semânticas: &lt;header&gt;, &lt;nav&gt;, &lt;section&gt;, &lt;footer&gt;</small>
+      <h1>Lab 01 — Links HTML, Árvore DOM e Cookies Locais</h1>
+      <p>Observe na prática os conceitos das Questões 19, 20 e 21 da Fundação FAT.</p>
+      <nav>
+        <a class="btn" href="#sec-links">1. Tag &lt;a&gt;</a>
+        <a class="btn" href="#sec-cookies">2. Cookies (~4 KB)</a>
+        <a class="btn" href="#sec-dom">3. Árvore DOM</a>
+      </nav>
+    </header>
+
+    <section id="sec-links">
+      <h2>1. Tag &lt;a&gt; e atributo <code>target</code> (Q20 - 2025)</h2>
+      <p>Clique nos dois links e observe a diferença de comportamento no navegador:</p>
+      <div class="grid2">
+        <div>
+          <a class="btn" href="https://example.com" target="_blank" rel="noopener">Abrir com target="_blank" (Nova Aba)</a>
+          <p><small><code>_blank</code> abre o destino em uma <strong>nova aba ou janela</strong>.</small></p>
+        </div>
+        <div>
+          <a class="btn sec" href="#sec-cookies" target="_self">Abrir com target="_self" (Mesma Aba)</a>
+          <p><small><code>_self</code> é o padrão: abre na <strong>mesma aba</strong>.</small></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-cookies">
+      <h2>2. Cookies: Armazenamento Local no Navegador (Q21 - 2025)</h2>
+      <form onsubmit="return false;" style="margin-bottom:12px;">
+        <label for="cookieVal">Seu nome de estudante:</label>
+        <input id="cookieVal" type="text" value="Henrique_ETEC" />
+      </form>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn" onclick="criarCookieSessao()">Criar Cookie de SESSÃO</button>
+        <button class="btn sec" onclick="criarCookiePermanente()">Criar Cookie PERMANENTE (7 dias)</button>
+        <button class="btn" style="background:#475569" onclick="lerCookies()">Ler document.cookie</button>
+        <button class="btn danger" onclick="apagarCookies()">Apagar Cookies</button>
+      </div>
+      <div class="alert">
+        <strong>Prova Real contra a Pegadinha da FAT:</strong> Aperte <strong>F12</strong> &rarr; aba <em>Application</em> (ou <em>Armazenamento</em> no Firefox) &rarr; <em>Cookies</em>. Veja que eles ficam gravados <strong>no seu navegador</strong> (limite ~4 KB), <strong>NUNCA na nuvem</strong>!
+        <br><small>Nota: Se você abrir via <code>file://</code> no Chrome, alguns navegadores ocultam cookies de arquivo local; use também o painel abaixo ou rode <code>python3 -m http.server</code> na pasta.</small>
+      </div>
+      <pre id="cookieOut">Clique em um botão acima para inspecionar os cookies...</pre>
+    </section>
+
+    <section id="sec-dom">
+      <h2>3. Árvore DOM no JavaScript (Q19 - 2019)</h2>
+      <p>Teste os 4 métodos cobrados pela banca FAT:</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
+        <button class="btn" onclick="testarDOM()">Executar Comandos DOM</button>
+      </div>
+      <div id="domAlvo" style="padding:10px; background:#eff6ff; border-radius:8px; border:1px dashed #2563eb;">
+        Elemento com id="domAlvo"
+      </div>
+      <pre id="domOut">Clique em "Executar Comandos DOM"...</pre>
+    </section>
+
+    <footer>
+      <small>Lab 01 concluído • Tags semânticas HTML5 usadas nesta página: &lt;header&gt;, &lt;nav&gt;, &lt;main&gt;, &lt;section&gt;, &lt;footer&gt;.</small>
+    </footer>
+  </main>
+
+  <script>
+    function criarCookieSessao() {
+      const v = encodeURIComponent(document.getElementById("cookieVal").value || "Aluno");
+      document.cookie = `etec_sessao=${v}; path=/`;
+      lerCookies("Cookie de SESSÃO criado (apaga ao fechar o navegador).");
+    }
+
+    function criarCookiePermanente() {
+      const v = encodeURIComponent(document.getElementById("cookieVal").value || "Aluno");
+      const maxAge = 7 * 24 * 60 * 60;
+      document.cookie = `etec_perm=${v}; max-age=${maxAge}; path=/`;
+      lerCookies("Cookie PERMANENTE criado (expira em 7 dias).");
+    }
+
+    function apagarCookies() {
+      document.cookie = "etec_sessao=; max-age=0; path=/";
+      document.cookie = "etec_perm=; max-age=0; path=/";
+      lerCookies("Cookies removidos!");
+    }
+
+    function lerCookies(aviso = "") {
+      const atual = document.cookie || "(vazio)";
+      const bytes = new Blob([atual]).size;
+      document.getElementById("cookieOut").textContent =
+        `${aviso ? aviso + "\n" : ""}document.cookie => ${atual}\nTamanho usado: ${bytes} bytes (limite ~4096 bytes / 4 KB por cookie).`;
+    }
+
+    function testarDOM() {
+      const alvo = document.getElementById("domAlvo");
+      const textoNovo = document.createTextNode(" + [Nó criado via createTextNode!]");
+      alvo.appendChild(textoNovo);
+      const raiz = document.documentElement.tagName;
+      const pai = alvo.parentNode.tagName;
+      document.getElementById("domOut").textContent =
+        `1. getElementById('domAlvo') -> encontrou <${alvo.tagName}>\n` +
+        `2. createTextNode(...) -> anexou texto dentro do elemento\n` +
+        `3. document.documentElement -> raiz <${raiz}>\n` +
+        `4. alvo.parentNode -> nó pai <${pai}>`;
+    }
+  </script>
+</body>
+</html>

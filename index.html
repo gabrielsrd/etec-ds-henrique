@@ -1,0 +1,2038 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+  <title>Plataforma ETEC DS M-Tec — Modo História &amp; Simulador (Prova 04/12)</title>
+  <style>
+    :root {
+      --bg: #f1f5f9; --surface: #ffffff; --primary: #1d4ed8; --primary-dark: #1e3a8a;
+      --green: #16a34a; --green-soft: #dcfce7; --purple: #7c3aed; --amber: #d97706;
+      --red: #dc2626; --text: #0f172a; --muted: #475569; --border: #cbd5e1;
+    }
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    body { margin: 0; background: var(--bg); color: var(--text); line-height: 1.55; padding-bottom: 40px; }
+
+    /* Top Bar & Menu */
+    .topbar {
+      background: #0f172a; color: #fff; position: sticky; top: 0; z-index: 50;
+      border-bottom: 3px solid var(--primary);
+    }
+    .topbar-inner {
+      max-width: 1200px; margin: 0 auto; padding: 10px 14px;
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .brand { font-weight: 800; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+    .hud-pills { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; font-size: 13px; font-weight: 700; }
+    .hud-pill { background: rgba(255,255,255,0.12); padding: 4px 10px; border-radius: 999px; }
+    .nav-bar {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      position: sticky; top: 49px; z-index: 40;
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto; padding: 8px 14px;
+      display: flex; gap: 6px; overflow-x: auto;
+    }
+    .nav-btn {
+      padding: 8px 14px; border-radius: 10px; border: 2px solid transparent; background: #f8fafc;
+      font-weight: 700; font-size: 13.5px; cursor: pointer; white-space: nowrap; color: var(--text);
+    }
+    .nav-btn:hover { background: #e2e8f0; }
+    .nav-btn.active { background: #dbeafe; border-color: var(--primary); color: var(--primary-dark); }
+
+    .container { max-width: 1140px; margin: 16px auto; padding: 0 14px; display: grid; gap: 16px; }
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+
+    /* Hero & Coach */
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e40af 100%); color: #fff;
+      border-radius: 18px; padding: 22px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 18px; align-items: center;
+    }
+    @media (max-width: 780px) { .hero { grid-template-columns: 1fr; } }
+    .countdown-box {
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 14px; padding: 14px; text-align: center;
+    }
+    .countdown-num { font-size: 28px; font-weight: 900; }
+    .coach { border-radius: 14px; padding: 16px 18px; border: 2px solid; display: grid; gap: 8px; }
+    .coach.ok { background: #f0fdf4; border-color: #22c55e; color: #14532d; }
+    .coach.warn { background: #fffbeb; border-color: #f59e0b; color: #78350f; }
+    .coach.danger { background: #fef2f2; border-color: #ef4444; color: #7f1d1d; }
+    .coach-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+
+    /* Buttons & Badges */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 10px 16px; border-radius: 10px; border: none; background: var(--primary);
+      color: #fff; font-weight: 700; font-size: 14px; cursor: pointer; text-decoration: none;
+    }
+    .btn:hover { filter: brightness(0.95); }
+    .btn.lg { padding: 13px 22px; font-size: 15.5px; border-radius: 12px; }
+    .btn.sm { padding: 6px 11px; font-size: 12.5px; border-radius: 8px; }
+    .btn.green { background: var(--green); }
+    .btn.purple { background: var(--purple); }
+    .btn.amber { background: var(--amber); }
+    .btn.red { background: var(--red); }
+    .btn.dark { background: #334155; }
+    .btn.outline { background: #fff; color: var(--text); border: 2px solid var(--border); }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+    .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+    .kpi-label { font-size: 11.5px; font-weight: 800; color: var(--muted); text-transform: uppercase; }
+    .kpi-val { font-size: 22px; font-weight: 800; margin-top: 2px; }
+    .track { height: 10px; background: #e2e8f0; border-radius: 999px; overflow: hidden; margin-top: 6px; }
+    .fill { height: 100%; background: var(--green); transition: width 0.3s; }
+
+    /* Story Mode */
+    .story-map { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+    .chap-card {
+      border: 2px solid #e2e8f0; border-radius: 14px; padding: 14px; background: #fff;
+      display: flex; flex-direction: column; justify-content: space-between; gap: 10px;
+    }
+    .chap-card.done { border-color: #86efac; background: #f0fdf4; }
+    .chap-card.today { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+    .chap-card.late { border-color: #ef4444; background: #fef2f2; }
+    .tag-pill { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 800; background: #e2e8f0; color: #334155; }
+    .tag-pill.done { background: #bbf7d0; color: #14532d; }
+    .tag-pill.today { background: #dbeafe; color: #1e40af; }
+    .tag-pill.late { background: #fecaca; color: #7f1d1d; }
+
+    .stepper { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; }
+    .step-pill {
+      padding: 8px 14px; border-radius: 10px; border: 2px solid var(--border); background: #f8fafc;
+      font-weight: 700; font-size: 13.5px; cursor: pointer;
+    }
+    .step-pill.active { background: #dbeafe; border-color: var(--primary); color: var(--primary-dark); }
+    .step-pill.done { background: #dcfce7; border-color: var(--green); color: #14532d; }
+
+    /* Lesson / Apostila typography */
+    .lesson-body h1, .lesson-body h2 { color: var(--primary-dark); border-left: 4px solid var(--primary); padding-left: 10px; margin-top: 18px; }
+    .lesson-body h3 { color: #0f172a; margin-top: 14px; }
+    .lesson-body code { background: #f1f5f9; color: #be123c; padding: 2px 5px; border-radius: 4px; font-family: monospace; font-size: 92%; }
+    .lesson-body pre { background: #0f172a; color: #f8fafc; padding: 12px; border-radius: 10px; overflow-x: auto; font-size: 13px; }
+    .lesson-body pre code { background: transparent; color: #f8fafc; padding: 0; }
+    .q-table { width: 100%; border-collapse: collapse; margin: 10px 0 14px 0; font-size: 13.5px; }
+    .q-table th { background: #1e3a8a; color: #fff; padding: 7px 9px; text-align: left; border: 1px solid #1e3a8a; }
+    .q-table td { padding: 7px 9px; border: 1px solid #cbd5e1; vertical-align: top; }
+    .q-table tr:nth-child(even) td { background: #f8fafc; }
+    .callout { padding: 11px 14px; border-radius: 10px; margin: 12px 0; font-size: 14px; }
+    .callout-warning { background: #fffbeb; border-left: 5px solid #d97706; }
+    .callout-caution { background: #fef2f2; border-left: 5px solid #dc2626; }
+    .callout-note, .callout-tip, .callout-important { background: #eff6ff; border-left: 5px solid #2563eb; }
+
+    /* Questions & Simulator */
+    .q-card { border: 1px solid var(--border); border-radius: 14px; padding: 16px; background: #fff; margin-bottom: 14px; }
+    .q-quote { border-left: 4px solid #64748b; background: #f8fafc; padding: 10px 12px; margin: 8px 0; border-radius: 6px; font-size: 14px; }
+    .q-code { background: #0f172a; color: #f8fafc; padding: 10px 12px; border-radius: 8px; overflow-x: auto; font-size: 13px; white-space: pre-wrap; font-family: monospace; }
+    .q-infographic { background: #eff6ff; border: 1px solid #93c5fd; border-radius: 10px; padding: 12px; margin-bottom: 10px; font-size: 13.5px; }
+    .opts-list { display: grid; gap: 8px; margin-top: 10px; }
+    .opt-item {
+      display: flex; gap: 10px; align-items: flex-start; text-align: left; width: 100%;
+      padding: 10px 12px; border-radius: 10px; border: 2px solid #e2e8f0; background: #fff;
+      cursor: pointer; font-size: 14px; color: var(--text);
+    }
+    .opt-item:hover { background: #f8fafc; }
+    .opt-item.selected { border-color: var(--primary); background: #eff6ff; }
+    .opt-item.correct { border-color: var(--green); background: #dcfce7; color: #14532d; }
+    .opt-item.wrong { border-color: var(--red); background: #fee2e2; color: #7f1d1d; }
+    .opt-letter { font-weight: 800; min-width: 24px; }
+    .q-exp { margin-top: 10px; padding: 10px 12px; border-radius: 8px; font-size: 13.5px; }
+    .q-exp.ok { background: #dcfce7; color: #14532d; }
+    .q-exp.bad { background: #fee2e2; color: #7f1d1d; }
+
+    .sim-palette { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
+    .pal-btn {
+      width: 34px; height: 32px; border-radius: 8px; border: 1px solid var(--border);
+      background: #fff; font-weight: 700; font-size: 12.5px; cursor: pointer;
+    }
+    .pal-btn.cur { border: 2px solid var(--primary); background: #dbeafe; }
+    .pal-btn.ans { background: #e2e8f0; }
+    .pal-btn.ok { background: #bbf7d0; border-color: var(--green); }
+    .pal-btn.bad { background: #fecaca; border-color: var(--red); }
+
+    /* Flashcards 3D & Pairs */
+    .scene { perspective: 1100px; max-width: 640px; margin: 10px auto; }
+    .card3d { width: 100%; min-height: 230px; position: relative; transform-style: preserve-3d; transition: transform 0.5s; cursor: pointer; }
+    .card3d.flipped { transform: rotateY(180deg); }
+    .face {
+      position: absolute; inset: 0; backface-visibility: hidden; border-radius: 16px;
+      border: 2px solid var(--border); border-bottom-width: 5px; padding: 20px;
+      display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: #fff;
+    }
+    .face.back { transform: rotateY(180deg); background: #f0fdf4; border-color: #86efac; }
+    .pairs-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+    @media (max-width: 640px) { .pairs-wrap { grid-template-columns: 1fr; } }
+    .pair-col { display: grid; gap: 8px; }
+    .pair-item { padding: 10px 12px; border-radius: 10px; border: 2px solid var(--border); background: #fff; cursor: pointer; font-weight: 600; font-size: 13.5px; text-align: left; }
+    .pair-item.selected { border-color: var(--primary); background: #dbeafe; }
+    .pair-item.matched { border-color: var(--green); background: #dcfce7; opacity: 0.65; cursor: default; }
+    .pair-item.error { border-color: var(--red); background: #fee2e2; }
+
+    /* Sub-tabs & Labs */
+    .subtabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .chip { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); background: #f8fafc; font-weight: 600; font-size: 13px; cursor: pointer; }
+    .chip.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .lab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    .viewport { height: 200px; border: 2px dashed #94a3b8; border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #f1f5f9; }
+    .css-box { width: 80px; height: 80px; background: #2563eb; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; border-radius: 10px; transition: transform 0.3s; margin: 20px auto; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">⚡ ETEC DS M-Tec Quest <span style="font-weight:500; opacity:0.8; font-size:13px;">(Prova 04/12)</span></div>
+      <div class="hud-pills">
+        <span class="hud-pill" id="topCountdown">⏳ -- dias</span>
+        <span class="hud-pill" id="topChapters">🗺️ 0/14 dias</span>
+        <span class="hud-pill" id="topCards">🃏 0/120 cards</span>
+        <span class="hud-pill" id="topXp">⭐ 0 XP • 🔥 0</span>
+        <button class="btn sm purple" onclick="toggleSyncPanel()">📲 Sincronizar</button>
+        <button class="btn sm dark" id="soundBtn" onclick="toggleSound()">🔊 Som ON</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav-bar">
+    <div class="nav-inner" id="mainNav">
+      <button class="nav-btn active" onclick="goTab('home')">🏠 Início &amp; Coach</button>
+      <button class="nav-btn" onclick="goTab('story')">🗺️ Modo História (14 Dias)</button>
+      <button class="nav-btn" onclick="goTab('sim')">📝 Simulador de Provas (Na Tela)</button>
+      <button class="nav-btn" onclick="goTab('apostila')">📖 Apostila &amp; Cola</button>
+      <button class="nav-btn" onclick="goTab('cards')">🃏 Flashcards &amp; Verdade/Fake</button>
+      <button class="nav-btn" onclick="goTab('labs')">🧪 Laboratórios Interativos</button>
+    </div>
+  </nav>
+
+  <div class="container" id="syncModalHost" style="padding-bottom:0;"></div>
+  <main class="container" id="appRoot"></main>
+
+  <script src="./dados_plataforma.js"></script>
+  <script>
+    const D = window.ETEC_DATA;
+    if (!D) {
+      document.getElementById("appRoot").innerHTML = "<div class='panel'><h2>Erro ao carregar dados_plataforma.js</h2><p>Extraia todo o arquivo .zip antes de abrir o COMECE_AQUI.html.</p></div>";
+      throw new Error("ETEC_DATA missing");
+    }
+
+    const STORE_CENTRAL = "etec_platform_v2";
+    const STORE_CARDS = "etec_ds_quest_v1";
+    let pState = loadPlatformState();
+    let cState = loadCardsState();
+    let activeTab = "home";
+    let activeChapter = null; // 1..14 when inside a chapter
+    let chapterStep = 1; // 1=Lição, 2=Prática, 3=Desafio
+    let simDateOverride = null;
+    let soundOn = true;
+    let audioCtx = null;
+
+    // Exam simulator & Revanche state
+    let simSession = null; // { examId, mode: 'instant'|'real', curIdx: 0, answers: {}, submitted: false, secLeft: 0 }
+    let simTimerId = null;
+    let revancheMode = false;
+    let revancheAnswers = {};
+
+    // Apostila state
+    let activeApostilaId = "cola";
+    let apostilaQuery = "";
+
+    // Cards/VF/Labs state
+    let cardsMode = "cards";
+    let cardViewStyle = "mc"; // "mc" = Múltipla Escolha A-D, "flip" = Virar Card 3D
+    let cardMcCache = {};
+    let cardsTag = "ALL";
+    let cardIdx = 0;
+    let isFlipped = false;
+    let vfArea = "ALL";
+    let vfIdx = 0;
+    let vfSessionPicked = {};
+    let activeLabTab = "lab01";
+    function clearCardMc() { cardMcCache = {}; }
+
+    function loadPlatformState() {
+      try {
+        const raw = localStorage.getItem(STORE_CENTRAL);
+        if (raw) {
+          const obj = JSON.parse(raw);
+          if (!obj.moduleScores) obj.moduleScores = {};
+          if (!obj.examScores) obj.examScores = {};
+          if (!obj.completedDays) obj.completedDays = [];
+          if (!obj.qHistory) obj.qHistory = {};
+          if (!obj.wrongQueue) obj.wrongQueue = [];
+          if (!obj.vfHistory) obj.vfHistory = {};
+          return obj;
+        }
+      } catch (e) {}
+      return { startDate: D.defaultStartIso || "2026-11-19", completedDays: [], examScores: {}, moduleScores: {}, qHistory: {}, wrongQueue: [], vfHistory: {}, checks: {} };
+    }
+
+    function recordQuestionResult(examId, qNum, isCorrect, isRevanche = false) {
+      const key = `${examId}_${qNum}`;
+      pState.qHistory = pState.qHistory || {};
+      pState.wrongQueue = pState.wrongQueue || [];
+      pState.qHistory[key] = !!isCorrect;
+      if (!isCorrect) {
+        if (!pState.wrongQueue.includes(key)) pState.wrongQueue.push(key);
+      } else if (isRevanche) {
+        pState.wrongQueue = pState.wrongQueue.filter((k) => k !== key);
+      }
+      savePlatformState();
+    }
+
+    function savePlatformState() {
+      try { localStorage.setItem(STORE_CENTRAL, JSON.stringify(pState)); } catch (e) {}
+      updateTopHud();
+    }
+
+    function loadCardsState() {
+      try {
+        const raw = localStorage.getItem(STORE_CARDS);
+        if (raw) return JSON.parse(raw);
+      } catch (e) {}
+      return { xp: 0, streak: 0, hearts: 5, known: [], review: [] };
+    }
+
+    function saveCardsState() {
+      try { localStorage.setItem(STORE_CARDS, JSON.stringify(cState)); } catch (e) {}
+      updateTopHud();
+    }
+
+    function playTone(freq, dur, type = "sine", delay = 0) {
+      if (!soundOn) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.type = type; osc.frequency.value = freq;
+        const t = audioCtx.currentTime + delay;
+        g.gain.setValueAtTime(0.11, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+        osc.connect(g); g.connect(audioCtx.destination);
+        osc.start(t); osc.stop(t + dur);
+      } catch (e) {}
+    }
+    function sfxOk() { playTone(523.25, 0.11, "triangle", 0); playTone(659.25, 0.17, "triangle", 0.09); }
+    function sfxBad() { playTone(190, 0.14, "sawtooth", 0); playTone(145, 0.2, "sawtooth", 0.11); }
+    function toggleSound() {
+      soundOn = !soundOn;
+      document.getElementById("soundBtn").textContent = soundOn ? "🔊 Som ON" : "🔇 Som OFF";
+    }
+
+    function parseIso(iso) { const [y, m, d] = iso.split("-").map(Number); return new Date(y, m - 1, d, 0, 0, 0, 0); }
+    function addDays(d, n) { const x = new Date(d.getTime()); x.setDate(x.getDate() + n); return x; }
+    function toIso(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }
+    function fmtBr(d) { return `${["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"][d.getDay()]}, ${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}`; }
+    function getToday() {
+      if (simDateOverride) return parseIso(simDateOverride);
+      const n = new Date();
+      return new Date(n.getFullYear(), n.getMonth(), n.getDate(), 0, 0, 0, 0);
+    }
+
+    function getScheduleStatus() {
+      const today = getToday();
+      const examDate = parseIso(D.examDateIso || "2026-12-04");
+      const startDate = parseIso(pState.startDate || "2026-11-19");
+      const diffDays = Math.round((examDate - today) / 86400000);
+      const pending = D.chapters.filter((c) => !pState.completedDays.includes(c.day));
+      const overdue = D.chapters.filter((c) => addDays(startDate, c.day - 1) < today && !pState.completedDays.includes(c.day));
+      const nextChapter = pending[0] || D.chapters[D.chapters.length - 1];
+      return { today, examDate, startDate, diffDays, pending, overdue, nextChapter };
+    }
+
+    function updateTopHud() {
+      const st = getScheduleStatus();
+      document.getElementById("topCountdown").textContent = st.diffDays > 0 ? `⏳ Faltam ${st.diffDays}d` : (st.diffDays === 0 ? "🎯 PROVA HOJE" : "✅ Concluído");
+      document.getElementById("topChapters").textContent = `🗺️ ${pState.completedDays.length}/14 dias`;
+      document.getElementById("topCards").textContent = `🃏 ${cState.known.length}/${D.flashcards.length} cards`;
+      document.getElementById("topXp").textContent = `⭐ ${cState.xp} XP • 🔥 ${cState.streak}`;
+    }
+
+    function goTab(tab) {
+      activeTab = tab;
+      if (tab !== "story") activeChapter = null;
+      if (tab !== "sim") revancheMode = false;
+      const order = ["home", "story", "sim", "apostila", "cards", "labs"];
+      document.querySelectorAll("#mainNav .nav-btn").forEach((b, i) => b.classList.toggle("active", order[i] === tab));
+      renderMain();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function openRevanche() {
+      activeTab = "sim";
+      if (simTimerId) clearInterval(simTimerId);
+      simSession = null;
+      revancheMode = true;
+      revancheAnswers = {};
+      document.querySelectorAll("#mainNav .nav-btn").forEach((b, i) => b.classList.toggle("active", i === 2));
+      renderMain();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function openChapter(day, step = 1) {
+      activeTab = "story";
+      if (activeChapter !== day) {
+        chapterAnswers = {};
+        cardIdx = 0;
+        isFlipped = false;
+        clearCardMc();
+      }
+      activeChapter = day;
+      chapterStep = step;
+      document.querySelectorAll("#mainNav .nav-btn").forEach((b, i) => b.classList.toggle("active", i === 1));
+      renderMain();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function startExamInSim(examId, mode = "instant") {
+      activeTab = "sim";
+      revancheMode = false;
+      document.querySelectorAll("#mainNav .nav-btn").forEach((b, i) => b.classList.toggle("active", i === 2));
+      const ex = D.exams[examId];
+      if (simTimerId) clearInterval(simTimerId);
+      simSession = { examId, mode, curIdx: 0, answers: {}, submitted: false, secLeft: ex.minutes * 60 };
+      simTimerId = setInterval(() => {
+        if (!simSession || simSession.submitted) return;
+        simSession.secLeft = Math.max(0, simSession.secLeft - 1);
+        const tel = document.getElementById("simTimerDisplay");
+        if (tel) tel.textContent = fmtTimer(simSession.secLeft);
+      }, 1000);
+      renderMain();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function fmtTimer(s) {
+      const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+      return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
+    }
+
+    let showSyncPanel = false;
+    let syncMsg = "";
+    function encodeSyncPayload() {
+      const jsonStr = JSON.stringify({ p: pState, c: cState });
+      const utf8Bytes = new TextEncoder().encode(jsonStr);
+      let bin = "";
+      utf8Bytes.forEach((b) => { bin += String.fromCharCode(b); });
+      return btoa(bin);
+    }
+    function decodeSyncPayload(code) {
+      const bin = atob(String(code || "").trim());
+      const bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      const jsonStr = new TextDecoder().decode(bytes);
+      const parsed = JSON.parse(jsonStr);
+      if (!parsed || typeof parsed.p !== "object" || typeof parsed.c !== "object") {
+        throw new Error("Código inválido");
+      }
+      return parsed;
+    }
+    function toggleSyncPanel() {
+      showSyncPanel = !showSyncPanel;
+      syncMsg = "";
+      renderSyncHost();
+      if (showSyncPanel) exportSyncCode(true);
+    }
+    function exportSyncCode(silent = false) {
+      const code = encodeSyncPayload();
+      const box = document.getElementById("syncCodeBox");
+      if (box) box.value = code;
+      if (!silent && typeof navigator !== "undefined" && navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+        navigator.clipboard.writeText(code).catch(() => {});
+      }
+      syncMsg = "✅ Código copiado! Envie no WhatsApp e cole no outro aparelho.";
+      const el = document.getElementById("syncStatusMsg");
+      if (el) { el.textContent = syncMsg; el.style.color = "var(--green)"; }
+      return code;
+    }
+    function importSyncCode(rawOverride) {
+      const box = document.getElementById("syncCodeBox");
+      const raw = rawOverride !== undefined ? rawOverride : (box ? box.value : "");
+      try {
+        const data = decodeSyncPayload(raw);
+        pState = {
+          startDate: D.defaultStartIso || "2026-11-19",
+          completedDays: [],
+          examScores: {},
+          moduleScores: {},
+          qHistory: {},
+          wrongQueue: [],
+          vfHistory: {},
+          checks: {},
+          ...data.p,
+        };
+        cState = { xp: 0, streak: 0, hearts: 5, known: [], review: [], ...data.c };
+        savePlatformState();
+        saveCardsState();
+        syncMsg = "🎉 Progresso sincronizado com sucesso!";
+        renderMain();
+      } catch (e) {
+        syncMsg = "❌ Código inválido ou incompleto. Copie o texto inteiro sem espaços cortados.";
+        const el = document.getElementById("syncStatusMsg");
+        if (el) { el.textContent = syncMsg; el.style.color = "var(--red)"; }
+      }
+    }
+    function renderSyncHost() {
+      const host = document.getElementById("syncModalHost");
+      if (!host) return;
+      if (!showSyncPanel) { host.innerHTML = ""; return; }
+      const ok = syncMsg.startsWith("🎉") || syncMsg.startsWith("✅");
+      host.innerHTML = `
+        <section class="panel" style="background:#f5f3ff; border-color:#c4b5fd; margin-top:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+            <h3 style="margin:0;">📲 Sincronizar Progresso PC ↔ Celular (Via WhatsApp)</h3>
+            <button class="btn sm outline" onclick="toggleSyncPanel()">✕ Fechar</button>
+          </div>
+          <p style="margin:0 0 10px 0; font-size:13.5px; color:#334155;">Para continuar de onde parou em outro aparelho: clique em <strong>Gerar &amp; Copiar Meu Código</strong> no aparelho atual, mande para você mesmo no WhatsApp e cole na caixa abaixo no outro aparelho clicando em <strong>Carregar Código Colado</strong>.</p>
+          <textarea id="syncCodeBox" rows="3" placeholder="Cole aqui o código de sincronização..." style="width:100%; padding:8px; border:1px solid #94a3b8; border-radius:8px; font-family:monospace; font-size:12px;">${encodeSyncPayload()}</textarea>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; align-items:center;">
+            <button class="btn sm purple" onclick="exportSyncCode(false)">📋 Gerar &amp; Copiar Meu Código</button>
+            <button class="btn sm green" onclick="importSyncCode()">📥 Carregar Código Colado</button>
+            <span id="syncStatusMsg" style="font-size:13px; font-weight:700; color:${ok ? "var(--green)" : "var(--red)"};">${escapeHtml(syncMsg)}</span>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderMain() {
+      updateTopHud();
+      renderSyncHost();
+      const root = document.getElementById("appRoot");
+      if (activeTab === "home") renderHome(root);
+      else if (activeTab === "story") renderStory(root);
+      else if (activeTab === "sim") renderSim(root);
+      else if (activeTab === "apostila") renderApostila(root);
+      else if (activeTab === "cards") renderCardsArea(root);
+      else if (activeTab === "labs") renderLabsArea(root);
+    }
+
+    function getAreaStats() {
+      const areas = D.areas || [];
+      const qAreaMap = {};
+      Object.entries(D.exams || {}).forEach(([exId, ex]) => {
+        (ex.questions || []).forEach((q) => {
+          qAreaMap[`${exId}_${q.num}`] = q.area;
+        });
+      });
+      const vfAreaMap = {};
+      (D.vfStatements || []).forEach((v) => { vfAreaMap[String(v.id)] = v.area; });
+
+      const map = {};
+      areas.forEach((a) => { map[a.id] = { ...a, total: 0, hits: 0 }; });
+
+      Object.entries(pState.qHistory || {}).forEach(([key, ok]) => {
+        const aId = qAreaMap[key];
+        if (aId && map[aId]) {
+          map[aId].total += 1;
+          if (ok) map[aId].hits += 1;
+        }
+      });
+      Object.entries(pState.vfHistory || {}).forEach(([vid, ok]) => {
+        const aId = vfAreaMap[String(vid)];
+        if (aId && map[aId]) {
+          map[aId].total += 1;
+          if (ok) map[aId].hits += 1;
+        }
+      });
+      return areas.map((a) => {
+        const s = map[a.id];
+        const pct = s.total > 0 ? Math.round((s.hits / s.total) * 100) : null;
+        return { ...s, pct };
+      });
+    }
+
+    function buildRadarHtml() {
+      const rows = getAreaStats();
+      const tested = rows.filter((r) => r.total > 0);
+      let weakest = null;
+      tested.forEach((r) => {
+        if (!weakest || r.pct < weakest.pct || (r.pct === weakest.pct && r.total > weakest.total)) weakest = r;
+      });
+      const wrongCnt = (pState.wrongQueue || []).length;
+      const vfCnt = (D.vfStatements || []).length;
+
+      const barsHtml = rows.map((r) => {
+        let color = "#94a3b8", tagCls = "", statusTxt = "⚪ Sem dados ainda";
+        if (r.total > 0) {
+          if (r.pct >= 75) { color = "var(--green)"; tagCls = "done"; statusTxt = `🟢 Forte (${r.hits}/${r.total} • ${r.pct}%)`; }
+          else if (r.pct >= 50) { color = "var(--amber)"; tagCls = "today"; statusTxt = `🟡 Atenção (${r.hits}/${r.total} • ${r.pct}%)`; }
+          else { color = "var(--red)"; tagCls = "late"; statusTxt = `🔴 Ponto Fraco (${r.hits}/${r.total} • ${r.pct}%)`; }
+        }
+        return `<div style="padding:10px; border:1px solid #e2e8f0; border-radius:10px; background:#f8fafc;">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:6px;">
+            <strong style="font-size:13.5px;">${r.title}</strong>
+            <span class="tag-pill ${tagCls}">${statusTxt}</span>
+          </div>
+          <div class="track"><div class="fill" style="width:${r.pct ?? 0}%; background:${color};"></div></div>
+        </div>`;
+      }).join("");
+
+      const diagHtml = weakest
+        ? `<div class="callout ${weakest.pct < 50 ? "callout-caution" : (weakest.pct < 75 ? "callout-warning" : "callout-note")}" style="margin:10px 0 12px 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div><strong>${weakest.pct < 75 ? "⚠️ Ponto que pede reforço:" : "🏆 Melhor atenção:"}</strong> sua menor taxa atual é em <strong>${weakest.title}</strong> (<strong>${weakest.pct}%</strong> em ${weakest.total} itens).</div>
+            <button class="btn sm ${weakest.pct < 50 ? "red" : "amber"}" onclick="openChapter(${weakest.recommendedDay}, 1)">🎯 Revisar Matéria Mais Fraca (Ir ao Dia ${weakest.recommendedDay})</button>
+          </div>`
+        : `<div class="callout callout-note" style="margin:10px 0 12px 0;">Responda questões nos <strong>Módulos</strong>, nos <strong>Simulados</strong> ou no mini-game <strong>Verdade ou Fake</strong> para calibrar automaticamente seu Radar por matéria!</div>`;
+
+      return `<section class="panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <h2 style="margin:0; font-size:18px;">📊 Radar de Pontos Fracos por Matéria (Diagnóstico Ao Vivo)</h2>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn sm ${wrongCnt > 0 ? "red" : "green"}" onclick="openRevanche()">🩹 Caderno de Erros (${wrongCnt})</button>
+            <button class="btn sm purple" onclick="goTab('cards'); cardsMode='vf'; renderMain();">⚡ Jogar Verdade ou Fake (${vfCnt})</button>
+          </div>
+        </div>
+        ${diagHtml}
+        <div class="lab-grid">${barsHtml}</div>
+      </section>`;
+    }
+
+    // ==================== 1. HOME & COACH ====================
+    function renderHome(root) {
+      const st = getScheduleStatus();
+      const ch = st.nextChapter;
+      const doneCount = pState.completedDays.length;
+      const pace = st.pending.length > 0 ? (st.pending.length / Math.max(1, st.diffDays)).toFixed(1) : "0";
+
+      let coachCls = "ok", coachTitle = "", coachMsg = "";
+      if (st.pending.length === 0) {
+        coachTitle = "🏆 Jornada dos 14 Dias Concluída!";
+        coachMsg = "Você completou todos os capítulos! Use o Simulador (M-Tec 40Q e 30 Apostas) e releia a Cola de Bolso antes da prova em 04/12.";
+      } else if (st.today < st.startDate) {
+        coachTitle = `🚀 Aquecimento (${fmtBr(st.today)}) — Trilha oficial começa amanhã (${fmtBr(st.startDate)})!`;
+        coachMsg = `Você já pode apertar o botão abaixo para começar o <strong>Capítulo 1</strong> hoje mesmo e ganhar folga extra antes de 04/12!`;
+      } else if (st.overdue.length === 0) {
+        coachTitle = "🟢 Ritmo Perfeito! Você está em dia para a prova de 04/12!";
+        coachMsg = `Continue a história no <strong>Dia ${ch.day}: ${ch.title}</strong>. São apenas 3 passos rápidos (Lição + Prática + Desafio) direto aqui na tela.`;
+      } else if (st.overdue.length === 1) {
+        coachCls = "warn";
+        coachTitle = `🟡 Atenção: 1 capítulo atrasado (Dia ${st.overdue[0].day})!`;
+        coachMsg = `Faça o <strong>Dia ${st.overdue[0].day}</strong> hoje (+30 min) ou recupere no Dia Curinga (03/12) para manter tudo em dia.`;
+      } else {
+        coachCls = "danger";
+        const rescue = st.overdue.slice(0, 2).map((x) => `Dia ${x.day}`).join(" e ");
+        coachTitle = `🔴 ALERTA DE ATRASO: ${st.overdue.length} capítulos pendentes para ${st.diffDays} dia(s)!`;
+        coachMsg = `Ritmo necessário: <strong>${pace} capítulos/dia</strong>. <strong>Plano de Resgate:</strong> priorize <strong>${rescue}</strong> hoje (peso Máxima: SQL, Matriz/Teste de Mesa, Redes/Cookies e Base M-Tec).`;
+      }
+
+      const simVal = simDateOverride || toIso(st.today);
+      const bestScoresHtml = Object.values(D.exams).map((ex) => {
+        const sc = pState.examScores[ex.id];
+        return `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 10px; border:1px solid #e2e8f0; border-radius:10px; background:#f8fafc;">
+          <div><strong>${ex.title}</strong><br><small style="color:var(--muted)">${ex.badge}</small></div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <span class="tag-pill ${sc ? "done" : ""}">${sc ? `${sc.hits}/${sc.total} (${sc.pct}%)` : "Não feita"}</span>
+            <button class="btn sm" onclick="startExamInSim('${ex.id}')">▶ Abrir</button>
+          </div>
+        </div>`;
+      }).join("");
+
+      root.innerHTML = `
+        <section class="hero">
+          <div>
+            <span style="display:inline-block; background:rgba(255,255,255,0.18); padding:4px 10px; border-radius:999px; font-size:12px; font-weight:700;">ETEC M-TEC DESENVOLVIMENTO DE SISTEMAS • ZERO PDF</span>
+            <h1 style="margin:8px 0 6px 0; font-size:25px;">${doneCount === 14 ? "Você está pronto para a Etec!" : `Próxima Missão: Dia ${ch.day} — ${ch.title}`}</h1>
+            <p style="margin:0 0 14px 0; opacity:0.92; font-size:14px;">${ch.storyIntro}</p>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn lg green" onclick="openChapter(${ch.day}, 1)">▶ Continuar Modo História (Dia ${ch.day})</button>
+              <button class="btn lg amber" onclick="goTab('apostila'); selectApostila('cola')">⚡ Cola de Bolso (04/12)</button>
+            </div>
+          </div>
+          <div class="countdown-box">
+            <div style="font-size:12px; font-weight:700; text-transform:uppercase; opacity:0.85;">Prova: Sexta, 04/12/2026</div>
+            <div class="countdown-num">${st.diffDays > 0 ? `Faltam ${st.diffDays} dias` : (st.diffDays === 0 ? "É HOJE!" : "Concluída")}</div>
+            <div style="font-size:12.5px; opacity:0.9; margin-top:4px;">Progresso total: ${doneCount}/14 capítulos • ${cState.known.length}/${D.flashcards.length} cards</div>
+          </div>
+        </section>
+
+        <section class="coach ${coachCls}">
+          <div class="coach-head">
+            <h2 style="margin:0; font-size:17.5px;">${coachTitle}</h2>
+            <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; font-size:12px; background:rgba(255,255,255,0.75); padding:5px 9px; border-radius:8px;">
+              <label><strong>Início:</strong> <input type="date" value="${pState.startDate}" onchange="pState.startDate=this.value; savePlatformState(); renderMain();" style="border:1px solid #94a3b8; border-radius:5px; padding:2px 4px;"></label>
+              <label><strong>Simular hoje:</strong> <input type="date" value="${simVal}" min="2026-11-18" max="2026-12-05" onchange="simDateOverride=this.value||null; renderMain();" style="border:1px solid #94a3b8; border-radius:5px; padding:2px 4px;"></label>
+              ${simDateOverride ? `<button class="btn sm dark" onclick="simDateOverride=null; renderMain();">Hoje Real</button>` : ""}
+            </div>
+          </div>
+          <div style="font-size:14px;">${coachMsg}</div>
+        </section>
+
+        <section class="kpi-grid">
+          <div class="kpi"><div class="kpi-label">Capítulos História</div><div class="kpi-val">${doneCount} / 14</div><div class="track"><div class="fill" style="width:${Math.round(doneCount/14*100)}%"></div></div></div>
+          <div class="kpi"><div class="kpi-label">Flashcards Dominados</div><div class="kpi-val">${cState.known.length} / ${D.flashcards.length}</div><div class="track"><div class="fill" style="width:${Math.round(cState.known.length/D.flashcards.length*100)}%; background:var(--purple)"></div></div></div>
+          <div class="kpi"><div class="kpi-label">XP Acumulado</div><div class="kpi-val">⭐ ${cState.xp} XP</div><small style="color:var(--muted)">+50 XP por capítulo concluído</small></div>
+          <div class="kpi"><div class="kpi-label">Provas Resolvidas</div><div class="kpi-val">${Object.keys(pState.examScores).length} / 7</div><small style="color:var(--muted)">220 questões disponíveis na tela</small></div>
+        </section>
+
+        ${buildRadarHtml()}
+
+        <section class="panel">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+            <h2 style="margin:0; font-size:18px;">📝 Acesso Rápido às Provas &amp; Simulados (100% na Tela)</h2>
+            <button class="btn sm outline" onclick="if(confirm('Zerar progresso da jornada?')){pState.completedDays=[];pState.examScores={};pState.moduleScores={};pState.qHistory={};pState.wrongQueue=[];pState.vfHistory={};revancheAnswers={};vfSessionPicked={};savePlatformState();renderMain();}">↺ Zerar Progresso</button>
+          </div>
+          <div style="display:grid; gap:8px;">${bestScoresHtml}</div>
+        </section>
+
+        <section class="panel" style="background:#fffbeb; border-color:#fcd34d;">
+          <strong>📱 Usar como App no Celular (PWA) &amp; Sincronizar PC ↔ Celular:</strong> No celular (Chrome no Android ou Safari no iPhone), abra este site e toque em <strong>Adicionar à tela inicial</strong> para estudar os <strong>120 Flashcards</strong>, o <strong>Verdade ou Fake</strong> e os <strong>Simulados</strong> em tela cheia! Sempre que quiser levar seu progresso do PC para o celular (ou voltar para o PC), clique em <strong>📲 Sincronizar</strong> na barra superior.
+        </section>
+      `;
+    }
+
+    // ==================== 2. MODO HISTÓRIA (14 CAPÍTULOS) ====================
+    function renderStory(root) {
+      if (activeChapter !== null) {
+        renderChapterFocus(root, activeChapter);
+        return;
+      }
+      const st = getScheduleStatus();
+      const cardsHtml = D.chapters.map((ch) => {
+        const cDate = addDays(st.startDate, ch.day - 1);
+        const done = pState.completedDays.includes(ch.day);
+        const isToday = toIso(cDate) === toIso(st.today);
+        const isLate = !done && cDate < st.today;
+        const mSc = (pState.moduleScores || {})[ch.day];
+        let cls = "chap-card", pillCls = "", pillTxt = "⏳ Agendado";
+        if (done) { cls += " done"; pillCls = "done"; pillTxt = "✅ Concluído"; }
+        else if (isToday) { cls += " today"; pillCls = "today"; pillTxt = "🎯 Missão de Hoje"; }
+        else if (isLate) { cls += " late"; pillCls = "late"; pillTxt = "⚠️ Atrasado"; }
+
+        const scoreBadge = mSc
+          ? `<span class="tag-pill ${mSc.pct >= 70 ? "done" : "late"}" style="margin-left:4px;">Nota: ${mSc.hits}/${mSc.total} (${mSc.pct}%)</span>`
+          : "";
+
+        return `<div class="${cls}">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; font-size:12px; font-weight:800; flex-wrap:wrap;">
+              <span>Dia ${String(ch.day).padStart(2,"0")} • ${fmtBr(cDate)}</span>
+              <div><span class="tag-pill ${pillCls}">${pillTxt}</span>${scoreBadge}</div>
+            </div>
+            <h3 style="margin:6px 0; font-size:15.5px;">${ch.title}</h3>
+            <p style="margin:0; font-size:13px; color:var(--muted);">${ch.storyIntro}</p>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #e2e8f0; padding-top:8px;">
+            <small><strong>Peso:</strong> ${ch.weight} • Teste: ${ch.challengeRefs.length}Q</small>
+            <button class="btn sm ${done ? "dark" : "green"}" onclick="openChapter(${ch.day}, 1)">${done ? "Rever Módulo" : "Iniciar Módulo ▶"}</button>
+          </div>
+        </div>`;
+      }).join("");
+
+      root.innerHTML = `
+        <section class="panel">
+          <h2 style="margin-top:0;">🗺️ Modo História — Sua Jornada de 14 Módulos até 04/12</h2>
+          <p style="color:var(--muted); font-size:14px; margin-top:0;">Clique em qualquer dia para seguir o ciclo completo na tela: <strong>1. Parte Teórica Completa &rarr; 2. Parte Prática Interativa &rarr; 3. Teste Pós-Módulo (8 a 10 questões com nota)</strong>.</p>
+          <div class="story-map">${cardsHtml}</div>
+        </section>
+      `;
+    }
+
+    let chapterAnswers = {};
+    let openVideoClips = {};
+    let miniPlayerNote = {};
+    function fmtMmSs(s) {
+      const m = Math.floor(s / 60), sec = s % 60;
+      return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+    }
+    function fmtClipDur(sec) {
+      const m = Math.floor(sec / 60), s = sec % 60;
+      return m > 0 ? (s > 0 ? `${m}m${String(s).padStart(2,"0")}s` : `${m} min`) : `${s}s`;
+    }
+    function openClipPlayer(videoId, startSec, endSec, key) {
+      const isHttp = !!(window.location && window.location.protocol && window.location.protocol.startsWith("http"));
+      if (isHttp) {
+        openVideoClips[key] = !openVideoClips[key];
+        renderMain();
+      } else {
+        const watchUrl = `https://www.youtube.com/watch?v=${videoId}&t=${startSec}s`;
+        window.open(watchUrl, "etec_mini_player", "width=880,height=540,menubar=no,toolbar=no,location=yes,resizable=yes,scrollbars=yes");
+        miniPlayerNote[key] = true;
+        renderMain();
+      }
+    }
+    function renderVideoClipsHtml(ch) {
+      const clips = ch.videoClips || [];
+      if (!clips.length) return "";
+      const isHttp = !!(window.location && window.location.protocol && window.location.protocol.startsWith("http"));
+      const cards = clips.map((v, idx) => {
+        const key = `${ch.day}_${idx}`;
+        const isOpen = !!openVideoClips[key];
+        const hasMiniNote = !!miniPlayerNote[key];
+        const sStr = fmtMmSs(v.startSec), eStr = fmtMmSs(v.endSec), durStr = fmtClipDur(v.endSec - v.startSec);
+        const embedUrl = `https://www.youtube.com/embed/${v.videoId}?start=${v.startSec}&end=${v.endSec}&autoplay=1&rel=0`;
+        const watchUrl = `https://www.youtube.com/watch?v=${v.videoId}&t=${v.startSec}s`;
+        const iframeHtml = (isHttp && isOpen)
+          ? `<div style="margin-top:10px;"><iframe src="${embedUrl}" title="${escapeHtml(v.title)}" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%; max-width:680px; height:360px; border:0; border-radius:10px; background:#0f172a;"></iframe><div style="font-size:12px; color:var(--muted); margin-top:4px;">Player embutido ativo: começa em <strong>${sStr}</strong> e para sozinho em <strong>${eStr}</strong>.</div></div>`
+          : "";
+        const miniNoteHtml = (!isHttp && hasMiniNote)
+          ? `<div class="callout callout-note" style="margin-top:10px; background:#dcfce7; border-color:#16a34a; color:#14532d;">⏱️ <strong>Mini-Player aberto no minuto ${sStr}!</strong> Assista apenas até <strong>${eStr}</strong> (${durStr} de trecho).</div>`
+          : "";
+        const mainBtnLabel = (isHttp && isOpen)
+          ? `Ocultar Player Embutido`
+          : `Assistir Aqui (Mini-Player no Ponto Exato: ${sStr} &rarr; ${eStr})`;
+        return `<div style="border:1px solid #cbd5e1; border-radius:12px; padding:12px; background:#ffffff;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:6px;">
+            <div>
+              <strong style="font-size:14.5px;">${escapeHtml(v.title)}</strong>
+              <div style="font-size:12.5px; color:var(--muted);">${escapeHtml(v.channel)}</div>
+            </div>
+            <span class="tag-pill today">✂️ Corte: ${sStr} até ${eStr} (${durStr})</span>
+          </div>
+          <p style="margin:8px 0; font-size:13px; color:#334155;">${escapeHtml(v.tip)}</p>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+            <button class="btn sm green" onclick="openClipPlayer('${v.videoId}', ${v.startSec}, ${v.endSec}, '${key}')">📺 ${mainBtnLabel}</button>
+            <a class="btn sm outline" href="${watchUrl}" target="_blank" rel="noopener">▶️ Abrir no YouTube em Nova Aba (começa em ${sStr} &rarr; pare em ${eStr})</a>
+          </div>
+          ${miniNoteHtml}
+          ${iframeHtml}
+        </div>`;
+      }).join("");
+      const subText = isHttp
+        ? `Rodando via servidor local: clique em <strong>Assistir Aqui</strong> para abrir o trecho embutido na tela (ele inicia em <code>start</code> e para sozinho em <code>end</code>).`
+        : `Para evitar bloqueio do YouTube em arquivos locais (<code>file://</code>), o botão verde abre um <strong>Mini-Player flutuante</strong> direto no segundo exato do trecho (ou use o botão <code>[1]</code> do <code>INICIAR_ESTUDO_WINDOWS.bat</code> para habilitar player embutido com parada automática):`;
+      return `<div class="panel" style="background:#f0f9ff; border-color:#bae6fd; padding:14px; margin-bottom:16px;">
+        <h3 style="margin:0 0 6px 0; font-size:16px;">🎬 Vídeos Rápidos da Lição (Trechos Cortados Direto ao Ponto)</h3>
+        <p style="margin:0 0 10px 0; font-size:13px; color:#334155;">${subText}</p>
+        <div style="display:grid; gap:10px;">${cards}</div>
+      </div>`;
+    }
+    function getChapterQuizStats(ch) {
+      const total = ch.challengeRefs.length;
+      const answered = Object.keys(chapterAnswers).length;
+      let hits = 0;
+      ch.challengeRefs.forEach((ref, idx) => {
+        const q = D.exams[ref.examId].questions.find((x) => x.num === ref.qNum);
+        if (chapterAnswers[idx] !== undefined && chapterAnswers[idx] === q.answer) hits += 1;
+      });
+      const pct = total > 0 ? Math.round((hits / total) * 100) : 0;
+      return { hits, total, answered, pct, allDone: answered === total };
+    }
+
+    function renderChapterFocus(root, dayNum) {
+      const ch = D.chapters.find((c) => c.day === dayNum);
+      const isDone = pState.completedDays.includes(dayNum);
+      const savedSc = (pState.moduleScores || {})[dayNum];
+
+      root.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <button class="btn sm outline" onclick="activeChapter=null; renderMain();">◀ Voltar ao Mapa dos 14 Dias</button>
+          <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+            ${savedSc ? `<span class="tag-pill ${savedSc.pct >= 70 ? "done" : "late"}">Melhor Nota: ${savedSc.hits}/${savedSc.total} (${savedSc.pct}%)</span>` : ""}
+            <span class="tag-pill ${isDone ? "done" : "today"}">Dia ${ch.day} de 14 ${isDone ? "• ✅ Concluído" : ""}</span>
+          </div>
+        </div>
+
+        <section class="panel">
+          <h2 style="margin:0 0 6px 0;">Dia ${ch.day}: ${ch.title}</h2>
+          <p style="margin:0 0 14px 0; color:var(--muted); font-size:14px;">${ch.storyIntro}</p>
+
+          <div class="stepper">
+            <button class="step-pill ${chapterStep === 1 ? "active" : (chapterStep > 1 ? "done" : "")}" onclick="chapterStep=1; renderMain();">1. 📖 Parte Teórica Completa</button>
+            <button class="step-pill ${chapterStep === 2 ? "active" : (chapterStep > 2 ? "done" : "")}" onclick="chapterStep=2; renderMain();">2. 🧪 Parte Prática do Módulo</button>
+            <button class="step-pill ${chapterStep === 3 ? "active" : ""}" onclick="chapterStep=3; renderMain();">3. 📝 Teste Pós-Módulo (${ch.challengeRefs.length}Q)</button>
+          </div>
+
+          <div id="chapterStepBody"></div>
+        </section>
+      `;
+
+      const body = document.getElementById("chapterStepBody");
+      if (chapterStep === 1) {
+        body.innerHTML = `
+          ${renderVideoClipsHtml(ch)}
+          <div class="lesson-body">${ch.lessonHtml}</div>
+          <div style="display:flex; justify-content:flex-end; margin-top:18px; border-top:1px solid #e2e8f0; padding-top:14px;">
+            <button class="btn lg green" onclick="chapterStep=2; renderMain(); window.scrollTo({top:0,behavior:'smooth'});">Avançar para Passo 2: Parte Prática Interativa ▶</button>
+          </div>
+        `;
+      } else if (chapterStep === 2) {
+        const extraSimHtml = ch.day === 14
+          ? `<div class="callout callout-note" style="margin-bottom:14px;"><strong>Simulados Completos Opcionais:</strong> Se quiser treinar resistência completa antes da prova de 04/12, você também pode abrir aqui a <button class="btn sm green" onclick="startExamInSim('mtec2022', 'instant')">🎓 Prova Real M-Tec (40Q)</button> ou <button class="btn sm purple" onclick="startExamInSim('apostas', 'instant')">🔮 30 Apostas Inéditas</button>.</div>`
+          : "";
+        body.innerHTML = `${extraSimHtml}<div id="chapPracticeTarget"></div>
+          <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-top:18px; border-top:1px solid #e2e8f0; padding-top:14px;">
+            <button class="btn outline" onclick="chapterStep=1; renderMain(); window.scrollTo({top:0,behavior:'smooth'});">◀ Voltar à Parte Teórica</button>
+            <button class="btn lg green" onclick="chapterStep=3; renderMain(); window.scrollTo({top:0,behavior:'smooth'});">Avançar para Passo 3: Teste Pós-Módulo (${ch.challengeRefs.length}Q) ▶</button>
+          </div>`;
+        const target = document.getElementById("chapPracticeTarget");
+        if (ch.practiceType === "lab_tipos") renderLabTiposInto(target);
+        else if (ch.practiceType === "lab01") renderLab01Into(target);
+        else if (ch.practiceType === "lab02") renderLab02Into(target);
+        else if (ch.practiceType === "lab03") renderLab03Into(target);
+        else if (ch.practiceType === "lab04") renderLab04Into(target);
+        else if (ch.practiceType === "lab_bin") renderLabBinInto(target);
+        else if (ch.practiceType === "lab_mtec") renderLabMTecInto(target);
+        else if (ch.practiceType === "pairs") renderPairsInto(target);
+        else renderCardsOnlyInto(target, ch.practiceTag);
+      } else {
+        // Step 3: Post-Module Test with Scoreboard
+        const stats = getChapterQuizStats(ch);
+        let statusHtml = `<span class="tag-pill today">Responda às ${stats.total} questões para fechar a nota do módulo</span>`;
+        if (stats.allDone) {
+          statusHtml = stats.pct >= 70
+            ? `<span class="tag-pill done">✅ Aprovado no Módulo (≥ 70%)</span>`
+            : `<span class="tag-pill late">🔁 Recomendado Revisar (&lt; 70%)</span>`;
+        }
+
+        const scoreboardHtml = `
+          <div class="panel" style="background:#f8fafc; margin-bottom:16px; padding:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <div>
+                <strong style="font-size:15.5px;">📊 Placar do Teste do Dia ${ch.day}: ${stats.hits} de ${stats.total} acertos (${stats.pct}%)</strong>
+                <div style="font-size:12.5px; color:var(--muted); margin-top:2px;">Respondidas: ${stats.answered}/${stats.total} • Meta de domínio: ≥ 70%</div>
+              </div>
+              <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                ${statusHtml}
+                <button class="btn sm purple" onclick="chapterAnswers={}; renderMain(); window.scrollTo({top:0,behavior:'smooth'});">🔄 Refazer Teste do Módulo</button>
+              </div>
+            </div>
+            <div class="track" style="margin-top:10px;"><div class="fill" style="width:${stats.pct}%; background:${stats.pct >= 70 ? "var(--green)" : "var(--amber)"};"></div></div>
+          </div>
+        `;
+
+        const qsHtml = ch.challengeRefs.map((ref, idx) => {
+          const ex = D.exams[ref.examId];
+          const q = ex.questions.find((x) => x.num === ref.qNum);
+          const picked = chapterAnswers[idx];
+          const optsHtml = q.options.map((opt, oi) => {
+            let cls = "opt-item";
+            if (picked !== undefined) {
+              if (oi === q.answer) cls += " correct";
+              else if (oi === picked) cls += " wrong";
+            }
+            return `<button class="${cls}" onclick="answerChapterQ(${idx}, ${oi}, ${q.answer}, ${ch.day})"><span class="opt-letter">(${"ABCDE"[oi]})</span><span>${opt}</span></button>`;
+          }).join("");
+          const expHtml = picked !== undefined
+            ? `<div class="q-exp ${picked === q.answer ? "ok" : "bad"}">${picked === q.answer ? "✅ Correto!" : `❌ Gabarito: (${"ABCDE"[q.answer]}).`} ${q.explain}</div>`
+            : "";
+          return `<div class="q-card">
+            <div style="font-size:12px; font-weight:800; color:var(--primary); margin-bottom:6px;">Questão ${idx + 1}/${ch.challengeRefs.length} • Fonte: ${ex.badge} (Q${q.num})</div>
+            <div>${q.stemHtml}</div>
+            <div class="opts-list">${optsHtml}</div>
+            ${expHtml}
+          </div>`;
+        }).join("");
+
+        const nextBtn = ch.day < 14
+          ? `<button class="btn lg green" onclick="completeChapter(${ch.day}, true)">🎉 Concluir Dia ${ch.day} (+50 XP) e Ir ao Dia ${ch.day + 1} ▶</button>`
+          : `<button class="btn lg green" onclick="completeChapter(${ch.day}, false)">🏆 Concluir Jornada Completa (+50 XP)!</button>`;
+
+        const reviewBtn = (stats.allDone && stats.pct < 70)
+          ? `<button class="btn amber" onclick="chapterStep=1; renderMain(); window.scrollTo({top:0,behavior:'smooth'});">📖 Voltar à Parte Teórica para Revisar</button>`
+          : "";
+
+        body.innerHTML = `${scoreboardHtml}${qsHtml}${stats.allDone ? scoreboardHtml : ""}
+          <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-top:14px;">
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="btn outline" onclick="chapterStep=2; renderMain();">◀ Voltar à Prática</button>
+              ${reviewBtn}
+            </div>
+            ${nextBtn}
+          </div>`;
+      }
+    }
+
+    function saveModuleScoreIfComplete(ch) {
+      const stats = getChapterQuizStats(ch);
+      if (!stats.allDone) return;
+      pState.moduleScores = pState.moduleScores || {};
+      const prev = pState.moduleScores[ch.day];
+      if (!prev || stats.pct >= prev.pct) {
+        pState.moduleScores[ch.day] = { hits: stats.hits, total: stats.total, pct: stats.pct };
+      }
+      savePlatformState();
+    }
+
+    function answerChapterQ(qIdx, choiceIdx, rightIdx, dayNum) {
+      if (chapterAnswers[qIdx] !== undefined) return;
+      chapterAnswers[qIdx] = choiceIdx;
+      const isOk = choiceIdx === rightIdx;
+      if (isOk) { cState.xp += 15; cState.streak += 1; sfxOk(); }
+      else { cState.streak = 0; sfxBad(); }
+      const ch = D.chapters.find((c) => c.day === dayNum);
+      if (ch) {
+        const ref = ch.challengeRefs[qIdx];
+        if (ref) recordQuestionResult(ref.examId, ref.qNum, isOk, false);
+        saveModuleScoreIfComplete(ch);
+      }
+      saveCardsState();
+      renderMain();
+    }
+
+    function completeChapter(dayNum, goNext) {
+      const ch = D.chapters.find((c) => c.day === dayNum);
+      if (ch) saveModuleScoreIfComplete(ch);
+      if (!pState.completedDays.includes(dayNum)) {
+        pState.completedDays.push(dayNum);
+        cState.xp += 50;
+        sfxOk();
+        saveCardsState();
+      }
+      savePlatformState();
+      if (goNext) openChapter(dayNum + 1, 1);
+      else goTab("home");
+    }
+
+    // ==================== 3. SIMULADOR DE PROVAS & CADERNO DE ERROS ====================
+    function renderSim(root) {
+      if (revancheMode) {
+        const pendingKeys = pState.wrongQueue || [];
+        const displayKeys = Array.from(new Set([...pendingKeys, ...Object.keys(revancheAnswers)]));
+        const areaTitle = (id) => {
+          const a = (D.areas || []).find((x) => x.id === id);
+          return a ? a.title : "Geral";
+        };
+
+        if (displayKeys.length === 0) {
+          root.innerHTML = `
+            <section class="panel" style="text-align:center; padding:28px;">
+              <h2>🎉 Caderno de Erros Zerado!</h2>
+              <p style="color:var(--muted);">Você ainda não tem nenhum erro pendente (ou já superou todas as questões que havia errado na revanche!).</p>
+              <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-top:14px;">
+                <button class="btn green" onclick="revancheMode=false; renderMain();">📝 Voltar aos Simulados</button>
+                <button class="btn purple" onclick="goTab('cards'); cardsMode='vf'; renderMain();">⚡ Jogar Verdade ou Fake</button>
+              </div>
+            </section>
+          `;
+          return;
+        }
+
+        const revHtml = displayKeys.map((qKey, idx) => {
+          const [exId, qNumStr] = qKey.split("_");
+          const qNum = Number(qNumStr);
+          const ex = D.exams[exId];
+          const q = ex && ex.questions.find((x) => x.num === qNum);
+          if (!ex || !q) return "";
+          const ansObj = revancheAnswers[qKey];
+          const picked = ansObj ? ansObj.picked : undefined;
+          const optsHtml = q.options.map((opt, oi) => {
+            let cls = "opt-item";
+            if (picked !== undefined) {
+              if (oi === q.answer) cls += " correct";
+              else if (oi === picked) cls += " wrong";
+            }
+            return `<button class="${cls}" onclick="answerRevancheQ('${qKey}', '${exId}', ${qNum}, ${oi}, ${q.answer})"><span class="opt-letter">(${"ABCDE"[oi]})</span><span>${opt}</span></button>`;
+          }).join("");
+
+          let expHtml = "";
+          if (picked !== undefined) {
+            expHtml = ansObj.isCorrect
+              ? `<div class="q-exp ok"><strong>🎉 Erro Superado! (+20 XP) — Questão limpa do seu Caderno de Erros!</strong><br>${q.explain}</div>`
+              : `<div class="q-exp bad"><strong>❌ Ainda não! Gabarito oficial: (${"ABCDE"[q.answer]}).</strong> A questão permanece na sua fila de erros para revisão.<br>${q.explain}</div>`;
+          }
+
+          return `<div class="q-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:6px;">
+              <span style="font-size:12px; font-weight:800; color:var(--primary);">Revanche ${idx + 1}/${displayKeys.length} • ${ex.title} (Q${qNum})</span>
+              <span class="tag-pill ${ansObj && ansObj.isCorrect ? "done" : "late"}">${ansObj && ansObj.isCorrect ? "✅ Superada" : areaTitle(q.area)}</span>
+            </div>
+            <div>${q.stemHtml}</div>
+            <div class="opts-list">${optsHtml}</div>
+            ${expHtml}
+          </div>`;
+        }).join("");
+
+        root.innerHTML = `
+          <section class="panel" style="background:#fff1f2; border-color:#fecdd3;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <div>
+                <h2 style="margin:0;">🩹 Caderno Automático de Erros — Modo Revanche</h2>
+                <p style="margin:4px 0 0 0; font-size:13.5px; color:#334155;">Restam <strong>${pendingKeys.length}</strong> questão(ões) na sua fila de erros. Ao acertar uma questão aqui, ela sai automaticamente do Caderno de Erros e melhora seu Radar!</p>
+              </div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button class="btn sm purple" onclick="revancheAnswers={}; renderMain();">🔄 Atualizar Fila (${pendingKeys.length})</button>
+                <button class="btn sm outline" onclick="revancheMode=false; renderMain();">◀ Voltar aos Simulados</button>
+              </div>
+            </div>
+          </section>
+          ${revHtml}
+        `;
+        return;
+      }
+
+      if (!simSession) {
+        const wrongCount = (pState.wrongQueue || []).length;
+        const revancheBanner = `
+          <section class="panel" style="background:${wrongCount > 0 ? "#fff1f2" : "#f0fdf4"}; border-color:${wrongCount > 0 ? "#fda4af" : "#86efac"}; margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <div>
+                <h3 style="margin:0 0 4px 0;">🩹 Caderno Automático de Erros (Modo Revanche)</h3>
+                <div style="font-size:13.5px; color:#334155;">${wrongCount > 0 ? `Você tem <strong>${wrongCount} questão(ões)</strong> que errou nos Módulos ou Simulados aguardando revanche!` : "Nenhum erro pendente no momento! Qualquer questão que você errar nos testes cai automaticamente aqui."}</div>
+              </div>
+              <button class="btn ${wrongCount > 0 ? "red" : "green"}" onclick="openRevanche()">⚔️ ${wrongCount > 0 ? `Iniciar Revanche dos Meus Erros (${wrongCount}Q)` : "Ver Caderno de Erros (0Q)"}</button>
+            </div>
+          </section>
+        `;
+
+        const cards = Object.values(D.exams).map((ex) => {
+          const sc = pState.examScores[ex.id];
+          return `<div class="chap-card ${sc ? "done" : ""}">
+            <div>
+              <span class="tag-pill ${sc ? "done" : "today"}">${ex.badge}</span>
+              <h3 style="margin:8px 0 6px 0;">${ex.title}</h3>
+              <p style="margin:0; font-size:13.5px; color:var(--muted);">${ex.desc}</p>
+            </div>
+            <div style="display:grid; gap:6px; border-top:1px solid #e2e8f0; padding-top:10px;">
+              <div style="font-size:12.5px; font-weight:700;">Melhor nota: ${sc ? `${sc.hits}/${sc.total} (${sc.pct}%)` : "Ainda não realizada"}</div>
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <button class="btn sm" onclick="startExamInSim('${ex.id}', 'instant')">⚡ Treino (Corrige na hora)</button>
+                <button class="btn sm green" onclick="startExamInSim('${ex.id}', 'real')">⏱️ Modo Prova (Nota no final)</button>
+              </div>
+            </div>
+          </div>`;
+        }).join("");
+
+        root.innerHTML = `
+          ${revancheBanner}
+          <section class="panel">
+            <h2 style="margin-top:0;">📝 Simulador Completo de Provas (Sem Sair da Página!)</h2>
+            <p style="color:var(--muted); font-size:14px; margin-top:0;">Escolha qualquer uma das <strong>7 provas completas (220 questões no total)</strong> e responda direto na tela com cronômetro, cartão de respostas e gabarito comentado:</p>
+            <div class="story-map">${cards}</div>
+          </section>
+        `;
+        return;
+      }
+
+      const ex = D.exams[simSession.examId];
+      const qs = ex.questions;
+      const curQ = qs[simSession.curIdx];
+      const picked = simSession.answers[curQ.num];
+      const showCorrection = simSession.submitted || (simSession.mode === "instant" && picked !== undefined);
+
+      const palette = qs.map((q, idx) => {
+        const ans = simSession.answers[q.num];
+        let cls = "pal-btn";
+        if (idx === simSession.curIdx) cls += " cur";
+        if (simSession.submitted || (simSession.mode === "instant" && ans !== undefined)) {
+          if (ans === q.answer) cls += " ok";
+          else if (ans !== undefined) cls += " bad";
+        } else if (ans !== undefined) {
+          cls += " ans";
+        }
+        return `<button class="${cls}" onclick="simSession.curIdx=${idx}; renderMain();">${q.num}</button>`;
+      }).join("");
+
+      const optsHtml = curQ.options.map((opt, oi) => {
+        let cls = "opt-item";
+        if (showCorrection) {
+          if (oi === curQ.answer) cls += " correct";
+          else if (oi === picked) cls += " wrong";
+        } else if (oi === picked) {
+          cls += " selected";
+        }
+        return `<button class="${cls}" onclick="answerSimQ(${curQ.num}, ${oi}, ${curQ.answer})"><span class="opt-letter">(${"ABCDE"[oi]})</span><span>${opt}</span></button>`;
+      }).join("");
+
+      const expHtml = showCorrection
+        ? `<div class="q-exp ${picked === curQ.answer ? "ok" : "bad"}"><strong>${picked === curQ.answer ? "✅ Acertou!" : `❌ Gabarito oficial: (${"ABCDE"[curQ.answer]}).`}</strong> ${curQ.explain}</div>`
+        : "";
+
+      let summaryHtml = "";
+      if (simSession.submitted) {
+        const hits = qs.filter((q) => simSession.answers[q.num] === q.answer).length;
+        const pct = Math.round((hits / qs.length) * 100);
+        summaryHtml = `<div class="callout callout-note"><strong>🏁 Prova Entregue!</strong> Você acertou <strong>${hits} de ${qs.length} questões (${pct}%)</strong>. Clique nos números acima para revisar cada questão comentada!</div>`;
+      }
+
+      root.innerHTML = `
+        <section class="panel">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+            <div><strong>${ex.title}</strong> <span class="tag-pill">${simSession.mode === "instant" ? "Modo Treino" : "Modo Prova Real"}</span></div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <span class="tag-pill today" id="simTimerDisplay">⏱️ ${fmtTimer(simSession.secLeft)}</span>
+              ${!simSession.submitted ? `<button class="btn sm green" onclick="submitSim()">✅ Entregar Prova</button>` : ""}
+              <button class="btn sm outline" onclick="if(simTimerId)clearInterval(simTimerId); simSession=null; renderMain();">✕ Trocar Prova</button>
+            </div>
+          </div>
+
+          ${summaryHtml}
+          <div class="sim-palette">${palette}</div>
+
+          <div class="q-card">
+            <div style="font-weight:800; color:var(--primary); margin-bottom:8px;">Questão ${curQ.num} de ${qs.length}</div>
+            <div>${curQ.stemHtml}</div>
+            <div class="opts-list">${optsHtml}</div>
+            ${expHtml}
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <button class="btn outline" ${simSession.curIdx === 0 ? "disabled" : ""} onclick="simSession.curIdx--; renderMain();">◀ Anterior</button>
+            <span style="font-size:13px; color:var(--muted);">Respondidas: ${Object.keys(simSession.answers).length} / ${qs.length}</span>
+            <button class="btn" ${simSession.curIdx >= qs.length - 1 ? "disabled" : ""} onclick="simSession.curIdx++; renderMain();">Próxima ▶</button>
+          </div>
+        </section>
+      `;
+    }
+
+    function answerRevancheQ(qKey, examId, qNum, oi, rightAns) {
+      if (revancheAnswers[qKey] && revancheAnswers[qKey].picked !== undefined) return;
+      const isOk = oi === rightAns;
+      revancheAnswers[qKey] = { picked: oi, isCorrect: isOk };
+      if (isOk) { cState.xp += 20; cState.streak += 1; sfxOk(); }
+      else { cState.streak = 0; sfxBad(); }
+      recordQuestionResult(examId, qNum, isOk, true);
+      saveCardsState();
+      renderMain();
+    }
+
+    function answerSimQ(qNum, oi, rightAns) {
+      if (simSession.submitted) return;
+      if (simSession.mode === "instant" && simSession.answers[qNum] !== undefined) return;
+      simSession.answers[qNum] = oi;
+      if (simSession.mode === "instant") {
+        const isOk = oi === rightAns;
+        if (isOk) { cState.xp += 10; cState.streak += 1; sfxOk(); }
+        else { cState.streak = 0; sfxBad(); }
+        recordQuestionResult(simSession.examId, qNum, isOk, false);
+        saveCardsState();
+      }
+      renderMain();
+    }
+
+    function submitSim() {
+      const ex = D.exams[simSession.examId];
+      simSession.submitted = true;
+      ex.questions.forEach((q) => {
+        if (simSession.mode === "real" || simSession.answers[q.num] !== undefined) {
+          recordQuestionResult(ex.id, q.num, simSession.answers[q.num] === q.answer, false);
+        }
+      });
+      const hits = ex.questions.filter((q) => simSession.answers[q.num] === q.answer).length;
+      const pct = Math.round((hits / ex.questions.length) * 100);
+      const prev = pState.examScores[ex.id];
+      if (!prev || hits >= prev.hits) pState.examScores[ex.id] = { hits, total: ex.questions.length, pct };
+      cState.xp += hits * 5;
+      sfxOk();
+      saveCardsState();
+      savePlatformState();
+      renderMain();
+    }
+
+    // ==================== 4. APOSTILA & COLA NA TELA ====================
+    function selectApostila(id) { activeApostilaId = id; renderMain(); }
+    function renderApostila(root) {
+      const tabs = D.apostilaSections.map((s) => `<button class="chip ${activeApostilaId === s.id ? "active" : ""}" onclick="selectApostila('${s.id}')">${s.title}</button>`).join("");
+      let bodyHtml = "";
+      if (apostilaQuery.trim().length >= 2) {
+        const q = apostilaQuery.trim().toLowerCase();
+        const matches = D.apostilaSections.filter((s) => s.html.toLowerCase().includes(q));
+        bodyHtml = matches.length
+          ? matches.map((m) => `<div style="border-bottom:2px solid #e2e8f0; padding-bottom:14px; margin-bottom:14px;"><span class="tag-pill today">${m.title}</span>${m.html}</div>`).join("")
+          : `<p>Nenhum resultado encontrado para "<strong>${escapeHtml(apostilaQuery)}</strong>".</p>`;
+      } else {
+        const sec = D.apostilaSections.find((s) => s.id === activeApostilaId) || D.apostilaSections[0];
+        bodyHtml = sec.html;
+      }
+
+      root.innerHTML = `
+        <section class="panel">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <h2 style="margin:0;">📖 Apostila &amp; Cola de Bolso (Leitura Direta)</h2>
+            <input type="search" value="${escapeHtml(apostilaQuery)}" placeholder="🔍 Buscar assunto (ex: SMTP, 1FN, Cultismo)..." oninput="apostilaQuery=this.value; renderMain();" style="padding:8px 12px; border:2px solid var(--border); border-radius:10px; min-width:260px;" />
+          </div>
+          <div class="subtabs">${tabs}</div>
+          <div class="lesson-body">${bodyHtml}</div>
+        </section>
+      `;
+    }
+
+    // ==================== 5. FLASHCARDS & PARES ====================
+    const TAG_LABELS = {
+      "ALL": "Todos (120)",
+      "REVIEW": "📌 Revisar",
+      "00_Moldes_FAT": "0. Moldes FAT",
+      "01_Programacao": "1. Programação",
+      "02_Banco_Dados": "2. Banco de Dados",
+      "03_Design_Digital": "3. Design & UX",
+      "04_Web_Redes_SO": "4. Web, Redes & SO",
+      "05_Ingles_Etica": "5. Inglês & Ética",
+      "06_MTec_Base_Comum": "6. Base Comum M-Tec"
+    };
+
+    function renderCardsArea(root) {
+      const vfTotal = (D.vfStatements || []).length;
+      root.innerHTML = `
+        <section class="panel">
+          <div class="subtabs">
+            <button class="chip ${cardsMode === "cards" && cardViewStyle === "mc" ? "active" : ""}" onclick="cardsMode='cards'; cardViewStyle='mc'; clearCardMc(); renderMain();">🎯 Flashcards Múltipla Escolha (${D.flashcards.length})</button>
+            <button class="chip ${cardsMode === "cards" && cardViewStyle === "flip" ? "active" : ""}" onclick="cardsMode='cards'; cardViewStyle='flip'; isFlipped=false; renderMain();">🃏 Flashcards 3D (Virar Card)</button>
+            <button class="chip ${cardsMode === "vf" ? "active" : ""}" onclick="cardsMode='vf'; renderMain();">⚡ Verdade ou Fake da Banca (${vfTotal})</button>
+            <button class="chip ${cardsMode === "pairs" ? "active" : ""}" onclick="cardsMode='pairs'; renderMain();">🔗 Associação de Pares</button>
+          </div>
+          <div id="cardsMount"></div>
+        </section>
+      `;
+      const mount = document.getElementById("cardsMount");
+      if (cardsMode === "cards") renderCardsOnlyInto(mount, cardsTag, true);
+      else if (cardsMode === "vf") renderVfInto(mount);
+      else renderPairsInto(mount);
+    }
+
+    function fmtInlineCode(s) {
+      return escapeHtml(s)
+        .replace(/`([^`]+)`/g, "<code>$1</code>")
+        .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    }
+
+    function getVfPool() {
+      const all = D.vfStatements || [];
+      return vfArea === "ALL" ? all : all.filter((v) => v.area === vfArea);
+    }
+
+    function renderVfInto(container) {
+      const areas = D.areas || [];
+      const pool = getVfPool();
+      if (!pool.length) {
+        container.innerHTML = "<p>Nenhuma afirmativa encontrada.</p>";
+        return;
+      }
+      if (vfIdx >= pool.length) vfIdx = 0;
+      const item = pool[vfIdx];
+      const picked = vfSessionPicked[item.id];
+      const areaObj = areas.find((a) => a.id === item.area);
+
+      const allHistEntries = Object.entries(pState.vfHistory || {});
+      const totalAns = allHistEntries.length;
+      const totalHits = allHistEntries.filter(([, ok]) => ok).length;
+
+      const filterTabs = [
+        `<button class="chip ${vfArea === "ALL" ? "active" : ""}" onclick="vfArea='ALL'; vfIdx=0; renderMain();">Todas (${(D.vfStatements || []).length})</button>`,
+        ...areas.map((a) => `<button class="chip ${vfArea === a.id ? "active" : ""}" onclick="vfArea='${a.id}'; vfIdx=0; renderMain();">${a.title}</button>`)
+      ].join("");
+
+      let fbHtml = "";
+      if (picked !== undefined) {
+        const acertou = picked === item.isTrue;
+        fbHtml = `<div class="q-exp ${acertou ? "ok" : "bad"}" style="margin-top:12px;">
+          <strong>${item.verdictTitle}</strong> — ${acertou ? "✅ Você acertou (+10 XP)!" : "❌ Ops! Atenção à pegadinha:"}<br>
+          ${fmtInlineCode(item.explain)}
+        </div>`;
+      }
+
+      container.innerHTML = `
+        <div class="subtabs">${filterTabs}</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px; font-size:13px;">
+          <div><strong>⚡ Treino Arcade de Pegadinhas (Estilo I, II e III):</strong> julgue rápido se a frase é <strong>Verdade</strong> ou <strong>Fake da Banca</strong>!</div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <span class="tag-pill done">Placar Geral: ${totalHits}/${totalAns} acertos</span>
+            <span class="tag-pill today">🔥 ${cState.streak} • ${vfIdx + 1}/${pool.length}</span>
+          </div>
+        </div>
+        <div class="q-card" style="background:#f8fafc;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:10px;">
+            <span class="tag-pill today">${areaObj ? areaObj.title : item.area}</span>
+            <span class="tag-pill">${escapeHtml(item.topic)}</span>
+          </div>
+          <h3 style="margin:6px 0 16px 0; font-size:18.5px; line-height:1.45;">${fmtInlineCode(item.text)}</h3>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:10px;">
+            <button id="vfBtnTrue" class="btn lg ${picked === undefined ? "green" : (item.isTrue ? "green" : (picked === true ? "red" : "outline"))}" onclick="answerVf(true, ${item.id})">✅ É VERDADE (Tecla V)</button>
+            <button id="vfBtnFalse" class="btn lg ${picked === undefined ? "red" : (!item.isTrue ? "green" : (picked === false ? "red" : "outline"))}" onclick="answerVf(false, ${item.id})">❌ É FAKE DA BANCA! (Tecla F)</button>
+          </div>
+          ${fbHtml}
+        </div>
+        <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:12px;">
+          <button class="btn sm dark" onclick="vfIdx=(vfIdx-1+${pool.length})%${pool.length}; renderMain();">◀ Anterior</button>
+          <button class="btn sm purple" onclick="pickRandomVf(${pool.length})">🎲 Sortear Pegadinha</button>
+          <button id="vfNextBtn" class="btn sm green" onclick="vfIdx=(vfIdx+1)%${pool.length}; renderMain();">Próxima Afirmativa ▶ (Espaço/Seta)</button>
+          <button class="btn sm outline" onclick="vfSessionPicked={}; renderMain();">🔄 Nova Rodada</button>
+        </div>
+      `;
+    }
+
+    function answerVf(userSaidTrue, itemId) {
+      if (vfSessionPicked[itemId] !== undefined) return;
+      const item = (D.vfStatements || []).find((v) => v.id === itemId);
+      if (!item) return;
+      vfSessionPicked[itemId] = userSaidTrue;
+      const isOk = userSaidTrue === item.isTrue;
+      pState.vfHistory = pState.vfHistory || {};
+      pState.vfHistory[String(itemId)] = isOk;
+      if (isOk) { cState.xp += 10; cState.streak += 1; sfxOk(); }
+      else { cState.streak = 0; sfxBad(); }
+      saveCardsState();
+      savePlatformState();
+      renderMain();
+    }
+
+    function pickRandomVf(len) {
+      if (len > 1) {
+        let next = Math.floor(Math.random() * len);
+        if (next === vfIdx) next = (vfIdx + 1) % len;
+        vfIdx = next;
+      }
+      renderMain();
+    }
+
+    function getOrBuildCardMc(item) {
+      if (cardMcCache[item.idx]) return cardMcCache[item.idx];
+      const usedTexts = new Set([item.back]);
+      const sameTag = D.flashcards
+        .filter((c) => c.tag === item.tag && c.front !== item.front)
+        .sort(() => Math.random() - 0.5);
+      const others = D.flashcards
+        .filter((c) => c.tag !== item.tag && c.front !== item.front)
+        .sort(() => Math.random() - 0.5);
+      const distractors = [];
+      for (const cand of [...sameTag, ...others]) {
+        if (!usedTexts.has(cand.back)) {
+          usedTexts.add(cand.back);
+          distractors.push({ text: cand.back, isCorrect: false });
+          if (distractors.length === 3) break;
+        }
+      }
+      const options = [{ text: item.back, isCorrect: true }, ...distractors].sort(() => Math.random() - 0.5);
+      cardMcCache[item.idx] = { cardIdx: item.idx, options, picked: null };
+      return cardMcCache[item.idx];
+    }
+
+    function answerCardMc(optIdx, cardGlobalIdx) {
+      const mc = cardMcCache[cardGlobalIdx];
+      if (!mc || mc.picked !== null) return;
+      mc.picked = optIdx;
+      const isRight = mc.options[optIdx].isCorrect;
+      if (isRight) {
+        if (!cState.known.includes(cardGlobalIdx)) cState.known.push(cardGlobalIdx);
+        cState.review = cState.review.filter((i) => i !== cardGlobalIdx);
+        cState.xp += 15;
+        cState.streak += 1;
+        sfxOk();
+      } else {
+        if (!cState.review.includes(cardGlobalIdx)) cState.review.push(cardGlobalIdx);
+        cState.known = cState.known.filter((i) => i !== cardGlobalIdx);
+        cState.streak = 0;
+        sfxBad();
+      }
+      saveCardsState();
+      renderMain();
+    }
+
+    function pickRandomCard(listLen) {
+      if (listLen > 1) {
+        let next = Math.floor(Math.random() * listLen);
+        if (next === cardIdx) next = (cardIdx + 1) % listLen;
+        cardIdx = next;
+      }
+      isFlipped = false;
+      clearCardMc();
+      renderMain();
+    }
+
+    function renderCardsOnlyInto(container, tagFilter, showTrail = false) {
+      let list = D.flashcards.map((c, idx) => ({ ...c, idx }));
+      let fallbackNote = "";
+      if (tagFilter === "REVIEW") {
+        const activeMcIds = Object.keys(cardMcCache).filter((k) => cardMcCache[k].picked !== null).map(Number);
+        const rev = list.filter((c) => cState.review.includes(c.idx) || activeMcIds.includes(c.idx));
+        if (rev.length > 0 || showTrail) list = rev;
+        else fallbackNote = `<div class="callout callout-note" style="margin-bottom:10px;">Sem cards pendentes na fila de revisão — exibindo o baralho completo de revisão final (${list.length} cards).</div>`;
+      } else if (tagFilter !== "ALL") list = list.filter((c) => c.tag === tagFilter);
+
+      const trailHtml = showTrail
+        ? `<div class="subtabs">${Object.entries(TAG_LABELS).map(([k, lb]) => `<button class="chip ${cardsTag === k ? "active" : ""}" onclick="cardsTag='${k}'; cardIdx=0; isFlipped=false; clearCardMc(); renderMain();">${lb}${k === "REVIEW" ? ` (${cState.review.length})` : ""}</button>`).join("")}</div>`
+        : "";
+
+      if (list.length === 0) {
+        container.innerHTML = `${trailHtml}<div style="text-align:center; padding:24px;"><h3>Nenhum card nesta fila!</h3></div>`;
+        return;
+      }
+      if (cardIdx >= list.length) cardIdx = 0;
+      const item = list[cardIdx];
+      const known = cState.known.includes(item.idx);
+      const inReview = cState.review.includes(item.idx);
+      const statusLabel = known ? "• ✅ Dominado" : (inReview ? "• 🔁 Para Revisar" : "");
+
+      const modeSwitcherHtml = `
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+          <span style="font-size:13px; color:var(--muted);">Card ${cardIdx + 1} de ${list.length} <strong>${statusLabel}</strong></span>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button class="chip ${cardViewStyle === "mc" ? "active" : ""}" onclick="cardViewStyle='mc'; clearCardMc(); renderMain();">🎯 Múltipla Escolha (A-D)</button>
+            <button class="chip ${cardViewStyle === "flip" ? "active" : ""}" onclick="cardViewStyle='flip'; isFlipped=false; renderMain();">🃏 Virar Card 3D</button>
+          </div>
+        </div>
+      `;
+
+      if (cardViewStyle === "mc") {
+        const mc = getOrBuildCardMc(item);
+        const optsHtml = mc.options.map((opt, oi) => {
+          let cls = "opt-item";
+          if (mc.picked !== null) {
+            if (opt.isCorrect) cls += " correct";
+            else if (oi === mc.picked) cls += " wrong";
+          }
+          return `<button class="${cls}" onclick="answerCardMc(${oi}, ${item.idx})"><span class="opt-letter">(${"ABCD"[oi]})</span><span>${escapeHtml(opt.text)}</span></button>`;
+        }).join("");
+
+        let fbHtml = "";
+        if (mc.picked !== null) {
+          const isOk = mc.options[mc.picked].isCorrect;
+          fbHtml = isOk
+            ? `<div class="q-exp ok">✅ Correto! (+15 XP) — Card marcado como <strong>Dominado</strong>!</div>`
+            : `<div class="q-exp bad">❌ Ops! Card enviado para <strong>'Revisar depois'</strong>. Veja a resposta correta destacada em verde acima.</div>`;
+        }
+
+        container.innerHTML = `
+          ${trailHtml}${fallbackNote}${modeSwitcherHtml}
+          <div class="q-card" style="background:#f8fafc;">
+            <div style="margin-bottom:8px;"><span class="tag-pill today">${TAG_LABELS[item.tag] || item.tag}</span></div>
+            <h3 style="margin:6px 0 12px 0; font-size:18px;">${escapeHtml(item.front)}</h3>
+            <div class="opts-list">${optsHtml}</div>
+            ${fbHtml}
+          </div>
+          <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:12px;">
+            <button class="btn sm dark" onclick="cardIdx=(cardIdx-1+${list.length})%${list.length}; isFlipped=false; clearCardMc(); renderMain();">◀ Card Anterior</button>
+            <button class="btn sm purple" onclick="pickRandomCard(${list.length})">🎲 Sortear Outro Card</button>
+            <button class="btn sm green" onclick="cardIdx=(cardIdx+1)%${list.length}; isFlipped=false; clearCardMc(); renderMain();">Próximo Card ▶</button>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          ${trailHtml}${fallbackNote}${modeSwitcherHtml}
+          <div style="text-align:right; font-size:12.5px; color:var(--muted); margin-bottom:4px;">Toque no card abaixo para virar</div>
+          <div class="scene">
+            <div class="card3d ${isFlipped ? "flipped" : ""}" onclick="isFlipped=!isFlipped; renderMain();">
+              <div class="face front">
+                <span class="tag-pill today" style="margin-bottom:10px;">${TAG_LABELS[item.tag] || item.tag}</span>
+                <div style="font-size:18px; font-weight:700;">${escapeHtml(item.front)}</div>
+              </div>
+              <div class="face back">
+                <span class="tag-pill done" style="margin-bottom:10px;">Resposta &amp; Pegadinha</span>
+                <div style="font-size:16px; font-weight:600; color:#14532d;">${escapeHtml(item.back)}</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:12px;">
+            <button class="btn sm dark" onclick="cardIdx=(cardIdx-1+${list.length})%${list.length}; isFlipped=false; clearCardMc(); renderMain();">◀ Anterior</button>
+            <button class="btn sm amber" onclick="markCardReview(${item.idx}, ${list.length})">🔁 Revisar depois</button>
+            <button class="btn sm green" onclick="markCardKnown(${item.idx}, ${list.length})">✅ Já sei (+10 XP)</button>
+            <button class="btn sm dark" onclick="cardIdx=(cardIdx+1)%${list.length}; isFlipped=false; clearCardMc(); renderMain();">Próximo ▶</button>
+          </div>
+        `;
+      }
+    }
+
+    function markCardKnown(idx, len) {
+      if (!cState.known.includes(idx)) cState.known.push(idx);
+      cState.review = cState.review.filter((i) => i !== idx);
+      cState.xp += 10; cState.streak += 1; sfxOk();
+      cardIdx = (cardIdx + 1) % Math.max(1, len); isFlipped = false; clearCardMc();
+      saveCardsState(); renderMain();
+    }
+    function markCardReview(idx, len) {
+      if (!cState.review.includes(idx)) cState.review.push(idx);
+      cState.known = cState.known.filter((i) => i !== idx);
+      cardIdx = (cardIdx + 1) % Math.max(1, len); isFlipped = false; clearCardMc();
+      saveCardsState(); renderMain();
+    }
+
+    let pairState = { leftSel: null, rightSel: null, matched: 0, total: 6 };
+    function renderPairsInto(container) {
+      const chosen = [...D.pairs].sort(() => Math.random() - 0.5).slice(0, 6);
+      const left = [...chosen].sort(() => Math.random() - 0.5);
+      const right = [...chosen].sort(() => Math.random() - 0.5);
+      pairState = { leftSel: null, rightSel: null, matched: 0, total: chosen.length };
+
+      container.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <div><strong>🔗 Associação de Pares:</strong> ligue cada termo da esquerda à definição da direita.</div>
+          <button class="btn sm purple" onclick="renderPairsInto(this.parentElement.parentElement)">🔄 Nova Rodada</button>
+        </div>
+        <div class="pairs-wrap">
+          <div class="pair-col" id="pLeft"></div>
+          <div class="pair-col" id="pRight"></div>
+        </div>
+        <div id="pairMsg" style="margin-top:10px; font-weight:700; color:var(--green);"></div>
+      `;
+      left.forEach((p) => {
+        const b = document.createElement("button");
+        b.className = "pair-item"; b.textContent = p.term; b.dataset.term = p.term;
+        b.onclick = () => pickPair("left", b);
+        container.querySelector("#pLeft").appendChild(b);
+      });
+      right.forEach((p) => {
+        const b = document.createElement("button");
+        b.className = "pair-item"; b.textContent = p.def; b.dataset.term = p.term;
+        b.onclick = () => pickPair("right", b);
+        container.querySelector("#pRight").appendChild(b);
+      });
+    }
+
+    function pickPair(side, el) {
+      if (el.classList.contains("matched")) return;
+      const col = el.parentElement;
+      col.querySelectorAll(".pair-item").forEach((x) => x.classList.remove("selected"));
+      el.classList.add("selected");
+      if (side === "left") pairState.leftSel = el; else pairState.rightSel = el;
+      if (pairState.leftSel && pairState.rightSel) {
+        const l = pairState.leftSel, r = pairState.rightSel;
+        pairState.leftSel = null; pairState.rightSel = null;
+        if (l.dataset.term === r.dataset.term) {
+          l.classList.remove("selected"); r.classList.remove("selected");
+          l.classList.add("matched"); r.classList.add("matched");
+          pairState.matched += 1; cState.xp += 10; cState.streak += 1; sfxOk();
+          if (pairState.matched === pairState.total) {
+            cState.xp += 20;
+            const msg = l.closest("div.pairs-wrap").nextElementSibling;
+            if (msg) msg.textContent = "🎉 Rodada completa! (+20 XP bônus)";
+          }
+          saveCardsState();
+        } else {
+          l.classList.add("error"); r.classList.add("error");
+          cState.streak = 0; sfxBad(); saveCardsState();
+          setTimeout(() => { l.classList.remove("selected","error"); r.classList.remove("selected","error"); }, 450);
+        }
+      }
+    }
+
+    // ==================== 6. MICRO-LABS INTERATIVOS NA TELA ====================
+    function renderLabsArea(root) {
+      root.innerHTML = `
+        <section class="panel">
+          <div class="subtabs">
+            <button class="chip ${activeLabTab === "lab_tipos" ? "active" : ""}" onclick="activeLabTab='lab_tipos'; renderMain();">🔤 Casting &amp; Lógica (Dia 1)</button>
+            <button class="chip ${activeLabTab === "lab02" ? "active" : ""}" onclick="activeLabTab='lab02'; renderMain();">🧮 Teste de Mesa &amp; Matriz (Dias 2-3)</button>
+            <button class="chip ${activeLabTab === "lab03" ? "active" : ""}" onclick="activeLabTab='lab03'; renderMain();">🗄️ SQL &amp; 1FN (Dias 6-7)</button>
+            <button class="chip ${activeLabTab === "lab04" ? "active" : ""}" onclick="activeLabTab='lab04'; renderMain();">🎨 Vetor vs Bitmap &amp; Cores (Dia 8)</button>
+            <button class="chip ${activeLabTab === "lab01" ? "active" : ""}" onclick="activeLabTab='lab01'; renderMain();">🌐 Web &amp; Cookies (Dia 9)</button>
+            <button class="chip ${activeLabTab === "lab_bin" ? "active" : ""}" onclick="activeLabTab='lab_bin'; renderMain();">🔢 Binário, Hex &amp; Linux (Dia 10)</button>
+            <button class="chip ${activeLabTab === "lab_mtec" ? "active" : ""}" onclick="activeLabTab='lab_mtec'; renderMain();">🎓 Base M-Tec Mat/Quím/Óptica (Dia 13)</button>
+          </div>
+          <div id="labMount"></div>
+        </section>
+      `;
+      const m = document.getElementById("labMount");
+      if (activeLabTab === "lab_tipos") renderLabTiposInto(m);
+      else if (activeLabTab === "lab01") renderLab01Into(m);
+      else if (activeLabTab === "lab02") renderLab02Into(m);
+      else if (activeLabTab === "lab03") renderLab03Into(m);
+      else if (activeLabTab === "lab04") renderLab04Into(m);
+      else if (activeLabTab === "lab_bin") renderLabBinInto(m);
+      else renderLabMTecInto(m);
+    }
+
+    function renderLab01Into(el) {
+      el.innerHTML = `
+        <h3>🌐 Lab 01 — Links (_blank vs _self), Cookies Locais (~4 KB) e DOM</h3>
+        <div class="lab-grid">
+          <div class="q-card">
+            <strong>1. Tag &lt;a&gt; (target)</strong><br><br>
+            <a class="btn sm" href="https://example.com" target="_blank" rel="noopener">Abrir com target="_blank" (Nova Aba)</a><br><br>
+            <small><code>_blank</code> abre em nova aba; <code>_self</code> abre na mesma aba.</small>
+          </div>
+          <div class="q-card">
+            <strong>2. Cookies Locais (F12 &gt; Application)</strong><br><br>
+            <input id="l1CVal" value="Aluno_ETEC" style="padding:6px; border:1px solid #94a3b8; border-radius:6px; width:140px;">
+            <button class="btn sm green" onclick="document.cookie='etec_s='+encodeURIComponent(document.getElementById('l1CVal').value)+'; path=/'; showL1Cookie('Cookie de SESSÃO gravado!')">Sessão</button>
+            <button class="btn sm purple" onclick="document.cookie='etec_p='+encodeURIComponent(document.getElementById('l1CVal').value)+'; max-age=604800; path=/'; showL1Cookie('Cookie PERMANENTE (7 dias) gravado!')">Permanente</button>
+            <button class="btn sm red" onclick="document.cookie='etec_s=; max-age=0; path=/'; document.cookie='etec_p=; max-age=0; path=/'; showL1Cookie('Cookies apagados!')">Limpar</button>
+            <pre class="q-code" id="l1COut">Clique acima para criar e ler document.cookie (fica no navegador, ~4 KB, NUNCA na nuvem!).</pre>
+          </div>
+        </div>
+        <div class="q-card">
+          <strong>3. Árvore DOM no JavaScript:</strong>
+          <button class="btn sm" onclick="l1TestDom()">Testar getElementById / createTextNode / documentElement / parentNode</button>
+          <div id="l1DomTarget" style="margin-top:8px; padding:8px; background:#eff6ff; border-radius:6px;">Elemento alvo (id="l1DomTarget")</div>
+          <pre class="q-code" id="l1DomOut">Clique no botão para inspecionar a árvore DOM...</pre>
+        </div>
+      `;
+    }
+    function showL1Cookie(msg) {
+      const c = document.cookie || "(vazio em file:// — alguns navegadores só exibem cookies via http://localhost)";
+      document.getElementById("l1COut").textContent = `${msg}\ndocument.cookie => ${c}`;
+    }
+    function l1TestDom() {
+      const a = document.getElementById("l1DomTarget");
+      a.appendChild(document.createTextNode(" + [Texto via createTextNode]"));
+      document.getElementById("l1DomOut").textContent = `getElementById => <${a.tagName}>\ndocumentElement (raiz) => <${document.documentElement.tagName}>\nparentNode => <${a.parentNode.tagName}>`;
+    }
+
+    let l2Stack = [10];
+    function renderLab02Into(el) {
+      el.innerHTML = `
+        <h3>🧮 Lab 02 — Teste de Mesa (DIV/MOD), Matriz 3x3 e Pilha LIFO</h3>
+        <div class="lab-grid">
+          <div class="q-card">
+            <strong>1. Teste de Mesa Linha a Linha (Decimal &rarr; Binário)</strong><br><br>
+            <input id="l2Num" type="number" value="250" min="1" max="255" style="padding:6px; width:80px; border:1px solid #94a3b8; border-radius:6px;">
+            <button class="btn sm" onclick="runL2Mesa()">Executar Teste de Mesa</button>
+            <pre class="q-code" id="l2MesaOut">Clique para rastrear passo a passo...</pre>
+          </div>
+          <div class="q-card">
+            <strong>2. Matriz 3x3 &amp; Pilha LIFO (PUSH / POP)</strong><br><br>
+            <button class="btn sm green" onclick="l2Stack.push(Math.floor(Math.random()*90)+10); updateL2Stack()">PUSH(novo)</button>
+            <button class="btn sm red" onclick="l2Stack.pop(); updateL2Stack()">POP() (remove topo)</button>
+            <pre class="q-code" id="l2StackOut">Pilha atual: [${l2Stack.join(", ")}] (topo à direita)\n\nMatriz M = [[1,3,5],[2,4,8],[1,1,1]]:\nDiagonal Principal (i==j): M[0][0](1)+M[1][1](4)+M[2][2](1) = 6\nPegadinha Secundária: 5+4+1 = 10</pre>
+          </div>
+        </div>
+      `;
+      runL2Mesa();
+    }
+    function runL2Mesa() {
+      const num = Math.max(1, Math.min(255, Number(document.getElementById("l2Num").value) || 250));
+      let y = num, x = "", passo = 1;
+      const out = ["Passo | y | y MOD 2 | y DIV 2 | x"];
+      while (y > 0) {
+        const r = y % 2, p = Math.floor(y / 2);
+        x = String(r) + x;
+        out.push(`${String(passo).padEnd(5)} | ${String(y).padEnd(3)} | ${r}       | ${String(p).padEnd(7)} | ${x}`);
+        y = p; passo += 1;
+      }
+      out.push(`Final: ${num}(10) = ${x}(2) = ${num.toString(16).toUpperCase()}(16)`);
+      document.getElementById("l2MesaOut").textContent = out.join("\n");
+    }
+    function updateL2Stack() {
+      document.getElementById("l2StackOut").textContent = `Pilha LIFO atual: [${l2Stack.join(", ")}] (topo = ${l2Stack.length ? l2Stack[l2Stack.length - 1] : "vazia"})\n\nMatriz M = [[1,3,5],[2,4,8],[1,1,1]]:\nDiagonal Principal: 1 + 4 + 1 = 6 | Secundária: 10`;
+    }
+
+    let l3Rows = [{ id: 1, nome: "Ana Paula", cidade: "São Paulo" }, { id: 2, nome: "Bruno Silva", cidade: "Campinas" }, { id: 3, nome: "Carla Dias", cidade: "São Paulo" }];
+    let l3Normalized = false;
+    function renderLab03Into(el) {
+      el.innerHTML = `
+        <h3>🗄️ Lab 03 — Sublinguagens SQL (DDL, DML, DQL) e 1ª Forma Normal (1FN)</h3>
+        <div class="lab-grid">
+          <div class="q-card">
+            <strong>1. Simulador DDL / DML / DQL Interativo</strong><br><br>
+            <button class="btn sm" onclick="l3Rows.push({id:l3Rows.length+1, nome:'Novo Aluno', cidade:'São Paulo'}); drawL3()">DML: INSERT (SP)</button>
+            <button class="btn sm amber" onclick="if(l3Rows.length>1)l3Rows.pop(); drawL3()">DML: DELETE último</button>
+            <button class="btn sm green" onclick="drawL3(true)">DQL: SELECT COUNT(*) WHERE cidade='São Paulo'</button>
+            <pre class="q-code" id="l3SqlOut"></pre>
+          </div>
+          <div class="q-card">
+            <strong>2. Normalização 1FN (Valores Atômicos)</strong><br><br>
+            <button class="btn sm purple" onclick="l3Normalized=!l3Normalized; drawL3()">${"Alternar Tabela Fora da 1FN ↔ Normalizada 1FN"}</button>
+            <pre class="q-code" id="l3NormOut"></pre>
+          </div>
+        </div>
+      `;
+      drawL3(false);
+    }
+    function drawL3(showCount = false) {
+      const sp = l3Rows.filter((r) => r.cidade === "São Paulo").length;
+      const lines = ["Tabela clientes (DDL CREATE TABLE):"];
+      l3Rows.forEach((r) => lines.push(`  id=${r.id} | ${r.nome} | ${r.cidade}`));
+      if (showCount) lines.push(`\nDQL SELECT COUNT(*) FROM clientes WHERE cidade='São Paulo';\n=> Resultado: ${sp} clientes! (NUNCA ponha COUNT() dentro do WHERE!)`);
+      document.getElementById("l3SqlOut").textContent = lines.join("\n");
+      document.getElementById("l3NormOut").textContent = l3Normalized
+        ? "[CERTO — 1FN Aplicada (1 valor atômico por célula)]:\nTabela Alunos:     id=1 | nome='Carlos'\nTabela Telefones:  aluno_id=1 | tel='119999-0000'\n                   aluno_id=1 | tel='118888-1111'"
+        : "[ERRADO — Viola a 1FN (dois telefones juntos!)]:\nid=1 | nome='Carlos' | telefones='119999-0000, 118888-1111'";
+    }
+
+    function renderLab04Into(el) {
+      el.innerHTML = `
+        <h3>🎨 Lab 04 — Vetorial (SVG) vs Bitmap (Raster), Cores RGB/Hex/CMYK &amp; CSS3</h3>
+        <label><strong>Zoom: <span id="l4Zv">100</span>%</strong></label>
+        <input type="range" id="l4Zoom" min="100" max="800" step="50" value="100" style="width:100%; max-width:340px;" oninput="l4SetZoom(this.value)">
+        <div class="lab-grid" style="margin-top:10px;">
+          <div class="q-card">
+            <strong>Vetorial (&lt;svg&gt;) — Sem Perda!</strong>
+            <div class="viewport">
+              <svg id="l4Svg" width="75" height="75" viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="#2563eb"/><polygon points="40,14 62,56 18,56" fill="#facc15"/></svg>
+            </div>
+          </div>
+          <div class="q-card">
+            <strong>Bitmap / Raster (40x40 px) — Pixelado!</strong>
+            <div class="viewport"><canvas id="l4Cvs" width="40" height="40" style="width:75px; height:75px; image-rendering:pixelated;"></canvas></div>
+          </div>
+        </div>
+        <div class="lab-grid">
+          <div class="q-card">
+            <strong>Cores RGB / Hex / CMYK</strong><br>
+            R <input type="range" id="l4R" min="0" max="255" value="37" oninput="l4UpdateColor()">
+            G <input type="range" id="l4G" min="0" max="255" value="99" oninput="l4UpdateColor()">
+            B <input type="range" id="l4B" min="0" max="255" value="235" oninput="l4UpdateColor()">
+            <div id="l4Swatch" style="margin-top:8px; padding:12px; border-radius:8px; font-weight:700; text-align:center;">#2563EB</div>
+          </div>
+          <div class="q-card" style="text-align:center;">
+            <strong>Transformações CSS3 (Q17 - 2019)</strong><br><br>
+            <button class="btn sm" onclick="l4Tf('scale(1.35)')">scale</button>
+            <button class="btn sm" onclick="l4Tf('skew(20deg,5deg)')">skew</button>
+            <button class="btn sm" onclick="l4Tf('translate(30px,-8px)')">translate</button>
+            <button class="btn sm" onclick="l4Tf('rotate(45deg)')">rotate</button>
+            <button class="btn sm dark" onclick="l4Tf('none')">reset</button>
+            <div id="l4Box" class="css-box">CSS3</div>
+          </div>
+        </div>
+      `;
+      const cvs = document.getElementById("l4Cvs");
+      const ctx = cvs.getContext("2d");
+      ctx.fillStyle = "#2563eb"; ctx.beginPath(); ctx.arc(20,20,17,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#facc15"; ctx.beginPath(); ctx.moveTo(20,7); ctx.lineTo(31,28); ctx.lineTo(9,28); ctx.closePath(); ctx.fill();
+      l4UpdateColor();
+    }
+    function l4SetZoom(v) {
+      document.getElementById("l4Zv").textContent = v;
+      const f = Number(v) / 100;
+      document.getElementById("l4Svg").style.transform = `scale(${f})`;
+      document.getElementById("l4Cvs").style.transform = `scale(${f})`;
+    }
+    function l4UpdateColor() {
+      const r = Number(document.getElementById("l4R").value), g = Number(document.getElementById("l4G").value), b = Number(document.getElementById("l4B").value);
+      const hx = (n) => n.toString(16).padStart(2, "0").toUpperCase();
+      const hex = `#${hx(r)}${hx(g)}${hx(b)}`;
+      const sw = document.getElementById("l4Swatch");
+      sw.style.background = hex;
+      sw.style.color = (r*0.299 + g*0.587 + b*0.114) > 150 ? "#0f172a" : "#ffffff";
+      sw.textContent = `RGB(${r},${g},${b}) • HEX: ${hex}`;
+    }
+    function l4Tf(t) { document.getElementById("l4Box").style.transform = t; }
+
+    // --- Lab Tipos, Casting, DIV/MOD & Tabela Verdade (Dia 1) ---
+    let ltP = true, ltQ = false;
+    function renderLabTiposInto(el) {
+      el.innerHTML = `
+        <h3>🔤 Lab 00 — Tipos Primitivos, Casting Explícito, DIV/MOD e Tabela Verdade</h3>
+        <div class="lab-grid">
+          <div class="q-card">
+            <strong>1. Simulador de Casting &amp; Conversão Implícita vs. Explícita</strong><br><br>
+            <label>Valor decimal real (<code>double</code>):
+              <input id="ltFloat" type="number" step="0.01" value="8.99" style="padding:5px; width:90px; border:1px solid #94a3b8; border-radius:6px;" oninput="ltUpdateCast()">
+            </label>
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;">
+              <button class="btn sm" onclick="document.getElementById('ltFloat').value='8.99'; ltUpdateCast()">8.99</button>
+              <button class="btn sm" onclick="document.getElementById('ltFloat').value='3.75'; ltUpdateCast()">3.75</button>
+              <button class="btn sm" onclick="document.getElementById('ltFloat').value='-4.8'; ltUpdateCast()">-4.8</button>
+            </div>
+            <pre class="q-code" id="ltCastOut"></pre>
+          </div>
+          <div class="q-card">
+            <strong>2. Calculadora DIV &amp; MOD (Portugol / Python / JS)</strong><br><br>
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+              <label>Dividendo <input id="ltA" type="number" value="17" style="padding:5px; width:70px; border:1px solid #94a3b8; border-radius:6px;" oninput="ltUpdateDivMod()"></label>
+              <label>Divisor <input id="ltB" type="number" value="5" min="1" style="padding:5px; width:70px; border:1px solid #94a3b8; border-radius:6px;" oninput="ltUpdateDivMod()"></label>
+            </div>
+            <pre class="q-code" id="ltDivOut"></pre>
+          </div>
+        </div>
+        <div class="q-card">
+          <strong>3. Tabela Verdade Interativa (<code>E / ∧</code>, <code>OU / ∨</code>, <code>NÃO / ¬</code>)</strong><br><br>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
+            <button class="btn sm" id="ltBtnP" onclick="ltP=!ltP; ltUpdateLogic()">P = Verdadeiro</button>
+            <button class="btn sm" id="ltBtnQ" onclick="ltQ=!ltQ; ltUpdateLogic()">Q = Falso</button>
+          </div>
+          <pre class="q-code" id="ltLogicOut"></pre>
+        </div>
+      `;
+      ltUpdateCast();
+      ltUpdateDivMod();
+      ltUpdateLogic();
+    }
+    function ltUpdateCast() {
+      const v = Number(document.getElementById("ltFloat").value);
+      const val = Number.isFinite(v) ? v : 0;
+      const castInt = Math.trunc(val);
+      const rounded = Math.round(val);
+      document.getElementById("ltCastOut").textContent =
+        `double x = ${val};\nint y = (int) x; // Casting EXPLÍCITO (forçado pelo dev)\n=> Resultado em y: ${castInt}  (ATENÇÃO FAT: trunca/corta casas, NÃO arredonda para ${rounded}!)\n\nConversão IMPLÍCITA: int a = 7; double b = a; -> b = 7.0 (sem perda)\nJS concatenação implícita: "5" + 2 -> "52" (string!) | parseInt("5") + 2 -> 7`;
+    }
+    function ltUpdateDivMod() {
+      const a = Math.trunc(Number(document.getElementById("ltA").value) || 0);
+      const b = Math.max(1, Math.trunc(Number(document.getElementById("ltB").value) || 1));
+      const div = Math.trunc(a / b);
+      const mod = a % b;
+      const par = a % 2 === 0 ? "PAR (A MOD 2 == 0)" : "ÍMPAR (A MOD 2 != 0)";
+      document.getElementById("ltDivOut").textContent =
+        `${a} DIV ${b} = ${div}   (quociente inteiro: ${b} cabe ${div}x em ${a})\n${a} MOD ${b} = ${mod}   (resto inteiro: ${a} - ${div}*${b} = ${a - div * b})\nParidade de ${a}: ${par}`;
+    }
+    function ltUpdateLogic() {
+      const bp = document.getElementById("ltBtnP"), bq = document.getElementById("ltBtnQ");
+      bp.textContent = `P = ${ltP ? "Verdadeiro (V)" : "Falso (F)"}`;
+      bp.className = `btn sm ${ltP ? "green" : "red"}`;
+      bq.textContent = `Q = ${ltQ ? "Verdadeiro (V)" : "Falso (F)"}`;
+      bq.className = `btn sm ${ltQ ? "green" : "red"}`;
+      const f = (x) => (x ? "V (Verdadeiro)" : "F (Falso)");
+      document.getElementById("ltLogicOut").textContent =
+        `NÃO P  (¬P)       => ${f(!ltP)}\nP E Q  (P ∧ Q)    => ${f(ltP && ltQ)}  (exige TODOS verdadeiros)\nP OU Q (P ∨ Q)    => ${f(ltP || ltQ)}  (basta UM verdadeiro)\n(NÃO P) OU Q      => ${f(!ltP || ltQ)}\nP E (NÃO Q)       => ${f(ltP && !ltQ)}`;
+    }
+
+    // --- Lab Binário 8-Bit, Hex & Linux (Dia 10) ---
+    let lbBits = [0, 1, 1, 0, 0, 1, 0, 0]; // 100 default
+    const LB_WEIGHTS = [128, 64, 32, 16, 8, 4, 2, 1];
+    const LINUX_FHS = {
+      "/": "Raiz absoluta do sistema de arquivos Linux (topo de toda a árvore). Nunca confunda com /root!",
+      "/home": "Pastas pessoais dos usuários comuns (ex.: /home/henrique). Equivalente ao C:\\Users do Windows.",
+      "/root": "Pasta pessoal exclusiva do superusuário administrador (root). Fica dentro de /, não é a raiz!",
+      "/etc": "Arquivos de CONFIGURAÇÃO do sistema e serviços (ex.: hosts, passwd, fstab).",
+      "/var": "Arquivos VARIÁVEIS que crescem continuamente, especialmente LOGS do sistema (/var/log) e caches.",
+      "/bin": "Binários/comandos executáveis essenciais disponíveis no sistema (ex.: ls, cp, mv, cat).",
+    };
+    function renderLabBinInto(el) {
+      el.innerHTML = `
+        <h3>🔢 Lab 05 — Conversor Interativo 1 Byte (Binário ↔ Decimal ↔ Hex) &amp; Linux FHS</h3>
+        <div class="q-card">
+          <strong>1. Ligue ou Desligue os 8 Bits de 1 Byte (Peso: 128 a 1)</strong><br><br>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;" id="lbBitRow"></div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin-bottom:8px;">
+            <small><strong>Atalhos da Prova FAT:</strong></small>
+            <button class="btn sm" onclick="lbSetVal(255)">255 (INFO 2025)</button>
+            <button class="btn sm" onclick="lbSetVal(100)">100 (DS 2019)</button>
+            <button class="btn sm" onclick="lbSetVal(250)">250 / FA₁₆ (DS 2019)</button>
+            <button class="btn sm dark" onclick="lbSetVal(0)">Zerar (0)</button>
+          </div>
+          <pre class="q-code" id="lbOut"></pre>
+        </div>
+        <div class="q-card">
+          <strong>2. Inspetor de Diretórios Linux (FHS — Caiu na INFO 2025 &amp; DS 2019)</strong><br><br>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+            ${Object.keys(LINUX_FHS).map((p) => `<button class="btn sm outline" onclick="document.getElementById('lbLinuxOut').textContent='${p} -> '+LINUX_FHS['${p}']">${p}</button>`).join("")}
+          </div>
+          <pre class="q-code" id="lbLinuxOut">Clique em qualquer diretório acima para revisar sua função oficial no Linux...</pre>
+        </div>
+      `;
+      lbDraw();
+    }
+    function lbSetVal(n) {
+      const x = Math.max(0, Math.min(255, Math.trunc(n)));
+      lbBits = LB_WEIGHTS.map((w) => ((x & w) ? 1 : 0));
+      lbDraw();
+    }
+    function lbToggleBit(i) {
+      lbBits[i] = lbBits[i] ? 0 : 1;
+      lbDraw();
+    }
+    function lbDraw() {
+      const row = document.getElementById("lbBitRow");
+      if (!row) return;
+      row.innerHTML = LB_WEIGHTS.map((w, i) => `
+        <button class="btn sm ${lbBits[i] ? "green" : "dark"}" style="min-width:58px; display:flex; flex-direction:column; align-items:center; padding:8px 6px;" onclick="lbToggleBit(${i})">
+          <span style="font-size:16px; font-weight:800;">${lbBits[i]}</span>
+          <small style="opacity:0.85; font-size:11px;">${w}</small>
+        </button>
+      `).join("");
+      let dec = 0;
+      const parts = [];
+      lbBits.forEach((b, i) => { if (b) { dec += LB_WEIGHTS[i]; parts.push(LB_WEIGHTS[i]); } });
+      const bin = lbBits.join("");
+      const hex = dec.toString(16).toUpperCase().padStart(2, "0");
+      const q16 = Math.floor(dec / 16), r16 = dec % 16;
+      const hexDig = (n) => n.toString(16).toUpperCase();
+      document.getElementById("lbOut").textContent =
+        `Binário (Base 2):     ${bin}₂  (sem zeros à esq.: ${dec.toString(2)}₂)\nDecimal (Base 10):    ${dec}₁₀   (${parts.length ? parts.join(" + ") : "0"} = ${dec})\nHexadecimal (Base 16): ${hex}₁₆   (passo: ${dec} ÷ 16 = quociente ${q16} [${hexDig(q16)}] e resto ${r16} [${hexDig(r16)}])`;
+    }
+
+    // --- Lab Base Comum M-Tec: Química, Conjuntos/Contagem, Terreno 3-4-5 & Óptica (Dia 13) ---
+    function renderLabMTecInto(el) {
+      el.innerHTML = `
+        <h3>🎓 Lab 06 — Simulador Base M-Tec (Química, Matemática &amp; Física Óptica)</h3>
+        <div class="lab-grid">
+          <div class="q-card">
+            <strong>1. Massa Molar (C=12, H=1, O=16) &amp; Condutividade Elétrica</strong><br><br>
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+              <button class="btn sm" onclick="lmSetMol(2,6,1,'Etanol (C₂H₅OH)')">Etanol (C₂H₅OH)</button>
+              <button class="btn sm" onclick="lmSetMol(2,4,2,'Ácido Acético (C₂H₄O₂)')">Ác. Acético (C₂H₄O₂)</button>
+              <button class="btn sm" onclick="lmSetMol(0,2,1,'Água (H₂O)')">Água (H₂O)</button>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+              <label>C <input id="lmC" type="number" min="0" max="20" value="2" style="width:52px; padding:4px;" oninput="lmCalcMol()"></label>
+              <label>H <input id="lmH" type="number" min="0" max="40" value="6" style="width:52px; padding:4px;" oninput="lmCalcMol()"></label>
+              <label>O <input id="lmO" type="number" min="0" max="20" value="1" style="width:52px; padding:4px;" oninput="lmCalcMol()"></label>
+            </div>
+            <pre class="q-code" id="lmMolOut"></pre>
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
+              <button class="btn sm outline" onclick="lmCond('metal')">Ligação Metálica</button>
+              <button class="btn sm outline" onclick="lmCond('ionica')">Ligação Iônica (NaCl)</button>
+              <button class="btn sm outline" onclick="lmCond('covalente')">Covalente (Açúcar/Álcool)</button>
+            </div>
+            <pre class="q-code" id="lmCondOut">Escolha um tipo de ligação química acima para ver quando conduz eletricidade.</pre>
+          </div>
+          <div class="q-card">
+            <strong>2. Conjuntos, Contagem 3 Dígitos &amp; Óptica da Cor (M-Tec)</strong><br><br>
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+              <button class="btn sm green" onclick="lmMathDemo('conj')">Conjuntos (A∩B)∪C</button>
+              <button class="btn sm purple" onclick="lmMathDemo('cont')">Contagem 3 Algarismos</button>
+              <button class="btn sm amber" onclick="lmMathDemo('geom')">Terreno 3-4-5 &amp; 2.320 m²</button>
+            </div>
+            <pre class="q-code" id="lmMathOut"></pre>
+            <div style="margin-top:8px;">
+              <strong>Física Óptica (Q33 M-Tec):</strong>
+              <select id="lmObj" onchange="lmOptics()" style="padding:4px;"><option value="red">Objeto Vermelho (tomate)</option><option value="white">Objeto Branco</option><option value="blue">Objeto Azul</option></select>
+              sob luz
+              <select id="lmLight" onchange="lmOptics()" style="padding:4px;"><option value="green">Verde (monocromática)</option><option value="white">Branca (Sol)</option><option value="red">Vermelha</option></select>
+              <div id="lmOptOut" style="margin-top:6px; padding:8px 12px; border-radius:8px; font-weight:800;"></div>
+            </div>
+          </div>
+        </div>
+      `;
+      lmCalcMol("Etanol (C₂H₅OH)");
+      lmMathDemo("conj");
+      lmOptics();
+    }
+    function lmSetMol(c, h, o, nome) {
+      document.getElementById("lmC").value = c;
+      document.getElementById("lmH").value = h;
+      document.getElementById("lmO").value = o;
+      lmCalcMol(nome);
+    }
+    function lmCalcMol(label = "Molécula customizada") {
+      const c = Number(document.getElementById("lmC").value) || 0;
+      const h = Number(document.getElementById("lmH").value) || 0;
+      const o = Number(document.getElementById("lmO").value) || 0;
+      const m = c * 12 + h * 1 + o * 16;
+      document.getElementById("lmMolOut").textContent =
+        `${label}\nConta: (${c}×12) + (${h}×1) + (${o}×16) = ${c * 12} + ${h} + ${o * 16} = ${m} g/mol`;
+    }
+    function lmCond(tipo) {
+      const map = {
+        metal: "LIGAÇÃO METÁLICA (ex.: Ferro, Cobre): Nuvem/mar de elétrons livres -> CONDUZ eletricidade no estado SÓLIDO e também fundido!",
+        ionica: "LIGAÇÃO IÔNICA (ex.: NaCl): Sólido tem íons presos na rede -> NÃO conduz sólido! Só CONDUZ quando fundido (líquido) ou dissolvido em água!",
+        covalente: "LIGAÇÃO COVALENTE / MOLECULAR (ex.: Açúcar, H₂O pura): Sem íons nem elétrons livres -> NÃO conduz eletricidade nem sólido nem puro!",
+      };
+      document.getElementById("lmCondOut").textContent = map[tipo];
+    }
+    function lmMathDemo(kind) {
+      const el = document.getElementById("lmMathOut");
+      if (kind === "conj") {
+        el.textContent = "Dados: A={1,2,3,4}, B={3,4,5,6}, C={5,7}\n1) Resolva o parêntese (A ∩ B) = {3, 4}  (apenas em comum)\n2) Una com C: {3, 4} ∪ {5, 7} = {3, 4, 5, 7}";
+      } else if (kind === "cont") {
+        el.textContent = "Quantos números naturais de 3 algarismos existem?\n- Cuidado: o 1º dígito (centena) NÃO pode ser ZERO!\n- Com repetição: 9 (1..9) × 10 × 10 = 900 números (100 a 999)\n- Distintos:     9 × 9 × 8 = 648 números";
+      } else {
+        el.textContent = "Terreno composto (Q21 M-Tec): Retângulo 40m × 58m = 2.320 m²\nDica Triângulo 3-4-5: se catetos = 30 e 40 -> hipotenusa = 50 (30²+40²=2500=50²)!";
+      }
+    }
+    function lmOptics() {
+      const obj = document.getElementById("lmObj").value;
+      const lig = document.getElementById("lmLight").value;
+      let seen = "PRETO", bg = "#0f172a", fg = "#ffffff", why = "absorve a luz incidente e não reflete nada aos olhos!";
+      if (obj === "white") {
+        const names = { white: ["BRANCO", "#f8fafc", "#0f172a"], red: ["VERMELHO", "#dc2626", "#fff"], green: ["VERDE", "#16a34a", "#fff"] }[lig];
+        seen = names[0]; bg = names[1]; fg = names[2]; why = "superfície branca reflete toda a luz que chega nela!";
+      } else if (lig === "white" || obj === lig) {
+        const names = { red: ["VERMELHO", "#dc2626", "#fff"], blue: ["AZUL", "#2563eb", "#fff"] }[obj];
+        seen = names[0]; bg = names[1]; fg = names[2]; why = "reflete a própria cor presente na iluminação!";
+      }
+      const out = document.getElementById("lmOptOut");
+      out.style.background = bg; out.style.color = fg;
+      out.textContent = `Cor enxergada: ${seen} — porque ${why}`;
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    }
+
+    if (typeof document !== "undefined" && typeof document.addEventListener === "function") {
+      document.addEventListener("keydown", (e) => {
+        if (activeTab !== "cards" || cardsMode !== "vf") return;
+        const tag = e.target && e.target.tagName;
+        if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+        if (e.key === "v" || e.key === "V") {
+          const btn = document.getElementById("vfBtnTrue");
+          if (btn) btn.click();
+        } else if (e.key === "f" || e.key === "F") {
+          const btn = document.getElementById("vfBtnFalse");
+          if (btn) btn.click();
+        } else if (e.key === "ArrowRight" || e.key === " ") {
+          e.preventDefault();
+          const btn = document.getElementById("vfNextBtn");
+          if (btn) btn.click();
+        }
+      });
+    }
+
+    if (typeof navigator !== "undefined" && "serviceWorker" in navigator && window.location && window.location.protocol && window.location.protocol.startsWith("http")) {
+      navigator.serviceWorker.register("./sw.js").catch(() => {});
+    }
+
+    renderMain();
+  </script>
+</body>
+</html>

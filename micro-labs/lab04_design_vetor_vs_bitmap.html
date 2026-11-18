@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab 04 — Vetor vs. Bitmap, Rasterização, Cores e Gestalt</title>
+  <style>
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+    body { margin: 0; padding: 20px; background: #f8fafc; color: #0f172a; }
+    main { max-width: 960px; margin: 0 auto; display: grid; gap: 18px; }
+    section, header { background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 18px; }
+    header { border-top: 5px solid #7c3aed; }
+    .compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .viewport { height: 220px; border: 2px dashed #94a3b8; border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #f1f5f9; }
+    #rasterCanvas { image-rendering: pixelated; }
+    .swatch { width: 100%; height: 90px; border-radius: 10px; border: 1px solid #cbd5e1; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+    .css-box { width: 90px; height: 90px; background: #2563eb; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; border-radius: 10px; transition: transform 0.3s; margin: 30px auto; }
+    .gestalt-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; text-align: center; }
+    .gestalt-card { border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; background: #f8fafc; }
+    .btn { padding: 7px 12px; border: none; border-radius: 6px; background: #7c3aed; color: #fff; font-weight: 600; cursor: pointer; margin: 2px; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <small>ETEC DS • Micro-Lab 04 • Design Digital</small>
+      <h1>Lab 04 — Vetorial vs. Bitmap, Cores, CSS3 Transform e Gestalt</h1>
+    </header>
+
+    <section>
+      <h2>1. Imagem Vetorial (SVG) vs. Bitmap/Raster (Pixels) — Q18 - 2025</h2>
+      <label for="zoomRange"><strong>Zoom atual: <span id="zoomVal">100</span>%</strong></label><br>
+      <input id="zoomRange" type="range" min="100" max="800" step="50" value="100" style="width:100%; max-width:420px; margin:10px 0;">
+      <div class="compare">
+        <div>
+          <h3>Vetorial (&lt;svg&gt;) — Sem Perda!</h3>
+          <div class="viewport">
+            <svg id="svgTarget" width="80" height="80" viewBox="0 0 80 80" style="transition: transform 0.1s;">
+              <circle cx="40" cy="40" r="34" fill="#2563eb" />
+              <polygon points="40,14 62,56 18,56" fill="#facc15" />
+            </svg>
+          </div>
+          <small>Recalculado em tempo real por fórmulas matemáticas (como <strong>SVG</strong> e <strong>PDF</strong>).</small>
+        </div>
+        <div>
+          <h3>Bitmap / Raster (40x40 px) — Pixelado!</h3>
+          <div class="viewport">
+            <canvas id="rasterCanvas" width="40" height="40" style="width:80px; height:80px;"></canvas>
+          </div>
+          <small>Composto por grade fixa de pixels (como <strong>JPEG, PNG e BMP</strong>). Converter vetor em pixels chama-se <strong>Rasterização</strong>.</small>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. Seletor de Padrões de Cores: RGB, Hexadecimal e CMYK — Q15 - 2025</h2>
+      <div class="compare">
+        <div>
+          <label>R (0–255): <span id="rv">37</span></label><input type="range" id="r" min="0" max="255" value="37" style="width:100%"><br>
+          <label>G (0–255): <span id="gv">99</span></label><input type="range" id="g" min="0" max="255" value="99" style="width:100%"><br>
+          <label>B (0–255): <span id="bv">235</span></label><input type="range" id="b" min="0" max="255" value="235" style="width:100%">
+        </div>
+        <div>
+          <div id="swatch" class="swatch">#2563EB</div>
+          <p id="colorInfo" style="font-size:14px; margin-top:8px;"></p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>3. Transformações CSS3 (Q17 - 2019) e Princípios da Gestalt (Q17 - 2025)</h2>
+      <div class="compare">
+        <div style="text-align:center;">
+          <div>
+            <button class="btn" onclick="setTransform('scale(1.4)')">scale (aumentar)</button>
+            <button class="btn" onclick="setTransform('skew(20deg, 5deg)')">skew (ângulo)</button>
+            <button class="btn" onclick="setTransform('translate(35px, -10px)')">translate (X,Y)</button>
+            <button class="btn" onclick="setTransform('rotate(45deg)')">rotate (girar)</button>
+            <button class="btn" style="background:#475569" onclick="setTransform('none')">reset</button>
+          </div>
+          <div id="cssBox" class="css-box">CSS3</div>
+        </div>
+        <div class="gestalt-row">
+          <div class="gestalt-card">
+            <strong>Continuidade</strong>
+            <svg width="120" height="50" viewBox="0 0 120 50"><path d="M5 40 Q 60 5, 115 40" stroke="#1d4ed8" stroke-width="4" fill="none"/></svg>
+            <small>Trajetória contínua</small>
+          </div>
+          <div class="gestalt-card">
+            <strong>Fechamento</strong>
+            <svg width="120" height="50" viewBox="0 0 120 50"><circle cx="60" cy="25" r="18" stroke="#dc2626" stroke-width="4" stroke-dasharray="18 8" fill="none"/></svg>
+            <small>Mente fecha lacunas</small>
+          </div>
+          <div class="gestalt-card">
+            <strong>Proximidade</strong>
+            <svg width="120" height="50" viewBox="0 0 120 50"><circle cx="25" cy="25" r="6" fill="#0f766e"/><circle cx="40" cy="25" r="6" fill="#0f766e"/><circle cx="90" cy="25" r="6" fill="#0f766e"/></svg>
+            <small>Itens próximos = grupo</small>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Desenha o mesmo icone no canvas de baixa resolucao (40x40) para mostrar pixelizacao
+    const cvs = document.getElementById("rasterCanvas");
+    const ctx = cvs.getContext("2d");
+    ctx.fillStyle = "#2563eb";
+    ctx.beginPath();
+    ctx.arc(20, 20, 17, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#facc15";
+    ctx.beginPath();
+    ctx.moveTo(20, 7);
+    ctx.lineTo(31, 28);
+    ctx.lineTo(9, 28);
+    ctx.closePath();
+    ctx.fill();
+
+    const zoomRange = document.getElementById("zoomRange");
+    zoomRange.addEventListener("input", () => {
+      const z = Number(zoomRange.value);
+      document.getElementById("zoomVal").textContent = z;
+      const factor = z / 100;
+      document.getElementById("svgTarget").style.transform = `scale(${factor})`;
+      cvs.style.transform = `scale(${factor})`;
+    });
+
+    function updateColor() {
+      const r = Number(document.getElementById("r").value);
+      const g = Number(document.getElementById("g").value);
+      const b = Number(document.getElementById("b").value);
+      document.getElementById("rv").textContent = r;
+      document.getElementById("gv").textContent = g;
+      document.getElementById("bv").textContent = b;
+
+      const toHex = (n) => n.toString(16).padStart(2, "0").toUpperCase();
+      const hex = `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+
+      const rf = r / 255, gf = g / 255, bf = b / 255;
+      const k = 1 - Math.max(rf, gf, bf);
+      const c = k === 1 ? 0 : Math.round(((1 - rf - k) / (1 - k)) * 100);
+      const m = k === 1 ? 0 : Math.round(((1 - gf - k) / (1 - k)) * 100);
+      const y = k === 1 ? 0 : Math.round(((1 - bf - k) / (1 - k)) * 100);
+      const kp = Math.round(k * 100);
+
+      const sw = document.getElementById("swatch");
+      sw.style.background = hex;
+      sw.style.color = (r * 0.299 + g * 0.587 + b * 0.114) > 150 ? "#0f172a" : "#ffffff";
+      sw.textContent = hex;
+      document.getElementById("colorInfo").innerHTML =
+        `<strong>RGB (Telas):</strong> rgb(${r}, ${g}, ${b})<br>` +
+        `<strong>Hexadecimal (Web):</strong> ${hex}<br>` +
+        `<strong>CMYK aproximado (Impressão):</strong> ${c}%, ${m}%, ${y}%, ${kp}%`;
+    }
+
+    ["r", "g", "b"].forEach((id) => document.getElementById(id).addEventListener("input", updateColor));
+    updateColor();
+
+    function setTransform(t) {
+      document.getElementById("cssBox").style.transform = t;
+    }
+  </script>
+</body>
+</html>
