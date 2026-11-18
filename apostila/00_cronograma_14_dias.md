@@ -1,82 +1,71 @@
-# Cronograma Intensivo de 14 Dias — Etec (Vagas Remanescentes 2º Módulo / DS)
+# Cronograma Intensivo de 14 Dias — Etec (Vagas Remanescentes 2º Ano M-Tec / DS)
 
-**Meta:** Dominar 100% dos conteúdos do 1º Módulo/1ª Série de Desenvolvimento de Sistemas e "hackear" os **4 Moldes da Fundação FAT**.  
-**Carga diária:** **1h30 a 2h por dia** divididas em 3 blocos curtos:
-1. **Bloco A (30 min) — Teoria Direta & Alerta de Pegadinhas:** Leitura ativa do módulo do dia em `01_guia_teorico_fundacao_fat.md`.
-2. **Bloco B (30 min) — Prática Zero-Setup / Flashcards:** Executar o Micro-Lab do dia ou rodar os Flashcards no celular (AnkiDroid / Quizlet / `cards-app`).
-3. **Bloco C (30–45 min) — Questões no Padrão FAT:** Resolver questões reais comentadas e o simulado inédito.
-
----
-
-## Semana 1 — Base Técnica Completa (Dias 1 a 7)
-
-### Dia 1 — Hackeando a Banca FAT + Algoritmos, Tipos e Tabela Verdade
-- [ ] **Teoria (30 min):** Ler *Módulo 0 (Os 4 Moldes da FAT)* e *Módulo 1.1–1.3* (Frameworks, Tipos Primitivos, Conversão Implícita vs. Casting, Tabela Verdade `AND/OR/NOT`).
-- [ ] **Prática / Cards (30 min):** Abrir o `lab02_teste_mesa_matriz` (Parte 1: Tabela Verdade) + Importar o baralho `ETEC_DS_2Modulo_Fundacao_FAT.apkg` no celular e revisar 15 cards do Módulo 1.
-- [ ] **Questões (30 min):** Resolver na Prova Real 2025: Q07, Q08 | Info 2025: Q19, Q20 | 2019: Q01.
-
-### Dia 2 — Teste de Mesa, Portugol (`DIV/MOD`), Matrizes 2D, Pilha e Recursividade
-- [ ] **Teoria (30 min):** Ler *Módulo 1.4–1.5* (Executar Linha a Linha, `DIV` vs `MOD`, Matriz base `[0][0]` e diagonal principal, Pilha LIFO `PUSH/POP`, Fatorial recursivo `n!`).
-- [ ] **Prática / Cards (30 min):** Rodar `python3 lab02_teste_mesa_matriz.py` (ou `node lab02_teste_mesa_matriz.js`) + 15 cards de Algoritmos no celular.
-- [ ] **Questões (30 min):** Resolver Prova Real 2025: Q09, Q10 | Info 2025: Q21 | 2019: Q02, Q03, Q06 | Simulado 1: Q01–Q05.
-
-### Dia 3 — Editores, Build/Bundling, Git, Licenças e POO
-- [ ] **Teoria (30 min):** Ler *Módulo 1.6–1.8* (Editores de Código vs WYSIWYG vs Notepad vs IDE, Build vs Bundling, Git `branch/diff/merge`, Licenças Open Source/Livre/Proprietária/EULA/Assinatura, 4 Pilares da POO).
-- [ ] **Prática / Cards (30 min):** Revisar cards no celular (20 cards novos + revisão espaçada).
-- [ ] **Questões (30 min):** Resolver Prova Real 2025: Q19, Q22, Q23 | 2019: Q26, Q27 | Simulado 1: Q06–Q10.
-
-### Dia 4 — Engenharia de Software: Requisitos, Viabilidade, Cascata, Scrum, XP e UML
-- [ ] **Teoria (30 min):** Ler *Módulo 1.9* (Requisitos Funcionais vs Não Funcionais, Viabilidade Legal/Técnica/Econômica/Operacional, Cascata, Scrum/Daily, Pair Programming XP, Teste de Unidade, UML Casos de Uso).
-- [ ] **Prática / Cards (30 min):** Treinar no `cards-app/index.html` modo *Associação de Pares* + revisão no Anki.
-- [ ] **Questões (30 min):** Resolver Prova Real 2019: Q08, Q10, Q11, Q12, Q24, Q25 | Info 2025: Q22, Q23, Q24 | Simulado 1: Q11–Q15.
-
-### Dia 5 — Banco de Dados I: SQL (DDL, DML, DQL, DCL, TCL) e NoSQL
-- [ ] **Teoria (30 min):** Ler *Módulo 2.1 e 2.5–2.6* (Pegadinha clássica DDL vs DQL vs DML, `SELECT COUNT(*) ... WHERE`, SGBDs Relacionais vs NoSQL MongoDB/Cassandra).
-- [ ] **Prática / Cards (30 min):** Rodar `python3 lab03_sql_pratico.py` (Parte SQL DDL/DML/DQL) + 15 cards de Banco de Dados.
-- [ ] **Questões (30 min):** Resolver Prova Real 2025: Q11, Q14 | Info 2025: Q28, Q29, Q30 | 2019: Q07 | Simulado 1: Q16–Q20.
-
-### Dia 6 — Banco de Dados I: Modelo Relacional, Chaves, Cardinalidade e Normalização (1FN/2FN/3FN)
-- [ ] **Teoria (30 min):** Ler *Módulo 2.2–2.4* (Tuplas/Atributos, PK/FK/Candidata/Alternativa, 1:1, 1:N, N:N, Auto-relacionamento, **1FN valores atômicos**, 2FN e 3FN).
-- [ ] **Prática / Cards (30 min):** Reexecutar `lab03_sql_pratico.py` focando na tabela fora da 1FN sendo normalizada + revisão Anki.
-- [ ] **Questões (30 min):** Resolver Prova Real 2025: Q12, Q13 | 2019: Q04, Q05, Q09 | Simulado 1: Q21–Q25.
-
-### Dia 7 — Revisão da Semana 1 + Simulado Parcial (Web 1 e Design)
-- [ ] **Teoria (30 min):** Ler *Módulo 3* inteiro (Design Digital: RGB/CMYK/Hex, Círculo Cromático, Vetor SVG/PDF vs Bitmap PNG/JPEG/BMP, Rasterização, Gestalt, Tipografia, Google Fonts, Heurística de Nielsen).
-- [ ] **Prática / Cards (30 min):** Abrir `lab04_design_vetor_vs_bitmap.html` no navegador (testar zoom 800%, seletor RGB/Hex e Gestalt).
-- [ ] **Questões (30 min):** Resolver Prova Real 2025: Q15–Q18 | Info 2025: Q09, Q10, Q15 | 2019: Q13–Q15.
+**Meta:** Dominar 100% dos conteúdos do 1º Módulo/1ª Série de Desenvolvimento de Sistemas + Base Comum M-Tec e enxergar os **4 Moldes da Fundação FAT** com clareza total.  
+**Ritmo diário na Plataforma (`Modo História`) ou na Apostila:** **1h30 a 2h por dia** em 3 etapas:
+1. **Teoria Completa do Zero (30–45 min):** Ler o Dia correspondente em `01_guia_teorico_fundacao_fat.md` (ou na etapa *Lição* do Modo História).
+2. **Prática Interativa & Flashcards (20–30 min):** Usar o Laboratório/Pares do Dia e revisar 10–15 flashcards + frases de *Verdade ou Fake*.
+3. **Teste Pós-Módulo & Simulados (30–40 min):** Fazer o quiz de 8–10 questões do dia e revisar eventuais erros no *Modo Revanche*.
 
 ---
 
-## Semana 2 — Web, Redes, SO, Inglês, Ética e Simulados Finais (Dias 8 a 14)
+## Semana 1 — Fundamentos de Lógica, Programação, Engenharia e Dados (Dias 1 a 7)
 
-### Dia 8 — Programação Web I: HTML5, CSS3, Bootstrap, DOM e Cookies
-- [ ] **Teoria (30 min):** Ler *Módulo 4.1–4.4* (Tags & Atributos, `target="_blank"`, Semântica `<nav><header><footer><section>`, `<ol>/<ul>`, CSS Seletor/Bloco + `scale/skew/translate/rotate`, Bootstrap, DOM `getElementById`, **Cookies local ~4KB vs nuvem**).
-- [ ] **Prática / Cards (30 min):** Abrir `lab01_web_cookies.html` no navegador + abrir `F12 > Application > Cookies` e inspecionar os cookies locais!
-- [ ] **Questões (30 min):** Resolver Prova Real 2025: Q20, Q21 | Info 2025: Q13, Q14 | 2019: Q16–Q19 | Simulado 1: Q26–Q30.
+### Dia 1 — Raio-X da Banca FAT, Memória, Tipos Primitivos, Casting, DIV/MOD e Tabela Verdade do Zero
+- [ ] **Teoria:** Moldes da banca FAT, Bits/Bytes/RAM, Variáveis vs. Constantes, Tabela ASCII, os 5 tipos primitivos (`int`, `float/double`, `char`, `string`, `bool`), conversão implícita vs. *casting* (truncamento), divisão `DIV/MOD` e Tabela Verdade completa passo a passo.
+- [ ] **Prática & Questões:** Laboratório de Tipos + Quiz do Dia 1 (DS 2025 Q8; Info 2025 Q19, Q20; DS 2019 Q1, Q2; Simulados).
 
-### Dia 9 — Binário/Hexadecimal, Hardware (SSD/HD/RAM) e Sistemas Operacionais (Linux/Windows)
-- [ ] **Teoria (30 min):** Ler *Módulo 4.5–4.7* (Conversão Decimal↔Binário↔Hex, `255 = 11111111`, SSD vs HD, Gerenciamento de Memória no SO, Comandos Linux `ls/mkdir/cp/apt/cat/shutdown` vs Diretórios `/bin,/etc,/home,/lib,/usr,/var,/tmp`).
-- [ ] **Prática / Cards (30 min):** Revisar 20 cards do Módulo 4 no celular + treinar conversão rápida de `10, 100, 250, 255`.
-- [ ] **Questões (30 min):** Resolver Prova Real 2025: Q27 | Info 2025: Q04, Q18 | 2019: Q20–Q22 | Simulado 2: Q01–Q08.
+### Dia 2 — Algoritmos, Fluxogramas, Decisão (`se/senao`), Laços (`enquanto`/`para`/`repita`) e Teste de Mesa
+- [ ] **Teoria:** E→P→S, os 4 símbolos geométricos de fluxograma, Dicionário Portugol ↔ JS/C/Java, decisão simples/composta/encadeada/`switch`, os 4 laços de repetição explicados um a um e Teste de Mesa passo a passo.
+- [ ] **Prática & Questões:** Micro-Lab de Teste de Mesa (`lab02`) + Quiz do Dia 2 (DS 2025 Q9, Q10; Apostas Q7–Q10).
 
-### Dia 10 — Redes, Protocolos (TCP/IP, E-mail, RDP, SSL), Topologias, IoT e Virtualização
-- [ ] **Teoria (30 min):** Ler *Módulo 4.8–4.11* (4 camadas TCP/IP, HTTP/HTTPS/SSL, **SMTP vs POP3 vs IMAP**, Topologia Barramento vs Estrela, RDP vs SSH, Virtualização e Contêineres, Hospedagem, IoT, Navegadores, Webmails, Office).
-- [ ] **Prática / Cards (30 min):** Jogar modo *Quiz Rápido & Pares* no `cards-app/index.html` focando em Protocolos e Topologias.
-- [ ] **Questões (30 min):** Resolver Prova Real 2025: Q24–Q26, Q28–Q30 | Info 2025: Q05–Q08, Q12, Q16, Q17, Q25–Q27 | 2019: Q23.
+### Dia 3 — Vetores (1D), Matrizes `[i][j]`, Pilha (LIFO), Fila (FIFO) e Funções com Recursividade
+- [ ] **Teoria:** Vetores base `0` (`.length`), Matrizes `M[linha][coluna]` (`range`, Diagonal Principal `i==j` vs. Secundária `i+j==N-1`), Pilha (`LIFO` PUSH/POP) vs. Fila (`FIFO`), Funções e Recursividade com *Call Stack* e Caso Base.
+- [ ] **Prática & Questões:** Simulador de Matriz & Pilha + Quiz do Dia 3 (DS 2025 Q10; Info 2025 Q21; DS 2019 Q3, Q6).
 
-### Dia 11 — Inglês Técnico, Soft Skills, Interpretação e Ética/Cidadania Organizacional
-- [ ] **Teoria (30 min):** Ler *Módulo 5* completo (Vocabulário de TI/Soft Skills, falsos cognatos como *data = dados*, leitura rápida de infográficos e as 3 regras fixas de Ética: Bem Comum, Trabalho/Consumo Sustentável, Meio Ambiente/Constituição).
-- [ ] **Prática / Cards (30 min):** Revisar todos os cards do Módulo 5 no AnkiDroid + Simulado 2: Q09–Q20.
-- [ ] **Questões (30 min):** Resolver Prova Real 2025: Q01–Q06 | 2019: Q28–Q30 | Simulado 2: Q21–Q30.
+### Dia 4 — Front-end/Back-end, Frameworks, Editores/IDEs, Compilação/Build, Git e Licenças
+- [ ] **Teoria:** Front-end vs. Back-end vs. Responsividade, Biblioteca vs. Framework (Bootstrap, Angular, Laravel, React Native), Bloco de Notas vs. VS Code vs. IDE vs. WYSIWYG, Compilador/Interpretador/JVM + *Build/Bundling/Tree Shaking*, Git (`branch`/`diff`/`merge`) e Licenças (Software Livre vs. *Freeware*/EULA).
+- [ ] **Prática & Questões:** Pares Relâmpago + Quiz do Dia 4 (DS 2025 Q7, Q19, Q22, Q23; DS 2019 Q18, Q26; M-Tec Q36).
 
-### Dia 12 — Simulado Cronometrado #1 (Condição Real de Prova)
-- [ ] **Simulado Cronometrado (1h15):** Resolver o **Simulado 1 (Questões 01 a 30)** em `02_simulado_60_questoes.md` sem consultar a apostila, preenchendo gabarito no papel (como na folha definitiva da FAT).
-- [ ] **Correção Cirúrgica (30 min):** Conferir no gabarito comentado e anotar no caderno de erros **qual dos 4 Moldes** causou cada erro.
+### Dia 5 — Engenharia de Software, Requisitos, SWOT, UML, Scrum/XP, Testes e POO
+- [ ] **Teoria:** Cascata vs. Prototipação vs. Espiral vs. Ágil, Estudo de Viabilidade, Requisitos Funcionais vs. Não Funcionais, Matriz SWOT/FOFA, Diagramas UML (Casos de Uso e Classes) + Dicionário de Dados, Scrum (PO/SM/Daily)/Kanban/XP (*Pair Programming*), 4 Níveis de Teste e POO (Classe vs. Objeto e os 4 Pilares).
+- [ ] **Prática & Questões:** Pares + Quiz do Dia 5 (Info 2025 Q22–Q24; DS 2019 Q8, Q10, Q12, Q24, Q25, Q27; M-Tec Q30).
 
-### Dia 13 — Simulado Cronometrado #2 + Ataque aos Erros
-- [ ] **Simulado Cronometrado (1h15):** Resolver o **Simulado 2 (Questões 31 a 60)** em `02_simulado_60_questoes.md`.
-- [ ] **Revisão Focada (30 min):** Revisitar os cards marcados como "Revisar depois" e reler os quadros de *Pegadinha Clássica* dos temas que errou.
+### Dia 6 — Banco de Dados Relacional do Zero, ACID, SQL (DDL/DML/DQL/DCL/TCL) e NoSQL
+- [ ] **Teoria:** O básico de Tabelas, Linhas, Colunas, `PK`, `FK` e `JOIN`, SGBD e propriedades ACID, as 5 Sublinguagens SQL uma a uma (`DDL`, `DML`, `DQL`, `DCL`, `TCL`), filtros `WHERE` + `COUNT(*)`/`SUM`, e Bancos NoSQL (JSON, *Sharding* e 4 famílias).
+- [ ] **Prática & Questões:** Laboratório SQL (`lab03`) + Quiz do Dia 6 (DS 2025 Q11, Q14; Info 2025 Q28–Q30; DS 2019 Q7).
 
-### Dia 14 — Revisão Turbo de Véspera (Zero Estresse)
-- [ ] **Manhã / Tarde (45 min):** Reler apenas as tabelas de resumo e os boxes `PEGADINHA DA FAT` em `01_guia_teorico_fundacao_fat.md`.
-- [ ] **Noite (30 min):** Zerar a fila de revisão do Anki no celular e separar documentos + **caneta esferográfica azul ou preta** (regra do edital da FAT!). Dormir cedo!
+### Dia 7 — Modelagem de Dados (3 Níveis), DER Desenhado, Chaves, Cardinalidades e Normalização (1FN–3FN)
+- [ ] **Teoria:** Conceitual (DER Peter Chen) → Lógico → Físico, Relação/Tupla/Atributo/Domínio, Atributos (Simples, Composto, Multivalorado, Derivado), Chaves (PK Simples/Composta, Candidata, Alternativa, FK), Cardinalidades (`1:1`, `1:N`, `N:N`, Auto-relacionamento) e Normalização visual passo a passo (`1FN`, `2FN`, `3FN`).
+- [ ] **Prática & Questões:** Laboratório de Normalização (`lab03`) + Quiz do Dia 7 (DS 2025 Q12, Q13; DS 2019 Q4, Q5, Q9; M-Tec Q32).
+
+---
+
+## Semana 2 — Design, Web, Hardware/Linux, Redes, Base Comum M-Tec e Revisão Final (Dias 8 a 14)
+
+### Dia 8 — Design Digital: Cores (RGB/CMYK/Hex), Vetor vs. Bitmap, Gestalt, Tipografia e UX
+- [ ] **Teoria:** Síntese Aditiva (RGB/Hex) vs. Subtrativa (CMYK), Círculo Cromático (Análogas/Complementares/Tríade), Vetorial (`.SVG`/Curvas de Bézier) vs. Bitmap (`.JPEG` com perda vs. `.PNG` sem perda + transparência), Rasterização, Direitos Autorais, 5 Leis da Gestalt, Tipografia (*Script*, Serifa, Sem Serifa, Google Fonts) e Heurísticas de Nielsen.
+- [ ] **Prática & Questões:** Laboratório Zoom 800% & Cores (`lab04`) + Quiz do Dia 8 (DS 2025 Q15–Q18; Info 2025 Q9, Q10, Q15; DS 2019 Q13–Q15).
+
+### Dia 9 — Desenvolvimento Web Front-end: HTML5, Listas/Tabelas/Formulários, CSS Box Model, DOM e Cookies
+- [ ] **Teoria:** Tags e Atributos HTML5, `<head>` vs. `<body>`, Semântica vs. `<div>`/`<span>`, `target="_blank"`, `<ol>`/`<ul>`, `<table>`/`<tr>`/`<td>`, `GET` vs. `POST`, Seletores & Especificidade CSS, Box Model (`padding`/`margin`), `transform`, Árvore DOM e Cookies locais (`~4 KB`, navegador local, sessão vs. permanente).
+- [ ] **Prática & Questões:** Laboratório Web & Cookies (`lab01`) + Quiz do Dia 9 (DS 2025 Q20, Q21; Info 2025 Q13, Q14; DS 2019 Q16, Q17, Q19; M-Tec Q38–Q40).
+
+### Dia 10 — Sistemas Numéricos (Binário/Hex), Hardware, Memórias, SO, VMs/Docker e Linux
+- [ ] **Teoria:** Bits/Bytes (`0..255`), Conversões Decimal ↔ Binário ↔ Hexadecimal (`100`, `250`, `255`), Von Neumann (CPU: UC/ULA/Registradores), Volátil vs. Não Volátil, RAM vs. ROM vs. SSD vs. HDD, SO/Kernel/Swap, VM (Hypervisor) vs. Contêiner Docker, Diretórios FHS Linux (`/etc`, `/var`, `/home` vs. comandos) e `chmod`/Office.
+- [ ] **Prática & Questões:** Conversor Binário/Hex (`lab_bin`) + Quiz do Dia 10 (DS 2025 Q27; Info 2025 Q4, Q5, Q16, Q18; DS 2019 Q20–Q22).
+
+### Dia 11 — Redes (TCP/IP, E-mail, Topologias), Cloud, IoT, Inglês Técnico e Ética
+- [ ] **Teoria:** Pacotes, IP vs. MAC, Switch vs. Roteador, 4 Camadas TCP/IP (TCP vs. UDP, HTTPS/SSL, DNS, DHCP, SSH vs. RDP), Protocolos de E-mail (`SMTP`, `POP3`, `IMAP`), Topologias (Barramento vs. Estrela vs. Anel/Malha), Cloud (`IaaS`, `PaaS`, `SaaS`), IoT, Navegadores vs. Buscadores, Inglês Técnico (*Skimming/Scanning*, Falsos Cognatos) e Ética/Logística Reversa/LGPD.
+- [ ] **Prática & Questões:** Pares + Quiz do Dia 11 (DS 2025 Q1–Q6, Q24–Q26, Q28–Q30; Info 2025 Q17, Q25–Q27; DS 2019 Q23).
+
+### Dia 12 — Base Comum M-Tec I: Português, Interpretação, Literatura e História (1º Ano EM)
+- [ ] **Teoria:** Gênero vs. 5 Tipos Textuais, Figuras de Linguagem (Antítese vs. Paradoxo, Metáfora, Metonímia), Semântica (Hiperônimo/Hipônimo), Variações Linguísticas, Escolas Literárias (Trovadorismo, Humanismo, Classicismo, Quinhentismo, Barroco Cultismo × Conceptismo) e História Geral (Paleolítico/Neolítico, Migrações, Antiguidade e Feudalismo).
+- [ ] **Prática & Questões:** Cards M-Tec + Quiz do Dia 12 (M-Tec 2022 Q1–Q6, Q24–Q27).
+
+### Dia 13 — Base Comum M-Tec II: Matemática, Química, Física e Biologia/Ambiental (1º Ano EM)
+- [ ] **Teoria:** Conjuntos Numéricos (`ℕ, ℤ, ℚ, 𝕀, ℝ`) & Venn, Contagem (restrição do `0`), Função Afim (`ax+b`) e Quadrática (Bhaskara/Vértice), Geometria `3-4-5`, Química (Base Atômica, Ligações & Condutividade Metal/Iônico/Molecular, Massa Molar), Física (Óptica das Cores) e Biologia/Meio Ambiente (Método Científico, Efeito Estufa, Kyoto, `SO₂` CETESB).
+- [ ] **Prática & Questões:** Lab M-Tec (`lab_mtec`) + Quiz do Dia 13 (M-Tec 2022 Q10, Q13, Q14, Q17–Q23, Q33).
+
+### Dia 14 — Revisão Integrada Final, as 25 Pegadinhas da FAT e Estratégia para 04/12
+- [ ] **Revisão:** Ler a arquitetura ponta a ponta + Dicionário das 25 Pegadinhas + Tela *Verdade ou Fake da Banca* + zerar o *Modo Revanche* com questões erradas anteriores.
+- [ ] **Simulado Final & Preparação:** Aplicar a Regra das 3 Passadas, revisar a *Cola de Bolso* e separar documentos + **caneta preta/azul transparente** na véspera (03/12).
