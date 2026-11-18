@@ -4,6 +4,141 @@ Este manual reúne **explicações completas passo a passo, contexto no mundo re
 
 ---
 
+## 🗣️ Portugol & Sintaxe do Zero: Guia para Ler Qualquer Código na Prova (Sem Nunca Ter Programado!)
+
+Se você nunca programou em C, Java, JavaScript ou Python, pode respirar aliviado: **na prova da Etec (Fundação FAT / M-Tec) você NÃO precisa escrever programas do zero nem decorar ponto e vírgula**. Todas as 30 ou 40 questões são de múltipla escolha (`A` a `E`).
+
+O que você precisa é **saber LER trechos curtos de 4 a 10 linhas** que já vêm prontos na questão. Este guia traduz cada símbolo estranho para português claro!
+
+---
+
+### 1. O que é Portugol (Pseudocódigo) e Por que Cai na Prova?
+
+**Portugol** é uma forma didática de escrever algoritmos usando palavras em **Português** (como `leia`, `escreva`, `se`, `entao`, `enquanto`) para que qualquer estudante entenda a lógica sem depender de inglês ou de compiladores complexos.
+
+Todo algoritmo clássico em Portugol (estilo VisuAlg) tem esta cara:
+
+```portugol
+algoritmo "MediaDoHenrique"
+var
+    n1, n2, media: real      // Declara as "caixinhas" (variáveis) e o tipo delas
+inicio                       // Aqui começa a execução linha por linha
+    leia(n1, n2)             // Lê o que a pessoa digitou (ex.: 8 e 6)
+    media <- (n1 + n2) / 2   // Calcula e GUARDA 7.0 dentro de 'media'
+    se (media >= 6) entao
+        escreva("Aprovado!") // Mostra na tela
+    senao
+        escreva("Recuperação")
+    fimse
+fimalgoritmo
+```
+
+> [!TIP]
+> **Regras visuais rápidas:** Tudo depois de `//` (ou entre `/* ... */`) é apenas **comentário explicativo** para humanos — o computador ignora na hora de rodar! E `;` (ponto e vírgula) em C/Java/JS serve apenas como o "ponto final" de uma frase.
+
+---
+
+### 2. Tabela Tradutora Completa: Português ↔ Portugol ↔ C / Java / JS / Python
+
+Sempre que bater o olho numa questão da prova com código, use esta tabela mental:
+
+| O que faz na prática | Como vem em **Portugol** | Como vem em **C / Java / JS / Python** | Atenção à pegadinha! |
+| :--- | :--- | :--- | :--- |
+| **Guardar valor** *(Atribuição)* | `x <- 10` ou `x := 10` | `x = 10;` (C/Java/JS) ou `x = 10` (Py) | `=` sozinho ou `<-` significa **"recebe / guarda dentro"**, NÃO é pergunta de igualdade! |
+| **Comparar igualdade** *(Pergunta)* | `x = 10` ou `x == 10` | `x == 10` (ou `x === 10` no JS) | Pergunta: *"O valor dentro de x é igual a 10?"* (Responde Verdadeiro ou Falso). |
+| **Diferente de** | `x <> 10` ou `x != 10` | `x != 10` | Retorna Verdadeiro quando `x` **não** for `10`. |
+| **Somar +1** *(Incremento)* | `x <- x + 1` | `x++` ou `x += 1` | **`x++` é apenas um atalho preguiçoso para `x = x + 1`!** (`x--` subtrai 1). |
+| **Acumular soma** | `soma <- soma + x` | `soma += x;` | Pega o valor antigo de `soma`, soma `x` e guarda o total de volta em `soma`. |
+| **Quociente Inteiro** | `17 DIV 5` (dá **`3`**) | `17 / 5` (entre 2 `int` em C/Java) ou `17 // 5` (Py) | Descarta o que sobrou e fica só com a parte inteira! |
+| **Resto da Divisão** | `17 MOD 5` (dá **`2`**) | `17 % 5` | Símbolo **`%`** em código **NÃO** é porcentagem — é **MOD (resto da divisão)**! |
+| **Bloco de Decisão** | `se (cond) entao ... senao ... fimse` | `if (cond) { ... } else { ... }` | As chaves **`{ }`** em C/Java/JS fazem exatamente o papel de **`entao ... fimse`** (agrupam o bloco)! |
+| **Repetição Pré-Teste** | `enquanto (x <= 5) faca ... fimenquanto` | `while (x <= 5) { ... }` | Testa antes! Se já começar falso, não executa nenhuma vez. |
+| **Repetição Pós-Teste** | `repita ... ate (x > 5)` | `do { ... } while (x <= 5);` | **Executa pelo menos 1 vez** e só testa a parada no final! |
+| **Repetição Contada** | `para i de 0 ate 2 faca ... fimpara` | `for (int i = 0; i <= 2; i++) { ... }` | Começa em `0`, repete enquanto `i <= 2`, somando `+1` (`i++`) a cada volta (`i = 0, 1, 2`). |
+| **Vetor e Matriz** | `v[0]`, `M[i, j]` ou `M[i][j]` | `v[0]`, `M[i][j]` | Em C/Java/JS/Python a contagem sempre começa na gaveta **`0`** (`M[linha][coluna]`). |
+
+---
+
+### 3. O Mesmo Algoritmo Escrito Lado a Lado (Para Nunca Mais Estranhar!)
+
+Veja como somar os números pares de `0` a `4` parece idêntico quando você entende as chaves `{}` e o `%`:
+
+**Em Portugol (Estilo Prova Teórica):**
+```portugol
+soma <- 0
+para i de 0 ate 4 faca
+    se (i MOD 2 == 0) entao
+        soma <- soma + i
+    fimse
+fimpara
+escreva(soma)
+```
+
+**Exatamente o mesmo algoritmo em JavaScript / C / Java:**
+```javascript
+let soma = 0;
+for (let i = 0; i <= 4; i++) {
+    if (i % 2 == 0) {
+        soma += i;
+    }
+}
+console.log(soma);
+```
+> **Por que imprime `6` nos dois?**
+> - Volta `i = 0`: `0 % 2 == 0` (V) → `soma` = `0 + 0 = 0`
+> - Volta `i = 1`: `1 % 2 == 1` (F) → ignora
+> - Volta `i = 2`: `2 % 2 == 0` (V) → `soma` = `0 + 2 = 2`
+> - Volta `i = 3`: `3 % 2 == 1` (F) → ignora
+> - Volta `i = 4`: `4 % 2 == 0` (V) → `soma` = `2 + 4 = 6`
+> - Próximo passo `i` vira `5`, falha em `i <= 4` → **Fim! Resultado: `6`!**
+
+---
+
+### 4. Guia Relâmpago das Outras 3 Sintaxes que Caem Prontas na Prova
+
+Você também não precisa decorar comandos avançados de Banco de Dados ou Web — basta reconhecer visualmente estas peças:
+
+#### A. Como Ler SQL em 30 Segundos (Dias 6 e 7)
+Olhe sempre para a **PRIMEIRA PALAVRA** em maiúsculo do comando:
+1. **`CREATE` / `ALTER` / `DROP`** → É **DDL** (*mexe na estrutura/tabela inteira*). Ex.: `ALTER TABLE alunos ADD cpf VARCHAR(11);`
+2. **`INSERT` / `UPDATE` / `DELETE`** → É **DML** (*insere, altera ou apaga linhas/dados dentro da tabela*). Ex.: `DELETE FROM alunos WHERE id = 2;`
+3. **`SELECT`** → É **DQL** (*consulta/lê dados*). Fórmula favorita da banca FAT:
+   `SELECT COUNT(*) FROM tabela WHERE condicao;`
+   *(Tradução direta: "**SELECIONE A CONTAGEM DE LINHAS** (`COUNT(*)`) **DA TABELA** `tabela` **ONDE** (`WHERE`) a condição for verdadeira!").* **Regra fatal:** `COUNT(*)` nunca vai depois do `WHERE`!
+
+#### B. Como Ler Tags HTML5 em 30 Segundos (Dia 9)
+HTML usa etiquetas entre sinais de menor/maior abrindo `<tag>` e fechando com barra `</tag>`:
+```html
+<a href="https://etec.sp.gov.br" target="_blank">Clique aqui</a>
+```
+- `a` = é o nome da **Tag** (aqui, um **link**).
+- `href="..."` e `target="_blank"` = são **Atributos** dando superpoderes à tag (`_blank` manda abrir em **nova aba**!).
+- **Tags para reconhecer de olho fechado:**
+  - `<body>...</body>` → Todo conteúdo **visível** na página (`<head>` é invisível/configuração).
+  - `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<footer>` → **Tags Semânticas HTML5**.
+  - `<div>` e `<span>` → **Caixas Genéricas SEM semântica**.
+  - `<ol>` → Lista **Ordenada** (`1, 2, 3`); `<ul>` → Lista **Não Ordenada** (`• • •`); `<li>` → cada **Item** dentro delas.
+  - `<table>` → Tabela; **`<tr>`** → **Linha** (*Table Row*); **`<td>`** → **Célula comum** (*Table Data*); **`<th>`** → Título da coluna.
+  - `<form method="POST">` → Esconde dados como **senha** no corpo da requisição (nunca use `GET` para senhas, pois aparece na URL!).
+
+#### C. Como Ler Regras CSS3 em 30 Segundos (Dia 9)
+Toda regra CSS segue este único modelo visual:
+```css
+.cartao {
+    padding: 16px;
+    margin: 20px;
+    transform: scale(1.2);
+}
+```
+- **Antes da chave `{` é o Seletor** (quem vai mudar de visual: `h1` muda toda tag `<h1>`; **`.`** muda uma **classe**; **`#`** muda um **ID único**).
+- **Dentro de `{ ... }` vêm `propriedade: valor;`**:
+  - `padding` = acolchoamento **interno** (entre o texto e a borda).
+  - `margin` = espaçamento **externo** (afasta caixas vizinhas).
+  - `transform: scale(...) / rotate(...) / translate(...) / skew(...)` = aumenta/gira/move/inclina o elemento.
+
+
+---
+
 ## Dia 1 — Raio-X da Banca Fundação FAT, Memória RAM, Tipos Primitivos, Casting, DIV/MOD e Lógica Proposicional
 
 ### 🎯 Contexto no Mundo Real: Por que você precisa dominar isso?
@@ -64,6 +199,22 @@ Conheça os **5 Tipos Primitivos Oficiais** exigidos pela Etec:
 
 > [!WARNING]
 > **Pegadinha clássica da FAT (INFO 2025 Q19):** A questão pergunta qual tipo primitivo armazena adequadamente um caractere isolado (como `'S'` ou `'N'`, ou uma letra `'B'`). Resposta oficial: **`char` / Caractere** (e **NUNCA** `boolean`, que só guarda `true`/`false`, nem `float`, que guarda decimais!).
+
+---
+
+### 🗣️ Como Ler Código na Prova (Para Quem Nunca Programou!)
+
+Antes de seguir, não se assuste quando a questão mostrar símbolos estranhos de programação. Você **não vai escrever código do zero na prova** — só precisa saber **traduzir 5 atalhos** que aparecem nos enunciados:
+
+- **`<-` vs. `=` vs. `==` (O trio que confunde todo iniciante):**
+  - Em Portugol, `x <- 5` significa **"guarde `5` dentro da variável `x`"** (atribuição).
+  - Em C, Java, JavaScript e Python, o símbolo `=` sozinho faz esse mesmo papel de guardar (`x = 5` guarda 5!).
+  - Já **`==`** (dois iguais juntos) significa **pergunta de comparação**: *"o valor dentro de `x` é igual a 5?"* (responde Verdadeiro ou Falso).
+- **Atalhos `++`, `--` e `+=`:**
+  - `i++` é só um jeito curto de escrever **`i <- i + 1`** (soma 1 no contador).
+  - `i--` é o mesmo que **`i <- i - 1`**.
+  - `soma += x` é o mesmo que **`soma <- soma + x`** (soma `x` ao total já acumulado em `soma`).
+- **Chaves `{ }` e Ponto e Vírgula `;`:** Em C, Java e JavaScript, o `;` apenas encerra uma linha (como ponto final), e as chaves `{ ... }` apenas abraçam um bloco de instruções (equivalente ao `entao ... fimse` do Portugol).
 
 ---
 
@@ -256,6 +407,24 @@ Podemos escrever um algoritmo de três formas: **Descrição Narrativa** (portug
 
 > [!WARNING]
 > **Pegadinha clássica:** Nunca marque que **Retângulo** serve para decidir (`se/senão`), nem que **Losango** faz cálculos (`soma = a + b`). **Processamento/Atribuição = Retângulo**; **Condicional/Decisão = Losango**; **Ler/Imprimir = Paralelogramo**.
+
+---
+
+### 🗣️ Dicionário Visual: Portugol ↔ C / Java / JS (Mesmo Algoritmo Lado a Lado!)
+
+Na prova, algumas questões vêm em **Portugol** (Português estruturado) e outras vêm em **JavaScript, C, Java ou Python**. Olhe como **ambos dizem exatamente a mesma coisa**:
+
+| Ação | Em Portugol | Em C / Java / JavaScript |
+| :--- | :--- | :--- |
+| Mostrar na tela | `escreva(x)` | `console.log(x);` / `System.out.println(x);` |
+| Se ... Senão | `se (x > 5) entao ... senao ... fimse` | `if (x > 5) { ... } else { ... }` |
+| Enquanto (pré-teste) | `enquanto (x <= 6) faca ... fimenquanto` | `while (x <= 6) { ... }` |
+| Para (contado) | `para i de 0 ate 3 faca ... fimpara` | `for (let i = 0; i <= 3; i++) { ... }` |
+| Resto da divisão | `x MOD 2 == 0` | `x % 2 == 0` |
+
+**Exemplo real comparado:** se `x` começa em `1`, ambos os blocos abaixo somam `+2` enquanto `x <= 5` (`1 → 3 → 5 → 7`):
+- Portugol: `enquanto (x <= 5) faca x <- x + 2; fimenquanto`
+- JavaScript/C: `while (x <= 5) { x += 2; }` *(Exatamente a mesma lógica — nunca trave por causa de chaves ou setinhas!)*
 
 ---
 
