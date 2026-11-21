@@ -375,7 +375,7 @@
     <button class="mb-btn" data-tab="cards" onclick="goTab('cards')"><span class="mb-ico">🃏</span><span>Cards</span></button>
   </nav>
 
-  <script src="./dados_plataforma.js?v=20261121f"></script>
+  <script src="./dados_plataforma.js?v=20261121g"></script>
   <script>
     const D = window.ETEC_DATA;
     if (!D) {
@@ -1663,14 +1663,14 @@
         const qaHtml = interviews.map((item) => `
           <details class="recall-box">
             <summary>${escapeHtml(item.q)}</summary>
-            <div style="font-size:13.5px; color:var(--muted); margin-bottom:8px;"><strong>💡 Dica da Banca:</strong> ${escapeHtml(item.tip)}</div>
-            <div class="callout callout-note" style="margin:0;"><strong>🗣️ Modelo de Resposta Segura:</strong><br>${escapeHtml(item.model)}</div>
+            <div style="font-size:13.5px; color:var(--muted); margin-bottom:8px;"><strong>💡 Como responder:</strong> ${escapeHtml(item.tip)}</div>
+            <div class="callout callout-note" style="margin:0;"><strong>🗣️ Roteiro (use a sua história real):</strong><br>${escapeHtml(item.model)}</div>
           </details>
         `).join("");
         container.innerHTML = `
           <div class="subtabs">${tabBtns}</div>
           <h3 style="margin-top:0;">🎤 Simulador da Entrevista Individual (08/12)</h3>
-          <p style="font-size:14px; color:var(--muted);">Leia a pergunta, <strong>responda em voz alta</strong> com suas palavras e só depois abra o modelo de resposta segura!</p>
+          <p style="font-size:14px; color:var(--muted);">Leia a pergunta, <strong>responda em voz alta</strong> com suas palavras e só depois abra o roteiro. Não decore frases: conte a sua história verdadeira.</p>
           ${qaHtml}
         `;
         return;
@@ -1709,21 +1709,23 @@
         <h4>📋 Passo a passo (como fazer no laboratório):</h4>
         <ol style="padding-left:20px; font-size:14px;">${stepsHtml}</ol>
 
-        <div class="code-head">
-          <span>📄 ${escapeHtml(lab.codeTitle)}</span>
-          <button class="btn sm purple" onclick="copyP2Code('${lab.id}', 1, this)">📋 Copiar Código</button>
-        </div>
-        <pre class="q-code code-block-p2">${escapeHtml(lab.code)}</pre>
-
-        ${lab.code2 ? `
+        <details class="recall-box" style="margin-top:14px;">
+          <summary>🔒 Ver uma solução (só depois de tentar e cronometrar!)</summary>
           <div class="code-head">
-            <span>📄 ${escapeHtml(lab.code2Title)}</span>
-            <button class="btn sm purple" onclick="copyP2Code('${lab.id}', 2, this)">📋 Copiar Código</button>
+            <span>📄 ${escapeHtml(lab.codeTitle)}</span>
+            <button class="btn sm purple" onclick="copyP2Code('${lab.id}', 1, this)">📋 Copiar</button>
           </div>
-          <pre class="q-code code-block-p2">${escapeHtml(lab.code2)}</pre>
-        ` : ""}
+          <pre class="q-code code-block-p2">${escapeHtml(lab.code)}</pre>
+          ${lab.code2 ? `
+            <div class="code-head">
+              <span>📄 ${escapeHtml(lab.code2Title)}</span>
+              <button class="btn sm purple" onclick="copyP2Code('${lab.id}', 2, this)">📋 Copiar</button>
+            </div>
+            <pre class="q-code code-block-p2">${escapeHtml(lab.code2)}</pre>
+          ` : ""}
+        </details>
 
-        <h4>✅ Checklist de Autoavaliação (+10 XP cada item concluído!):</h4>
+        <h4>✅ Checklist: marque só o que você conseguiu fazer sozinho</h4>
         <div style="display:grid; gap:8px;">${checksHtml}</div>
       `;
     }
