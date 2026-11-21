@@ -65,7 +65,8 @@ DIAS = [
      "intro": "Como o CSS escolhe e estiliza elementos, padding × margin, centralizar com Flexbox, viewport e @media; JavaScript básico e tipos de aplicativo (web, nativo, híbrido).",
      "practice": "lab04", "tag": "02_Web_Design",
      "videos": [("boxmodel", 120, 510, "As camadas da caixa: conteúdo, padding, borda e margem.")],
-     "quiz": refs("irma2025ipi:22", "irma2024ipi:39", "irma2024ipi:40", "taboao2023:29", "taboao2023:39", "taboao2023:40")},
+     "quiz": refs("irma2025ipi:22", "irma2024ipi:39", "irma2024ipi:40", "novas:3", "novas:4", "novas:5",
+                  "novas:6", "novas:7", "novas:8", "novas:10")},
     {"day": 6, "date": "Qui 26/11", "phase": 1, "weight": "Alta",
      "title": "Banco de Dados I: tabelas, chaves, DER, normalização e SQL",
      "intro": "Tabela, registro e campo; chave primária e estrangeira; cardinalidade; DER e os modelos conceitual, lógico e físico; dicionário de dados; normalização; SQL básico.",
@@ -170,6 +171,7 @@ EXAM_META = {
     "irma2024ipi": {"group": "bank", "title": "Taboão — Informática para Internet, 06/12/2024", "badge": "Banco", "desc": ""},
     "irma2025inf": {"group": "bank", "title": "Taboão — Informática, 05/12/2025", "badge": "Banco", "desc": ""},
     "irma2025ipi": {"group": "bank", "title": "Taboão — Informática para Internet, 05/12/2025", "badge": "Banco", "desc": ""},
+    "novas": {"group": "bank", "title": "Questões inéditas no estilo de Taboão", "badge": "Banco", "desc": ""},
 }
 
 PRIMARY = ["taboao2026", "taboao2025", "repetidas"]
