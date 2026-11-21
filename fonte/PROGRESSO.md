@@ -37,3 +37,12 @@ Informação do Henrique (20/11): um amigo que estuda na Etec disse que há vaga
 ## Pendências / ideias
 - Depois do diagnóstico do Henrique (21/11), recalibrar: ver o relatório e reforçar as áreas vermelhas.
 - As listas de resultado (com nomes e CPFs) ficam só em fonte/provas_taboao/ (ignorado pelo Git). Não publicar.
+
+## Sincronização PC ↔ celular (21/11/2026)
+
+- Worker `etec-ds-sync` no Cloudflare (conta do Gabriel), código em `~/gabriel/projeto-henrique/sync-worker/` (fora do repo), banco D1 `etec-ds-sync` (tabela `progress(code, data, updated)`).
+- O site guarda um código pessoal em `localStorage["etec_sync_code"]`; o link `?c=CODIGO` troca o código do aparelho. O código do Henrique **não** fica no repositório (é público).
+- O site envia `{p: pState, c: cState}` 20 s depois de cada alteração (na hora ao sair da aba) e ao abrir/voltar para a aba; o Worker junta com o que está salvo (`mergeP`/`mergeC`: dias e cards somados, maior nota, maior XP, histórico por chave com o mais recente vencendo, "Zerar" via `resetAt`) e devolve a versão juntada.
+- D1 em vez de KV: KV pode levar até 60 s para mostrar uma gravação de outro aparelho.
+- Limites: só aceita origem gabrielsrd.github.io (e localhost para teste), corpo até 256 KB, no máximo 200 códigos.
+- Deploy: `cd sync-worker && npx wrangler deploy`.

@@ -334,6 +334,10 @@
       .panel { padding: 15px; border-radius: 14px; }
       .container { padding: 0 10px; margin: 12px auto; gap: 12px; }
     }
+    .sync-grid { display:grid; grid-template-columns: 170px minmax(0,1fr); gap:14px; align-items:start; }
+    .sync-qr { width:170px; height:170px; background:#fff; border-radius:10px; padding:6px; display:flex; align-items:center; justify-content:center; }
+    .sync-qr svg { width:100%; height:100%; }
+    @media (max-width: 600px) { .sync-grid { grid-template-columns: minmax(0,1fr); } .sync-qr { margin:0 auto; } }
   </style>
 </head>
 <body>
@@ -345,7 +349,7 @@
         <span class="hud-pill hide-mobile" id="topChapters">🗺️ 0/16 dias</span>
         <span class="hud-pill hide-mobile" id="topCards">🃏 0/102 cards</span>
         <span class="hud-pill hide-mobile" id="topXp">⭐ 0 XP</span>
-        <button class="btn sm purple" onclick="toggleSyncPanel()" title="Sincronizar PC ↔ Celular">📲 Sync</button>
+        <button class="btn sm purple" id="syncBtn" onclick="toggleSyncPanel()" title="Sincronizar PC ↔ Celular">☁️ Sync</button>
         <button class="btn sm dark" id="themeBtn" onclick="toggleTheme()" title="Alternar Modo Claro / Escuro">🌙</button>
         <button class="btn sm dark hide-mobile" id="soundBtn" onclick="toggleSound()">🔊 Som</button>
       </div>
@@ -453,38 +457,38 @@
       if (b) b.textContent = next === "dark" ? "☀️" : "🌙";
     }
 
+    function defaultPlatformState() {
+      return {
+        startDate: D.defaultStartIso || "2026-11-21",
+        completedDays: [], examScores: {}, moduleScores: {}, qHistory: {}, wrongQueue: [], vfHistory: {}, checks: {},
+        vfVersion: D.cardsVersion,
+      };
+    }
+
+    // Completa campos que faltam e limpa o que não existe mais (usado ao carregar e ao receber da nuvem)
+    function sanitizePlatformState(obj) {
+      obj = { ...defaultPlatformState(), ...(obj || {}) };
+      ["moduleScores", "examScores", "qHistory", "vfHistory", "checks"].forEach((k) => {
+        if (!obj[k] || typeof obj[k] !== "object" || Array.isArray(obj[k])) obj[k] = {};
+      });
+      if (!Array.isArray(obj.completedDays)) obj.completedDays = [];
+      if (!Array.isArray(obj.wrongQueue)) obj.wrongQueue = [];
+      // Remove erros pendentes de provas/questões que não existem mais
+      obj.wrongQueue = obj.wrongQueue.filter((k) => {
+        const i = String(k).lastIndexOf("_");
+        const ex = D.exams[String(k).slice(0, i)];
+        return !!(ex && ex.questions.some((q) => q.num === Number(String(k).slice(i + 1))));
+      });
+      if (obj.vfVersion !== D.cardsVersion) { obj.vfHistory = {}; obj.vfVersion = D.cardsVersion; }
+      return obj;
+    }
+
     function loadPlatformState() {
       try {
         const raw = localStorage.getItem(STORE_CENTRAL);
-        if (raw) {
-          const obj = JSON.parse(raw);
-          if (!obj.moduleScores) obj.moduleScores = {};
-          if (!obj.examScores) obj.examScores = {};
-          if (!obj.completedDays) obj.completedDays = [];
-          if (!obj.qHistory) obj.qHistory = {};
-          if (!obj.wrongQueue) obj.wrongQueue = [];
-          // Remove erros pendentes de provas/questões que não existem mais (provas FAT e simulados antigos removidos)
-          obj.wrongQueue = obj.wrongQueue.filter((k) => {
-            const i = k.lastIndexOf("_");
-            const ex = D.exams[k.slice(0, i)];
-            return !!(ex && ex.questions.some((q) => q.num === Number(k.slice(i + 1))));
-          });
-          if (!obj.vfHistory) obj.vfHistory = {};
-          if (obj.vfVersion !== D.cardsVersion) { obj.vfHistory = {}; obj.vfVersion = D.cardsVersion; }
-          if (!obj.checks) obj.checks = {};
-          return obj;
-        }
+        if (raw) return sanitizePlatformState(JSON.parse(raw));
       } catch (e) {}
-      return {
-        startDate: D.defaultStartIso || "2026-11-21",
-        completedDays: [],
-        examScores: {},
-        moduleScores: {},
-        qHistory: {},
-        wrongQueue: [],
-        vfHistory: {},
-        checks: {},
-      };
+      return defaultPlatformState();
     }
 
     function recordQuestionResult(examId, qNum, isCorrect, isRevanche = false) {
@@ -501,30 +505,42 @@
     }
 
     function savePlatformState() {
+      pState._t = Date.now();
       try { localStorage.setItem(STORE_CENTRAL, JSON.stringify(pState)); } catch (e) {}
       updateTopHud();
+      scheduleCloudPush();
+    }
+
+    function defaultCardsState() {
+      return { xp: 0, streak: 0, hearts: 5, known: [], review: [], cardsVersion: D.cardsVersion };
+    }
+
+    function sanitizeCardsState(obj) {
+      obj = { ...defaultCardsState(), ...(obj || {}) };
+      if (!Array.isArray(obj.known)) obj.known = [];
+      if (!Array.isArray(obj.review)) obj.review = [];
+      if (obj.cardsVersion !== D.cardsVersion) { obj.known = []; obj.review = []; obj.cardsVersion = D.cardsVersion; }
+      // Sanitiza índices se o baralho mudou de tamanho entre versões
+      obj.known = obj.known.filter((i) => i >= 0 && i < D.flashcards.length);
+      obj.review = obj.review.filter((i) => i >= 0 && i < D.flashcards.length);
+      obj.xp = Number(obj.xp) || 0;
+      obj.streak = Number(obj.streak) || 0;
+      return obj;
     }
 
     function loadCardsState() {
       try {
         const raw = localStorage.getItem(STORE_CARDS);
-        if (raw) {
-          const obj = JSON.parse(raw);
-          if (!Array.isArray(obj.known)) obj.known = [];
-          if (!Array.isArray(obj.review)) obj.review = [];
-          // Sanitiza índices se o baralho mudou de tamanho entre versões
-          obj.known = obj.known.filter((i) => i >= 0 && i < D.flashcards.length);
-          if (obj.cardsVersion !== D.cardsVersion) { obj.known = []; obj.review = []; obj.cardsVersion = D.cardsVersion; }
-          obj.review = obj.review.filter((i) => i >= 0 && i < D.flashcards.length);
-          return obj;
-        }
+        if (raw) return sanitizeCardsState(JSON.parse(raw));
       } catch (e) {}
-      return { xp: 0, streak: 0, hearts: 5, known: [], review: [] };
+      return defaultCardsState();
     }
 
     function saveCardsState() {
+      cState._t = Date.now();
       try { localStorage.setItem(STORE_CARDS, JSON.stringify(cState)); } catch (e) {}
       updateTopHud();
+      scheduleCloudPush();
     }
 
     function playTone(freq, dur, type = "sine", delay = 0) {
@@ -666,6 +682,181 @@
     // ==================== SYNC PC ↔ CELULAR ====================
     let showSyncPanel = false;
     let syncMsg = "";
+    // ===== Sincronização automática pela nuvem (Cloudflare Worker + D1) =====
+    // Cada aparelho guarda um código pessoal; quem abre o link ?c=CODIGO passa a usar o mesmo progresso.
+    const SYNC_API = (typeof window !== "undefined" && window.ETEC_SYNC_API_OVERRIDE) || "https://etec-ds-sync.bieldetilu.workers.dev";
+    const STORE_SYNC = "etec_sync_code";
+    const SYNC_DEBOUNCE_MS = 20000;
+    let syncCode = initSyncCode();
+    let cloudTimer = null;
+    let cloudBusy = false;
+    let cloudAgain = false;
+    let cloudStatus = "idle"; // idle | syncing | ok | off
+    let cloudLastOk = 0;
+
+    function cloudEnabled() {
+      return !!(syncCode && SYNC_API && SYNC_API.startsWith("http") && typeof fetch === "function");
+    }
+
+    function initSyncCode() {
+      let fromUrl = null;
+      try {
+        const u = new URL(window.location.href);
+        const c = (u.searchParams.get("c") || "").trim().toLowerCase();
+        if (/^[a-z0-9]{8,32}$/.test(c)) fromUrl = c;
+        if (u.searchParams.has("c")) {
+          u.searchParams.delete("c");
+          history.replaceState(null, "", u.pathname + u.search + u.hash);
+        }
+      } catch (e) {}
+      try {
+        if (fromUrl) { localStorage.setItem(STORE_SYNC, fromUrl); return fromUrl; }
+        const saved = localStorage.getItem(STORE_SYNC);
+        if (saved && /^[a-z0-9]{8,32}$/.test(saved)) return saved;
+        const alphabet = "abcdefghjkmnpqrstuvwxyz23456789";
+        const rnd = new Uint8Array(12);
+        crypto.getRandomValues(rnd);
+        const code = Array.from(rnd, (b) => alphabet[b % alphabet.length]).join("");
+        localStorage.setItem(STORE_SYNC, code);
+        return code;
+      } catch (e) { return null; }
+    }
+
+    function personalLink() {
+      const base = window.location.href.split(/[?#]/)[0];
+      return `${base}?c=${syncCode}`;
+    }
+
+    // Comparação que ignora a ordem das chaves dos objetos
+    function stableStr(x) {
+      if (Array.isArray(x)) return "[" + x.map(stableStr).join(",") + "]";
+      if (x && typeof x === "object") return "{" + Object.keys(x).sort().map((k) => JSON.stringify(k) + ":" + stableStr(x[k])).join(",") + "}";
+      return JSON.stringify(x);
+    }
+
+    function setCloudStatus(st) {
+      cloudStatus = st;
+      if (st === "ok") cloudLastOk = Date.now();
+      const btn = document.getElementById("syncBtn");
+      if (btn) {
+        const icon = st === "ok" ? "☁️✓" : st === "syncing" ? "☁️…" : st === "off" ? "☁️⚠" : "☁️";
+        btn.textContent = `${icon} Sync`;
+        btn.title = st === "ok" ? "Progresso salvo na nuvem" : st === "off" ? "Sem conexão: o progresso fica neste aparelho e sobe quando a internet voltar" : "Sincronizar PC ↔ Celular";
+      }
+      const el = document.getElementById("cloudStatusLine");
+      if (el) el.innerHTML = cloudStatusText();
+    }
+
+    function cloudStatusText() {
+      if (!cloudEnabled()) return "⚠️ Sincronização automática indisponível neste navegador.";
+      if (cloudStatus === "syncing") return "☁️ Sincronizando…";
+      if (cloudStatus === "off") return "⚠️ Sem conexão agora. O progresso fica salvo neste aparelho e sobe sozinho quando a internet voltar.";
+      if (cloudStatus === "ok") {
+        const t = new Date(cloudLastOk);
+        return `✅ Progresso salvo na nuvem às ${String(t.getHours()).padStart(2, "0")}:${String(t.getMinutes()).padStart(2, "0")}.`;
+      }
+      return "☁️ Aguardando a primeira sincronização…";
+    }
+
+    function applyCloudState(data) {
+      if (!data || typeof data.p !== "object" || typeof data.c !== "object") return false;
+      const newP = sanitizePlatformState(data.p);
+      const newC = sanitizeCardsState(data.c);
+      if (stableStr(newP) === stableStr(pState) && stableStr(newC) === stableStr(cState)) return false;
+      pState = newP;
+      cState = newC;
+      try {
+        localStorage.setItem(STORE_CENTRAL, JSON.stringify(pState));
+        localStorage.setItem(STORE_CARDS, JSON.stringify(cState));
+      } catch (e) {}
+      // Só redesenha a tela inteira no Início, para não atrapalhar uma lição ou prova em andamento
+      if (activeTab === "home") renderMain(); else updateTopHud();
+      return true;
+    }
+
+    async function cloudSync() {
+      if (!cloudEnabled()) return;
+      if (cloudBusy) { cloudAgain = true; return; }
+      if (cloudTimer) { clearTimeout(cloudTimer); cloudTimer = null; }
+      cloudBusy = true;
+      setCloudStatus("syncing");
+      try {
+        const res = await fetch(`${SYNC_API}/p/${syncCode}`, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=UTF-8" },
+          body: JSON.stringify({ p: pState, c: cState }),
+          cache: "no-store",
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        applyCloudState(await res.json());
+        setCloudStatus("ok");
+      } catch (e) {
+        setCloudStatus("off");
+      } finally {
+        cloudBusy = false;
+        if (cloudAgain) { cloudAgain = false; scheduleCloudPush(); }
+      }
+    }
+
+    function scheduleCloudPush() {
+      if (!cloudEnabled()) return;
+      if (cloudTimer) clearTimeout(cloudTimer);
+      cloudTimer = setTimeout(() => { cloudTimer = null; cloudSync(); }, SYNC_DEBOUNCE_MS);
+    }
+
+    // Ao sair da aba ou fechar: envia o que estiver pendente na hora
+    function cloudFlush() {
+      if (!cloudEnabled() || !cloudTimer) return;
+      clearTimeout(cloudTimer);
+      cloudTimer = null;
+      try {
+        const body = JSON.stringify({ p: pState, c: cState });
+        if (navigator.sendBeacon && navigator.sendBeacon(`${SYNC_API}/p/${syncCode}`, body)) return;
+        fetch(`${SYNC_API}/p/${syncCode}`, { method: "POST", headers: { "Content-Type": "text/plain;charset=UTF-8" }, body, keepalive: true }).catch(() => {});
+      } catch (e) {}
+    }
+
+    if (typeof document !== "undefined" && typeof document.addEventListener === "function") {
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") cloudFlush();
+        else cloudSync(); // voltou para a aba: pega o que foi feito no outro aparelho
+      });
+      window.addEventListener("pagehide", cloudFlush);
+      window.addEventListener("online", () => cloudSync());
+    }
+
+    let qrLibPromise = null;
+    function loadQrLib() {
+      if (typeof qrcode === "function") return Promise.resolve();
+      if (!qrLibPromise) {
+        qrLibPromise = new Promise((resolve, reject) => {
+          const s = document.createElement("script");
+          s.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js";
+          s.onload = resolve;
+          s.onerror = () => { qrLibPromise = null; reject(); };
+          document.head.appendChild(s);
+        });
+      }
+      return qrLibPromise;
+    }
+    function drawSyncQr() {
+      const box = document.getElementById("syncQr");
+      if (!box) return;
+      loadQrLib().then(() => {
+        const qr = qrcode(0, "M");
+        qr.addData(personalLink());
+        qr.make();
+        box.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 2, scalable: true });
+      }).catch(() => { box.innerHTML = '<small style="color:var(--muted)">QR indisponível sem internet — use o link.</small>'; });
+    }
+    function copyPersonalLink() {
+      const link = personalLink();
+      const done = () => { const el = document.getElementById("linkCopyMsg"); if (el) el.textContent = "✅ Link copiado!"; };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(link).then(done).catch(() => {});
+      const inp = document.getElementById("personalLinkBox");
+      if (inp) { inp.select(); }
+    }
+
     function encodeSyncPayload() {
       const jsonStr = JSON.stringify({ p: pState, c: cState });
       const utf8Bytes = new TextEncoder().encode(jsonStr);
@@ -686,7 +877,7 @@
       showSyncPanel = !showSyncPanel;
       syncMsg = "";
       renderSyncHost();
-      if (showSyncPanel) exportSyncCode(true);
+      if (showSyncPanel) { drawSyncQr(); cloudSync(); }
     }
     function exportSyncCode(silent = false) {
       const code = encodeSyncPayload();
@@ -705,14 +896,8 @@
       const raw = rawOverride !== undefined ? rawOverride : (box ? box.value : "");
       try {
         const data = decodeSyncPayload(raw);
-        pState = {
-          startDate: D.defaultStartIso || "2026-11-21",
-          completedDays: [], examScores: {}, moduleScores: {}, qHistory: {}, wrongQueue: [], vfHistory: {}, checks: {},
-          ...data.p,
-        };
-        cState = { xp: 0, streak: 0, hearts: 5, known: [], review: [], ...data.c };
-        cState.known = (cState.known || []).filter((i) => i >= 0 && i < D.flashcards.length);
-        cState.review = (cState.review || []).filter((i) => i >= 0 && i < D.flashcards.length);
+        pState = sanitizePlatformState(data.p);
+        cState = sanitizeCardsState(data.c);
         savePlatformState();
         saveCardsState();
         syncMsg = "🎉 Progresso sincronizado com sucesso!";
@@ -728,19 +913,42 @@
       if (!host) return;
       if (!showSyncPanel) { host.innerHTML = ""; return; }
       const ok = syncMsg.startsWith("🎉") || syncMsg.startsWith("✅");
+      const link = syncCode ? personalLink() : "";
       host.innerHTML = `
         <section class="panel" style="background:var(--purple-soft); border-color:var(--purple); margin-top:10px;">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
-            <h3 style="margin:0;">📲 Sincronizar Progresso PC ↔ Celular (Via WhatsApp)</h3>
+            <h3 style="margin:0;">📲 Continuar no celular ou no PC</h3>
             <button class="btn sm outline" onclick="toggleSyncPanel()">✕ Fechar</button>
           </div>
-          <p style="margin:0 0 10px 0; font-size:13.5px; color:var(--muted);">Clique em <strong>Gerar &amp; Copiar</strong>, mande no WhatsApp e cole abaixo no outro aparelho clicando em <strong>Carregar Código</strong>.</p>
-          <textarea id="syncCodeBox" rows="3" placeholder="Cole aqui o código de sincronização..." style="width:100%; padding:8px; border:1px solid var(--border); border-radius:8px; font-family:monospace; font-size:12px; background:var(--surface); color:var(--text);">${encodeSyncPayload()}</textarea>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; align-items:center;">
-            <button class="btn sm purple" onclick="exportSyncCode(false)">📋 Gerar &amp; Copiar Meu Código</button>
-            <button class="btn sm green" onclick="importSyncCode()">📥 Carregar Código Colado</button>
-            <span id="syncStatusMsg" style="font-size:13px; font-weight:700; color:${ok ? "var(--green)" : "var(--red)"};">${escapeHtml(syncMsg)}</span>
-          </div>
+          <p id="cloudStatusLine" style="margin:0 0 10px 0; font-size:14px; font-weight:700;">${cloudStatusText()}</p>
+          ${cloudEnabled() ? `
+          <div class="sync-grid">
+            <div id="syncQr" class="sync-qr" aria-label="QR code do seu link pessoal"><small style="color:var(--muted)">Gerando QR…</small></div>
+            <div style="min-width:0;">
+              <p style="margin:0 0 8px 0; font-size:14px;">O progresso é salvo sozinho. Para usar <strong>o mesmo progresso</strong> em outro aparelho, abra nele o <strong>seu link pessoal</strong> uma vez:</p>
+              <ul style="margin:0 0 10px 0; padding-left:20px; font-size:14px;">
+                <li><strong>Celular:</strong> com esta tela aberta no PC, aponte a câmera do celular para o QR.</li>
+                <li><strong>PC:</strong> copie o link no celular e mande para você mesmo no WhatsApp.</li>
+              </ul>
+              <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+                <input id="personalLinkBox" readonly value="${escapeHtml(link)}" onclick="this.select()" style="flex:1 1 220px; min-width:0; padding:7px 9px; border:1px solid var(--border); border-radius:8px; font-family:monospace; font-size:12.5px; background:var(--surface); color:var(--text);">
+                <button class="btn sm purple" onclick="copyPersonalLink()">📋 Copiar link</button>
+                <button class="btn sm outline" onclick="cloudSync()">🔄 Sincronizar agora</button>
+                <span id="linkCopyMsg" style="font-size:13px; font-weight:700; color:var(--green);"></span>
+              </div>
+              <p style="margin:8px 0 0 0; font-size:12.5px; color:var(--muted);">Depois de aberto uma vez, o aparelho lembra do link. Não compartilhe com outras pessoas: quem tiver o link mexe no mesmo progresso.</p>
+            </div>
+          </div>` : ""}
+          <details style="margin-top:10px;">
+            <summary style="cursor:pointer; font-size:13.5px; font-weight:700;">Plano B sem internet: código manual pelo WhatsApp</summary>
+            <p style="margin:8px 0; font-size:13.5px; color:var(--muted);">Clique em <strong>Gerar &amp; Copiar</strong>, mande no WhatsApp e, no outro aparelho, cole abaixo e clique em <strong>Carregar Código</strong>. Isso substitui o progresso do outro aparelho.</p>
+            <textarea id="syncCodeBox" rows="3" placeholder="Cole aqui o código de sincronização..." style="width:100%; padding:8px; border:1px solid var(--border); border-radius:8px; font-family:monospace; font-size:12px; background:var(--surface); color:var(--text);">${encodeSyncPayload()}</textarea>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; align-items:center;">
+              <button class="btn sm purple" onclick="exportSyncCode(false)">📋 Gerar &amp; Copiar Meu Código</button>
+              <button class="btn sm green" onclick="importSyncCode()">📥 Carregar Código Colado</button>
+              <span id="syncStatusMsg" style="font-size:13px; font-weight:700; color:${ok ? "var(--green)" : "var(--red)"};">${escapeHtml(syncMsg)}</span>
+            </div>
+          </details>
         </section>
       `;
     }
@@ -947,7 +1155,7 @@
             <div style="display:flex; gap:6px; flex-wrap:wrap;">
               <button class="btn sm outline" onclick="goTab('apostila')">📖 Apostila &amp; Cola</button>
               <button class="btn sm outline" onclick="goTab('labs')">🧪 Micro-Labs</button>
-              <button class="btn sm outline" onclick="if(confirm('Zerar todo o progresso salvo neste aparelho?')){pState.completedDays=[];pState.examScores={};pState.moduleScores={};pState.qHistory={};pState.wrongQueue=[];pState.vfHistory={};pState.checks={};revancheAnswers={};vfSessionPicked={};savePlatformState();renderMain();}">↺ Zerar</button>
+              <button class="btn sm outline" onclick="if(confirm('Zerar todo o progresso salvo neste aparelho?')){pState.completedDays=[];pState.examScores={};pState.moduleScores={};pState.qHistory={};pState.wrongQueue=[];pState.vfHistory={};pState.checks={};pState.resetAt=Date.now();revancheAnswers={};vfSessionPicked={};savePlatformState();renderMain();}">↺ Zerar</button>
             </div>
           </div>
           <div style="display:grid; gap:8px;">${primaryExamsHtml}</div>
@@ -2490,6 +2698,8 @@
 
     initTheme();
     renderMain();
+    setCloudStatus("idle");
+    cloudSync();
   </script>
 </body>
 </html>
