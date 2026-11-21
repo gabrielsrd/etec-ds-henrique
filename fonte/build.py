@@ -196,6 +196,7 @@ def main():
         "extraExamIds": EXTRA,
         "areas": AREAS,
         "vfStatements": VF,
+        "cardsVersion": "cards_v2_20261121",
         "flashcards": FLASHCARDS,
         "pairs": PAIRS,
         "phase2": PHASE2,

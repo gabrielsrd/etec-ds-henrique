@@ -375,7 +375,7 @@
     <button class="mb-btn" data-tab="cards" onclick="goTab('cards')"><span class="mb-ico">🃏</span><span>Cards</span></button>
   </nav>
 
-  <script src="./dados_plataforma.js?v=20261121i"></script>
+  <script src="./dados_plataforma.js?v=20261121j"></script>
   <script>
     const D = window.ETEC_DATA;
     if (!D) {
@@ -470,6 +470,7 @@
             return !!(ex && ex.questions.some((q) => q.num === Number(k.slice(i + 1))));
           });
           if (!obj.vfHistory) obj.vfHistory = {};
+          if (obj.vfVersion !== D.cardsVersion) { obj.vfHistory = {}; obj.vfVersion = D.cardsVersion; }
           if (!obj.checks) obj.checks = {};
           return obj;
         }
@@ -513,6 +514,7 @@
           if (!Array.isArray(obj.review)) obj.review = [];
           // Sanitiza índices se o baralho mudou de tamanho entre versões
           obj.known = obj.known.filter((i) => i >= 0 && i < D.flashcards.length);
+          if (obj.cardsVersion !== D.cardsVersion) { obj.known = []; obj.review = []; obj.cardsVersion = D.cardsVersion; }
           obj.review = obj.review.filter((i) => i >= 0 && i < D.flashcards.length);
           return obj;
         }
