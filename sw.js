@@ -1,4 +1,4 @@
-const CACHE_NAME = "etec-ds-henrique-v7";
+const CACHE_NAME = "etec-ds-henrique-v8";
 const CORE_ASSETS = [
   "./",
   "./index.html",

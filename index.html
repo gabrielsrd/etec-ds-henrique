@@ -740,11 +740,26 @@
       const btn = document.getElementById("syncBtn");
       if (btn) {
         const icon = st === "ok" ? "☁️✓" : st === "syncing" ? "☁️…" : st === "off" ? "☁️⚠" : "☁️";
-        btn.textContent = `${icon} Sync`;
+        const name = profileName();
+        btn.textContent = name ? `👤 ${name} ${icon}` : `${icon} Sync`;
         btn.title = st === "ok" ? "Progresso salvo na nuvem" : st === "off" ? "Sem conexão: o progresso fica neste aparelho e sobe quando a internet voltar" : "Sincronizar PC ↔ Celular";
       }
       const el = document.getElementById("cloudStatusLine");
       if (el) el.innerHTML = cloudStatusText();
+    }
+
+    function profileName() {
+      return String((pState && pState.profileName) || "").trim().slice(0, 30);
+    }
+    function saveProfileName() {
+      const inp = document.getElementById("profileNameBox");
+      if (!inp) return;
+      pState.profileName = inp.value.trim().slice(0, 30);
+      savePlatformState();
+      setCloudStatus(cloudStatus);
+      renderSyncHost();
+      drawSyncQr();
+      cloudSync();
     }
 
     function cloudStatusText() {
@@ -771,6 +786,7 @@
       } catch (e) {}
       // Só redesenha a tela inteira no Início, para não atrapalhar uma lição ou prova em andamento
       if (activeTab === "home") renderMain(); else updateTopHud();
+      setCloudStatus(cloudStatus);
       return true;
     }
 
@@ -919,6 +935,11 @@
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
             <h3 style="margin:0;">📲 Continuar no celular ou no PC</h3>
             <button class="btn sm outline" onclick="toggleSyncPanel()">✕ Fechar</button>
+          </div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin:0 0 8px 0;">
+            <span style="font-size:15px; font-weight:800;">${profileName() ? `👤 Conectado como ${escapeHtml(profileName())}` : "👤 Qual é o seu nome?"}</span>
+            <input id="profileNameBox" maxlength="30" placeholder="Seu nome" value="${escapeHtml(profileName())}" style="flex:0 1 160px; min-width:0; padding:6px 8px; border:1px solid var(--border); border-radius:8px; background:var(--surface); color:var(--text);">
+            <button class="btn sm outline" onclick="saveProfileName()">${profileName() ? "Trocar nome" : "Salvar"}</button>
           </div>
           <p id="cloudStatusLine" style="margin:0 0 10px 0; font-size:14px; font-weight:700;">${cloudStatusText()}</p>
           ${cloudEnabled() ? `
