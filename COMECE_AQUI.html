@@ -233,6 +233,7 @@
       display: flex; align-items: center; justify-content: space-between; gap: 8px;
     }
     details.recall-box summary::-webkit-details-marker { display: none; }
+    details.recall-box, details.recall-box summary { overflow-wrap: anywhere; word-break: break-word; min-width: 0; }
     details.recall-box summary::after { content: "▼ Abrir"; font-size: 12px; color: var(--purple); white-space: nowrap; }
     details.recall-box[open] summary::after { content: "▲ Ocultar"; }
     details.recall-box[open] summary { margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px dashed var(--border); }
@@ -374,7 +375,7 @@
     <button class="mb-btn" data-tab="cards" onclick="goTab('cards')"><span class="mb-ico">🃏</span><span>Cards</span></button>
   </nav>
 
-  <script src="./dados_plataforma.js?v=20261121b"></script>
+  <script src="./dados_plataforma.js?v=20261121c"></script>
   <script>
     const D = window.ETEC_DATA;
     if (!D) {
