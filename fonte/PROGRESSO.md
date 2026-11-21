@@ -17,8 +17,8 @@ Informação do Henrique (20/11): um amigo que estuda na Etec disse que há vaga
 ## Etapas
 - [x] 1. Hotfix publicado em 20/11 (commit e386140)
 - [x] 2. Banco: 8 arquivos em fonte/provas/*.md (296 questões, gabarito verificado, explicações didáticas)
-- [ ] 3. Mapa de assuntos e repetições (fonte/mapa_provas.md)
-- [ ] 4. Aulas profundas dia a dia (fonte/aulas/dia_NN.md)
+- [x] 3. Repetições: treino automático (22 grupos) em build.py + MANUAL_GROUPS/EXTRA_OCCURRENCES em dias.py
+- [ ] 4. Aulas (fonte/aulas/dia_NN.md): 1–8 prontas e publicadas (C# verificado com fonte/verificar_csharp.py via Docker; SQL via sqlite3). Faltam 9–16.
 - [ ] 5. Simulados novos + banco de repetidas + cards
 - [ ] 6. 2ª fase (labs + entrevista)
 - [ ] 7. Limpeza (FAT, Portugol, cards-app, micro-labs FAT), testes no navegador, publicação
@@ -28,3 +28,8 @@ Informação do Henrique (20/11): um amigo que estuda na Etec disse que há vaga
 - Quizzes dos dias 2–8 NÃO usam dez/2024 (fica limpa para o simulado do Dia 9).
 - Áreas: 16 (fonte/provas.py AREAS). Remover provas FAT, apostas, sim1, sim2, sim_taboao2027 (gabarito viciado em B).
 - Cronograma: 1 diag · 2 Prog I · 3 Prog II · 4 Web I · 5 Web II · 6 BD · 7 APS+Design · 8 Fundamentos (+simulado técnico) · 9 Simulado real dez/2024 · 10 Linguagens (Port, Ing, Arte) · 11 Mat · 12 Natureza (Fís, Quím, Bio) · 13 Humanas + Pesquisa + EdF + véspera · 14–16 laboratório.
+
+## Ferramentas
+- Build: `python3 fonte/build.py` → dados_plataforma.js; depois `cp COMECE_AQUI.html index.html` e trocar `?v=` do script.
+- Verificar C#: `VERIF_TMP=<scratch> python3 fonte/verificar_csharp.py dia_NN.md` (marcar blocos ilustrativos com ```csharp nocheck e entradas com in=a|b).
+- Banco de questões inéditas: fonte/simulados/banco_novo.md (id novas, grupo bank).
