@@ -8,152 +8,269 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <link rel="manifest" href="./manifest.json" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
-  <title>Plataforma ETEC DS M-Tec — Modo História &amp; Simulador (Prova 04/12)</title>
+  <title>ETEC Taboão da Serra — 2ª Série M-Tec DS (04/12 &amp; 08/12)</title>
   <style>
     :root {
-      --bg: #f1f5f9; --surface: #ffffff; --primary: #1d4ed8; --primary-dark: #1e3a8a;
-      --green: #16a34a; --green-soft: #dcfce7; --purple: #7c3aed; --amber: #d97706;
-      --red: #dc2626; --text: #0f172a; --muted: #475569; --border: #cbd5e1;
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --surface-alt: #f8fafc;
+      --primary: #2563eb;
+      --primary-dark: #1e3a8a;
+      --primary-soft: #dbeafe;
+      --green: #16a34a;
+      --green-soft: #dcfce7;
+      --green-text: #14532d;
+      --purple: #7c3aed;
+      --purple-soft: #f5f3ff;
+      --amber: #d97706;
+      --amber-soft: #fffbeb;
+      --amber-text: #78350f;
+      --red: #dc2626;
+      --red-soft: #fef2f2;
+      --red-text: #7f1d1d;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #cbd5e1;
+      --border-soft: #e2e8f0;
+      --code-bg: #0f172a;
+      --code-fg: #f8fafc;
+      --inline-code-bg: #f1f5f9;
+      --inline-code-fg: #be123c;
+      --shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
     }
-    * { box-sizing: border-box; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-    body { margin: 0; background: var(--bg); color: var(--text); line-height: 1.55; padding-bottom: 40px; }
+    [data-theme="dark"] {
+      --bg: #0b1120;
+      --surface: #111827;
+      --surface-alt: #1e293b;
+      --primary: #3b82f6;
+      --primary-dark: #93c5fd;
+      --primary-soft: rgba(59, 130, 246, 0.22);
+      --green: #22c55e;
+      --green-soft: rgba(34, 197, 94, 0.16);
+      --green-text: #bbf7d0;
+      --purple: #a78bfa;
+      --purple-soft: rgba(139, 92, 246, 0.16);
+      --amber: #f59e0b;
+      --amber-soft: rgba(245, 158, 11, 0.16);
+      --amber-text: #fde68a;
+      --red: #f87171;
+      --red-soft: rgba(239, 68, 68, 0.16);
+      --red-text: #fecaca;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --border: #334155;
+      --border-soft: #1f2937;
+      --code-bg: #020617;
+      --code-fg: #e2e8f0;
+      --inline-code-bg: #1e293b;
+      --inline-code-fg: #fda4af;
+      --shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    }
 
-    /* Top Bar & Menu */
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    body { margin: 0; background: var(--bg); color: var(--text); line-height: 1.6; padding-bottom: 48px; transition: background 0.2s, color 0.2s; }
+
+    /* Top Bar */
     .topbar {
-      background: #0f172a; color: #fff; position: sticky; top: 0; z-index: 50;
+      background: #0f172a; color: #fff; position: sticky; top: 0; z-index: 60;
       border-bottom: 3px solid var(--primary);
     }
     .topbar-inner {
       max-width: 1200px; margin: 0 auto; padding: 10px 14px;
-      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px;
     }
-    .brand { font-weight: 800; font-size: 16px; display: flex; align-items: center; gap: 8px; }
-    .hud-pills { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; font-size: 13px; font-weight: 700; }
-    .hud-pill { background: rgba(255,255,255,0.12); padding: 4px 10px; border-radius: 999px; }
+    .brand { font-weight: 800; font-size: 15.5px; display: flex; align-items: center; gap: 8px; letter-spacing: -0.01em; }
+    .brand-sub { font-weight: 600; opacity: 0.78; font-size: 12.5px; }
+    .hud-pills { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-size: 12.5px; font-weight: 700; }
+    .hud-pill { background: rgba(255,255,255,0.12); padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+
+    /* Desktop Nav Bar */
     .nav-bar {
       background: var(--surface); border-bottom: 1px solid var(--border);
-      position: sticky; top: 49px; z-index: 40;
+      position: sticky; top: 49px; z-index: 50;
     }
     .nav-inner {
       max-width: 1200px; margin: 0 auto; padding: 8px 14px;
-      display: flex; gap: 6px; overflow-x: auto;
+      display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none;
     }
+    .nav-inner::-webkit-scrollbar { display: none; }
     .nav-btn {
-      padding: 8px 14px; border-radius: 10px; border: 2px solid transparent; background: #f8fafc;
+      padding: 9px 14px; border-radius: 10px; border: 2px solid transparent; background: var(--surface-alt);
       font-weight: 700; font-size: 13.5px; cursor: pointer; white-space: nowrap; color: var(--text);
+      transition: background 0.15s, border-color 0.15s;
     }
-    .nav-btn:hover { background: #e2e8f0; }
-    .nav-btn.active { background: #dbeafe; border-color: var(--primary); color: var(--primary-dark); }
+    .nav-btn:hover { background: var(--primary-soft); }
+    .nav-btn.active { background: var(--primary-soft); border-color: var(--primary); color: var(--primary-dark); }
+
+    /* Mobile Bottom Nav Bar */
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 70;
+      background: var(--surface); border-top: 1px solid var(--border);
+      box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.12);
+      padding: 4px 4px calc(4px + env(safe-area-inset-bottom, 0px)) 4px;
+      grid-template-columns: repeat(5, 1fr); gap: 2px;
+    }
+    .mb-btn {
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+      min-height: 50px; border: none; background: transparent; color: var(--muted);
+      font-size: 11px; font-weight: 700; border-radius: 10px; cursor: pointer; padding: 4px 2px;
+    }
+    .mb-btn .mb-ico { font-size: 18px; line-height: 1; }
+    .mb-btn.active { color: var(--primary); background: var(--primary-soft); }
 
     .container { max-width: 1140px; margin: 16px auto; padding: 0 14px; display: grid; gap: 16px; }
-    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+    .panel {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      padding: 20px; box-shadow: var(--shadow);
+    }
 
     /* Hero & Coach */
     .hero {
-      background: linear-gradient(135deg, #0f172a 0%, #1e40af 100%); color: #fff;
-      border-radius: 18px; padding: 22px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 18px; align-items: center;
+      background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 58%, #312e81 100%); color: #fff;
+      border-radius: 18px; padding: 22px; display: grid; grid-template-columns: 1.55fr 1fr; gap: 18px; align-items: center;
+      box-shadow: 0 10px 28px rgba(30, 58, 138, 0.25);
     }
-    @media (max-width: 780px) { .hero { grid-template-columns: 1fr; } }
     .countdown-box {
       background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22);
-      border-radius: 14px; padding: 14px; text-align: center;
+      border-radius: 14px; padding: 14px; display: grid; gap: 10px;
     }
-    .countdown-num { font-size: 28px; font-weight: 900; }
+    .cd-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 6px 8px; background: rgba(15, 23, 42, 0.28); border-radius: 10px; }
+    .countdown-num { font-size: 20px; font-weight: 900; }
+
     .coach { border-radius: 14px; padding: 16px 18px; border: 2px solid; display: grid; gap: 8px; }
-    .coach.ok { background: #f0fdf4; border-color: #22c55e; color: #14532d; }
-    .coach.warn { background: #fffbeb; border-color: #f59e0b; color: #78350f; }
-    .coach.danger { background: #fef2f2; border-color: #ef4444; color: #7f1d1d; }
+    .coach.ok { background: var(--green-soft); border-color: var(--green); color: var(--green-text); }
+    .coach.warn { background: var(--amber-soft); border-color: var(--amber); color: var(--amber-text); }
+    .coach.danger { background: var(--red-soft); border-color: var(--red); color: var(--red-text); }
     .coach-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 
     /* Buttons & Badges */
     .btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-      padding: 10px 16px; border-radius: 10px; border: none; background: var(--primary);
+      padding: 10px 16px; min-height: 42px; border-radius: 10px; border: none; background: var(--primary);
       color: #fff; font-weight: 700; font-size: 14px; cursor: pointer; text-decoration: none;
+      transition: transform 0.08s, filter 0.15s;
     }
     .btn:hover { filter: brightness(0.95); }
-    .btn.lg { padding: 13px 22px; font-size: 15.5px; border-radius: 12px; }
-    .btn.sm { padding: 6px 11px; font-size: 12.5px; border-radius: 8px; }
-    .btn.green { background: var(--green); }
-    .btn.purple { background: var(--purple); }
-    .btn.amber { background: var(--amber); }
-    .btn.red { background: var(--red); }
-    .btn.dark { background: #334155; }
-    .btn.outline { background: #fff; color: var(--text); border: 2px solid var(--border); }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn.lg { padding: 12px 20px; min-height: 48px; font-size: 15px; border-radius: 12px; }
+    .btn.sm { padding: 7px 12px; min-height: 36px; font-size: 12.5px; border-radius: 8px; }
+    .btn.green { background: #16a34a; color: #fff; }
+    .btn.purple { background: #7c3aed; color: #fff; }
+    .btn.amber { background: #d97706; color: #fff; }
+    .btn.red { background: #dc2626; color: #fff; }
+    .btn.dark { background: #334155; color: #fff; }
+    .btn.outline { background: var(--surface); color: var(--text); border: 2px solid var(--border); }
 
-    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
-    .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
-    .kpi-label { font-size: 11.5px; font-weight: 800; color: var(--muted); text-transform: uppercase; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 10px; }
+    .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px; box-shadow: var(--shadow); }
+    .kpi-label { font-size: 11.5px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; }
     .kpi-val { font-size: 22px; font-weight: 800; margin-top: 2px; }
-    .track { height: 10px; background: #e2e8f0; border-radius: 999px; overflow: hidden; margin-top: 6px; }
-    .fill { height: 100%; background: var(--green); transition: width 0.3s; }
+    .track { height: 10px; background: var(--border-soft); border-radius: 999px; overflow: hidden; margin-top: 6px; position: relative; }
+    .fill { height: 100%; background: var(--green); transition: width 0.3s; border-radius: 999px; }
 
-    /* Story Mode */
-    .story-map { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+    /* Story Mode & Exam Cards */
+    .story-map { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 12px; }
     .chap-card {
-      border: 2px solid #e2e8f0; border-radius: 14px; padding: 14px; background: #fff;
+      border: 2px solid var(--border-soft); border-radius: 14px; padding: 15px; background: var(--surface);
       display: flex; flex-direction: column; justify-content: space-between; gap: 10px;
     }
-    .chap-card.done { border-color: #86efac; background: #f0fdf4; }
-    .chap-card.today { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
-    .chap-card.late { border-color: #ef4444; background: #fef2f2; }
-    .tag-pill { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 800; background: #e2e8f0; color: #334155; }
-    .tag-pill.done { background: #bbf7d0; color: #14532d; }
-    .tag-pill.today { background: #dbeafe; color: #1e40af; }
-    .tag-pill.late { background: #fecaca; color: #7f1d1d; }
+    .chap-card.done { border-color: var(--green); background: var(--green-soft); }
+    .chap-card.today { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.16); }
+    .chap-card.late { border-color: var(--red); background: var(--red-soft); }
+    .chap-card.featured { border-color: var(--amber); box-shadow: 0 0 0 3px rgba(217,119,6,0.18); }
 
-    .stepper { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; }
+    .tag-pill { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 800; background: var(--surface-alt); color: var(--muted); border: 1px solid var(--border-soft); }
+    .tag-pill.done { background: var(--green-soft); color: var(--green-text); border-color: var(--green); }
+    .tag-pill.today { background: var(--primary-soft); color: var(--primary-dark); border-color: var(--primary); }
+    .tag-pill.late { background: var(--red-soft); color: var(--red-text); border-color: var(--red); }
+    .tag-pill.amber { background: var(--amber-soft); color: var(--amber-text); border-color: var(--amber); }
+
+    .stepper { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; border-bottom: 2px solid var(--border-soft); padding-bottom: 12px; }
     .step-pill {
-      padding: 8px 14px; border-radius: 10px; border: 2px solid var(--border); background: #f8fafc;
-      font-weight: 700; font-size: 13.5px; cursor: pointer;
+      padding: 9px 14px; border-radius: 10px; border: 2px solid var(--border); background: var(--surface-alt);
+      font-weight: 700; font-size: 13.5px; cursor: pointer; color: var(--text);
     }
-    .step-pill.active { background: #dbeafe; border-color: var(--primary); color: var(--primary-dark); }
-    .step-pill.done { background: #dcfce7; border-color: var(--green); color: #14532d; }
+    .step-pill.active { background: var(--primary-soft); border-color: var(--primary); color: var(--primary-dark); }
+    .step-pill.done { background: var(--green-soft); border-color: var(--green); color: var(--green-text); }
 
     /* Lesson / Apostila typography */
-    .lesson-body h1, .lesson-body h2 { color: var(--primary-dark); border-left: 4px solid var(--primary); padding-left: 10px; margin-top: 18px; }
-    .lesson-body h3 { color: #0f172a; margin-top: 14px; }
-    .lesson-body code { background: #f1f5f9; color: #be123c; padding: 2px 5px; border-radius: 4px; font-family: monospace; font-size: 92%; }
-    .lesson-body pre { background: #0f172a; color: #f8fafc; padding: 12px; border-radius: 10px; overflow-x: auto; font-size: 13px; }
-    .lesson-body pre code { background: transparent; color: #f8fafc; padding: 0; }
-    .q-table { width: 100%; border-collapse: collapse; margin: 10px 0 14px 0; font-size: 13.5px; }
-    .q-table th { background: #1e3a8a; color: #fff; padding: 7px 9px; text-align: left; border: 1px solid #1e3a8a; }
-    .q-table td { padding: 7px 9px; border: 1px solid #cbd5e1; vertical-align: top; }
-    .q-table tr:nth-child(even) td { background: #f8fafc; }
-    .callout { padding: 11px 14px; border-radius: 10px; margin: 12px 0; font-size: 14px; }
-    .callout-warning { background: #fffbeb; border-left: 5px solid #d97706; }
-    .callout-caution { background: #fef2f2; border-left: 5px solid #dc2626; }
-    .callout-note, .callout-tip, .callout-important { background: #eff6ff; border-left: 5px solid #2563eb; }
+    .lesson-body h1, .lesson-body h2 { color: var(--primary-dark); border-left: 4px solid var(--primary); padding-left: 10px; margin-top: 20px; font-size: 19px; }
+    .lesson-body h3 { color: var(--text); margin-top: 16px; font-size: 16px; }
+    .lesson-body code { background: var(--inline-code-bg); color: var(--inline-code-fg); padding: 2px 5px; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 90%; }
+    .lesson-body pre { background: var(--code-bg); color: var(--code-fg); padding: 13px; border-radius: 10px; overflow-x: auto; font-size: 13px; line-height: 1.5; border: 1px solid #334155; }
+    .lesson-body pre code { background: transparent; color: var(--code-fg); padding: 0; }
+    .table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 12px 0 16px 0; border-radius: 10px; border: 1px solid var(--border); }
+    .q-table { width: 100%; border-collapse: collapse; margin: 0; font-size: 13.5px; min-width: 480px; }
+    .q-table th { background: #1e3a8a; color: #fff; padding: 8px 10px; text-align: left; border-bottom: 1px solid #1e3a8a; }
+    .q-table td { padding: 8px 10px; border-top: 1px solid var(--border-soft); vertical-align: top; }
+    .q-table tr:nth-child(even) td { background: var(--surface-alt); }
+
+    .callout { padding: 12px 15px; border-radius: 10px; margin: 12px 0; font-size: 14px; }
+    .callout-warning { background: var(--amber-soft); border-left: 5px solid var(--amber); color: var(--text); }
+    .callout-caution { background: var(--red-soft); border-left: 5px solid var(--red); color: var(--text); }
+    .callout-note, .callout-tip, .callout-important { background: var(--primary-soft); border-left: 5px solid var(--primary); color: var(--text); }
+
+    /* Interactive Recall & Accordion Boxes */
+    details.recall-box {
+      background: var(--purple-soft); border: 2px solid var(--purple); border-radius: 12px;
+      padding: 12px 14px; margin: 14px 0;
+    }
+    details.recall-box summary {
+      font-weight: 800; cursor: pointer; color: var(--text); list-style: none;
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    }
+    details.recall-box summary::-webkit-details-marker { display: none; }
+    details.recall-box summary::after { content: "▼ Abrir"; font-size: 12px; color: var(--purple); white-space: nowrap; }
+    details.recall-box[open] summary::after { content: "▲ Ocultar"; }
+    details.recall-box[open] summary { margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px dashed var(--border); }
+
+    details.extra-exams-box {
+      border: 2px dashed var(--border); border-radius: 14px; padding: 14px 16px; background: var(--surface-alt);
+    }
+    details.extra-exams-box summary {
+      font-weight: 800; font-size: 15px; cursor: pointer; color: var(--text);
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    }
 
     /* Questions & Simulator */
-    .q-card { border: 1px solid var(--border); border-radius: 14px; padding: 16px; background: #fff; margin-bottom: 14px; }
-    .q-quote { border-left: 4px solid #64748b; background: #f8fafc; padding: 10px 12px; margin: 8px 0; border-radius: 6px; font-size: 14px; }
-    .q-code { background: #0f172a; color: #f8fafc; padding: 10px 12px; border-radius: 8px; overflow-x: auto; font-size: 13px; white-space: pre-wrap; font-family: monospace; }
-    .q-infographic { background: #eff6ff; border: 1px solid #93c5fd; border-radius: 10px; padding: 12px; margin-bottom: 10px; font-size: 13.5px; }
-    .opts-list { display: grid; gap: 8px; margin-top: 10px; }
+    .q-card { border: 1px solid var(--border); border-radius: 14px; padding: 16px; background: var(--surface); margin-bottom: 14px; }
+    .q-card img { max-width: 100%; height: auto; display: block; margin: 12px auto; border-radius: 10px; background: #ffffff; padding: 6px; border: 1px solid var(--border); }
+    .q-quote { border-left: 4px solid #64748b; background: var(--surface-alt); padding: 10px 12px; margin: 8px 0; border-radius: 6px; font-size: 14px; }
+    .q-code { background: var(--code-bg); color: var(--code-fg); padding: 12px; border-radius: 10px; overflow-x: auto; font-size: 13px; white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; border: 1px solid #334155; }
+    .q-infographic { background: var(--primary-soft); border: 1px solid var(--primary); border-radius: 10px; padding: 12px; margin-bottom: 10px; font-size: 13.5px; }
+    .opts-list { display: grid; gap: 8px; margin-top: 12px; }
     .opt-item {
       display: flex; gap: 10px; align-items: flex-start; text-align: left; width: 100%;
-      padding: 10px 12px; border-radius: 10px; border: 2px solid #e2e8f0; background: #fff;
-      cursor: pointer; font-size: 14px; color: var(--text);
+      padding: 12px 13px; min-height: 48px; border-radius: 10px; border: 2px solid var(--border-soft);
+      background: var(--surface); cursor: pointer; font-size: 14.5px; color: var(--text);
+      transition: background 0.12s, border-color 0.12s;
     }
-    .opt-item:hover { background: #f8fafc; }
-    .opt-item.selected { border-color: var(--primary); background: #eff6ff; }
-    .opt-item.correct { border-color: var(--green); background: #dcfce7; color: #14532d; }
-    .opt-item.wrong { border-color: var(--red); background: #fee2e2; color: #7f1d1d; }
-    .opt-letter { font-weight: 800; min-width: 24px; }
-    .q-exp { margin-top: 10px; padding: 10px 12px; border-radius: 8px; font-size: 13.5px; }
-    .q-exp.ok { background: #dcfce7; color: #14532d; }
-    .q-exp.bad { background: #fee2e2; color: #7f1d1d; }
+    .opt-item:hover { background: var(--surface-alt); border-color: var(--border); }
+    .opt-item.selected { border-color: var(--primary); background: var(--primary-soft); }
+    .opt-item.correct { border-color: var(--green); background: var(--green-soft); color: var(--green-text); }
+    .opt-item.wrong { border-color: var(--red); background: var(--red-soft); color: var(--red-text); }
+    .opt-letter { font-weight: 800; min-width: 26px; }
+    .q-exp { margin-top: 10px; padding: 11px 13px; border-radius: 10px; font-size: 13.5px; }
+    .q-exp.ok { background: var(--green-soft); color: var(--green-text); border: 1px solid var(--green); }
+    .q-exp.bad { background: var(--red-soft); color: var(--red-text); border: 1px solid var(--red); }
 
     .sim-palette { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
     .pal-btn {
-      width: 34px; height: 32px; border-radius: 8px; border: 1px solid var(--border);
-      background: #fff; font-weight: 700; font-size: 12.5px; cursor: pointer;
+      width: 35px; height: 34px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text); font-weight: 700; font-size: 12.5px; cursor: pointer;
     }
-    .pal-btn.cur { border: 2px solid var(--primary); background: #dbeafe; }
-    .pal-btn.ans { background: #e2e8f0; }
-    .pal-btn.ok { background: #bbf7d0; border-color: var(--green); }
-    .pal-btn.bad { background: #fecaca; border-color: var(--red); }
+    .pal-btn.cur { border: 2px solid var(--primary); background: var(--primary-soft); color: var(--primary-dark); }
+    .pal-btn.ans { background: var(--surface-alt); border-color: var(--muted); }
+    .pal-btn.ok { background: var(--green-soft); border-color: var(--green); color: var(--green-text); }
+    .pal-btn.bad { background: var(--red-soft); border-color: var(--red); color: var(--red-text); }
+
+    /* Cutoff Meter */
+    .meter-wrap { position: relative; height: 18px; background: var(--border-soft); border-radius: 999px; overflow: hidden; margin: 8px 0; }
+    .meter-fill { height: 100%; border-radius: 999px; transition: width 0.35s; }
+    .meter-mark { position: absolute; top: 0; bottom: 0; width: 2px; background: #0f172a; opacity: 0.7; }
+    [data-theme="dark"] .meter-mark { background: #ffffff; }
 
     /* Flashcards 3D & Pairs */
     .scene { perspective: 1100px; max-width: 640px; margin: 10px auto; }
@@ -162,54 +279,80 @@
     .face {
       position: absolute; inset: 0; backface-visibility: hidden; border-radius: 16px;
       border: 2px solid var(--border); border-bottom-width: 5px; padding: 20px;
-      display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: #fff;
+      display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+      background: var(--surface); color: var(--text);
     }
-    .face.back { transform: rotateY(180deg); background: #f0fdf4; border-color: #86efac; }
+    .face.back { transform: rotateY(180deg); background: var(--green-soft); border-color: var(--green); color: var(--green-text); }
     .pairs-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
-    @media (max-width: 640px) { .pairs-wrap { grid-template-columns: 1fr; } }
     .pair-col { display: grid; gap: 8px; }
-    .pair-item { padding: 10px 12px; border-radius: 10px; border: 2px solid var(--border); background: #fff; cursor: pointer; font-weight: 600; font-size: 13.5px; text-align: left; }
-    .pair-item.selected { border-color: var(--primary); background: #dbeafe; }
-    .pair-item.matched { border-color: var(--green); background: #dcfce7; opacity: 0.65; cursor: default; }
-    .pair-item.error { border-color: var(--red); background: #fee2e2; }
+    .pair-item { padding: 11px 12px; min-height: 46px; border-radius: 10px; border: 2px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; font-weight: 600; font-size: 13.5px; text-align: left; }
+    .pair-item.selected { border-color: var(--primary); background: var(--primary-soft); }
+    .pair-item.matched { border-color: var(--green); background: var(--green-soft); color: var(--green-text); opacity: 0.72; cursor: default; }
+    .pair-item.error { border-color: var(--red); background: var(--red-soft); }
 
-    /* Sub-tabs & Labs */
+    /* Sub-tabs, Labs & Phase 2 */
     .subtabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
-    .chip { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); background: #f8fafc; font-weight: 600; font-size: 13px; cursor: pointer; }
+    .chip { padding: 7px 13px; min-height: 36px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-alt); color: var(--text); font-weight: 600; font-size: 13px; cursor: pointer; }
     .chip.active { background: var(--primary); border-color: var(--primary); color: #fff; }
     .lab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
-    .viewport { height: 200px; border: 2px dashed #94a3b8; border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #f1f5f9; }
+    .viewport { height: 200px; border: 2px dashed var(--muted); border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--surface-alt); }
     .css-box { width: 80px; height: 80px; background: #2563eb; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; border-radius: 10px; transition: transform 0.3s; margin: 20px auto; }
+    .code-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; background: #1e293b; color: #e2e8f0; padding: 8px 12px; border-radius: 10px 10px 0 0; font-size: 12.5px; font-weight: 700; }
+    .code-block-p2 { margin: 0 0 14px 0; border-radius: 0 0 10px 10px; border-top: none; }
+    .check-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--border-soft); border-radius: 10px; background: var(--surface-alt); cursor: pointer; }
+    .check-item input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--green); flex-shrink: 0; }
+
+    /* Responsive Mobile-First */
+    @media (max-width: 780px) {
+      body { padding-bottom: 78px; }
+      .hero { grid-template-columns: 1fr; padding: 18px; }
+      .pairs-wrap { grid-template-columns: 1fr; }
+      .hide-mobile { display: none !important; }
+      .nav-bar { top: 48px; }
+      .mobile-bottom-nav { display: grid; }
+      .panel { padding: 15px; border-radius: 14px; }
+      .container { padding: 0 10px; margin: 12px auto; gap: 12px; }
+    }
   </style>
 </head>
 <body>
   <header class="topbar">
     <div class="topbar-inner">
-      <div class="brand">⚡ ETEC DS M-Tec Quest <span style="font-weight:500; opacity:0.8; font-size:13px;">(Prova 04/12)</span></div>
+      <div class="brand">🎯 ETEC Taboão M-Tec DS <span class="brand-sub hide-mobile">(04/12 &amp; 08/12)</span></div>
       <div class="hud-pills">
         <span class="hud-pill" id="topCountdown">⏳ -- dias</span>
-        <span class="hud-pill" id="topChapters">🗺️ 0/14 dias</span>
-        <span class="hud-pill" id="topCards">🃏 0/120 cards</span>
-        <span class="hud-pill" id="topXp">⭐ 0 XP • 🔥 0</span>
-        <button class="btn sm purple" onclick="toggleSyncPanel()">📲 Sincronizar</button>
-        <button class="btn sm dark" id="soundBtn" onclick="toggleSound()">🔊 Som ON</button>
+        <span class="hud-pill hide-mobile" id="topChapters">🗺️ 0/16 dias</span>
+        <span class="hud-pill hide-mobile" id="topCards">🃏 0/102 cards</span>
+        <span class="hud-pill hide-mobile" id="topXp">⭐ 0 XP</span>
+        <button class="btn sm purple" onclick="toggleSyncPanel()" title="Sincronizar PC ↔ Celular">📲 Sync</button>
+        <button class="btn sm dark" id="themeBtn" onclick="toggleTheme()" title="Alternar Modo Claro / Escuro">🌙</button>
+        <button class="btn sm dark hide-mobile" id="soundBtn" onclick="toggleSound()">🔊 Som</button>
       </div>
     </div>
   </header>
 
   <nav class="nav-bar">
     <div class="nav-inner" id="mainNav">
-      <button class="nav-btn active" onclick="goTab('home')">🏠 Início &amp; Coach</button>
-      <button class="nav-btn" onclick="goTab('story')">🗺️ Modo História (14 Dias)</button>
-      <button class="nav-btn" onclick="goTab('sim')">📝 Simulador de Provas (Na Tela)</button>
+      <button class="nav-btn active" onclick="goTab('home')">🏠 Início</button>
+      <button class="nav-btn" onclick="goTab('story')">🗺️ Trilha (16 Dias)</button>
+      <button class="nav-btn" onclick="goTab('sim')">📝 Provas (40Q)</button>
+      <button class="nav-btn" onclick="goTab('phase2')">🛠️ 2ª Fase (08/12)</button>
       <button class="nav-btn" onclick="goTab('apostila')">📖 Apostila &amp; Cola</button>
-      <button class="nav-btn" onclick="goTab('cards')">🃏 Flashcards &amp; Verdade/Fake</button>
-      <button class="nav-btn" onclick="goTab('labs')">🧪 Laboratórios Interativos</button>
+      <button class="nav-btn" onclick="goTab('cards')">🃏 Cards &amp; V/F</button>
+      <button class="nav-btn" onclick="goTab('labs')">🧪 Micro-Labs</button>
     </div>
   </nav>
 
   <div class="container" id="syncModalHost" style="padding-bottom:0;"></div>
   <main class="container" id="appRoot"></main>
+
+  <nav class="mobile-bottom-nav" id="mobileNav" aria-label="Navegação rápida">
+    <button class="mb-btn active" data-tab="home" onclick="goTab('home')"><span class="mb-ico">🏠</span><span>Início</span></button>
+    <button class="mb-btn" data-tab="story" onclick="goTab('story')"><span class="mb-ico">🗺️</span><span>Trilha</span></button>
+    <button class="mb-btn" data-tab="sim" onclick="goTab('sim')"><span class="mb-ico">📝</span><span>Provas</span></button>
+    <button class="mb-btn" data-tab="phase2" onclick="goTab('phase2')"><span class="mb-ico">🛠️</span><span>2ª Fase</span></button>
+    <button class="mb-btn" data-tab="cards" onclick="goTab('cards')"><span class="mb-ico">🃏</span><span>Cards</span></button>
+  </nav>
 
   <script src="./dados_plataforma.js"></script>
   <script>
@@ -219,22 +362,37 @@
       throw new Error("ETEC_DATA missing");
     }
 
+    // Preserva 100% as chaves de localStorage para manter todo histórico do Henrique!
     const STORE_CENTRAL = "etec_platform_v2";
     const STORE_CARDS = "etec_ds_quest_v1";
+    const THEME_KEY = "etec_theme";
+
+    // Calendário real dos 16 dias (21/11 -> 03/12 para 1ª Fase; 05/12 -> 07/12 para 2ª Fase; 04/12 é o Dia da Prova Escrita!)
+    const REAL_DAY_ISOS = {
+      1: "2026-11-21", 2: "2026-11-22", 3: "2026-11-23", 4: "2026-11-24",
+      5: "2026-11-25", 6: "2026-11-26", 7: "2026-11-27", 8: "2026-11-28",
+      9: "2026-11-29", 10: "2026-11-30", 11: "2026-12-01", 12: "2026-12-02",
+      13: "2026-12-03", 14: "2026-12-05", 15: "2026-12-06", 16: "2026-12-07"
+    };
+
     let pState = loadPlatformState();
     let cState = loadCardsState();
     let activeTab = "home";
-    let activeChapter = null; // 1..14 when inside a chapter
+    let activeChapter = null; // 1..16
     let chapterStep = 1; // 1=Lição, 2=Prática, 3=Desafio
     let simDateOverride = null;
     let soundOn = true;
     let audioCtx = null;
 
     // Exam simulator & Revanche state
-    let simSession = null; // { examId, mode: 'instant'|'real', curIdx: 0, answers: {}, submitted: false, secLeft: 0 }
+    let simSession = null;
     let simTimerId = null;
     let revancheMode = false;
     let revancheAnswers = {};
+    let lastReportMsg = "";
+
+    // Phase 2 Lab state
+    let activePhase2Tab = "p2_web";
 
     // Apostila state
     let activeApostilaId = "cola";
@@ -242,7 +400,7 @@
 
     // Cards/VF/Labs state
     let cardsMode = "cards";
-    let cardViewStyle = "mc"; // "mc" = Múltipla Escolha A-D, "flip" = Virar Card 3D
+    let cardViewStyle = "mc";
     let cardMcCache = {};
     let cardsTag = "ALL";
     let cardIdx = 0;
@@ -250,8 +408,29 @@
     let vfArea = "ALL";
     let vfIdx = 0;
     let vfSessionPicked = {};
-    let activeLabTab = "lab01";
+    let activeLabTab = "lab_tipos";
     function clearCardMc() { cardMcCache = {}; }
+
+    // Theme (Light / Dark)
+    function initTheme() {
+      try {
+        const saved = localStorage.getItem(THEME_KEY);
+        if (saved === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+          const b = document.getElementById("themeBtn");
+          if (b) b.textContent = "☀️";
+        }
+      } catch (e) {}
+    }
+    function toggleTheme() {
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      const next = isDark ? "light" : "dark";
+      if (next === "dark") document.documentElement.setAttribute("data-theme", "dark");
+      else document.documentElement.removeAttribute("data-theme");
+      try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+      const b = document.getElementById("themeBtn");
+      if (b) b.textContent = next === "dark" ? "☀️" : "🌙";
+    }
 
     function loadPlatformState() {
       try {
@@ -264,10 +443,20 @@
           if (!obj.qHistory) obj.qHistory = {};
           if (!obj.wrongQueue) obj.wrongQueue = [];
           if (!obj.vfHistory) obj.vfHistory = {};
+          if (!obj.checks) obj.checks = {};
           return obj;
         }
       } catch (e) {}
-      return { startDate: D.defaultStartIso || "2026-11-19", completedDays: [], examScores: {}, moduleScores: {}, qHistory: {}, wrongQueue: [], vfHistory: {}, checks: {} };
+      return {
+        startDate: D.defaultStartIso || "2026-11-21",
+        completedDays: [],
+        examScores: {},
+        moduleScores: {},
+        qHistory: {},
+        wrongQueue: [],
+        vfHistory: {},
+        checks: {},
+      };
     }
 
     function recordQuestionResult(examId, qNum, isCorrect, isRevanche = false) {
@@ -291,7 +480,15 @@
     function loadCardsState() {
       try {
         const raw = localStorage.getItem(STORE_CARDS);
-        if (raw) return JSON.parse(raw);
+        if (raw) {
+          const obj = JSON.parse(raw);
+          if (!Array.isArray(obj.known)) obj.known = [];
+          if (!Array.isArray(obj.review)) obj.review = [];
+          // Sanitiza índices se o baralho mudou de tamanho entre versões
+          obj.known = obj.known.filter((i) => i >= 0 && i < D.flashcards.length);
+          obj.review = obj.review.filter((i) => i >= 0 && i < D.flashcards.length);
+          return obj;
+        }
       } catch (e) {}
       return { xp: 0, streak: 0, hearts: 5, known: [], review: [] };
     }
@@ -319,7 +516,8 @@
     function sfxBad() { playTone(190, 0.14, "sawtooth", 0); playTone(145, 0.2, "sawtooth", 0.11); }
     function toggleSound() {
       soundOn = !soundOn;
-      document.getElementById("soundBtn").textContent = soundOn ? "🔊 Som ON" : "🔇 Som OFF";
+      const b = document.getElementById("soundBtn");
+      if (b) b.textContent = soundOn ? "🔊 Som" : "🔇 Mudo";
     }
 
     function parseIso(iso) { const [y, m, d] = iso.split("-").map(Number); return new Date(y, m - 1, d, 0, 0, 0, 0); }
@@ -331,32 +529,57 @@
       const n = new Date();
       return new Date(n.getFullYear(), n.getMonth(), n.getDate(), 0, 0, 0, 0);
     }
+    function getChapterDate(dayNum) {
+      if (REAL_DAY_ISOS[dayNum]) return parseIso(REAL_DAY_ISOS[dayNum]);
+      const startDate = parseIso(pState.startDate || D.defaultStartIso || "2026-11-21");
+      return addDays(startDate, dayNum - 1);
+    }
 
     function getScheduleStatus() {
       const today = getToday();
       const examDate = parseIso(D.examDateIso || "2026-12-04");
-      const startDate = parseIso(pState.startDate || "2026-11-19");
-      const diffDays = Math.round((examDate - today) / 86400000);
-      const pending = D.chapters.filter((c) => !pState.completedDays.includes(c.day));
-      const overdue = D.chapters.filter((c) => addDays(startDate, c.day - 1) < today && !pState.completedDays.includes(c.day));
-      const nextChapter = pending[0] || D.chapters[D.chapters.length - 1];
-      return { today, examDate, startDate, diffDays, pending, overdue, nextChapter };
+      const phase2Date = parseIso(D.phase2DateIso || "2026-12-08");
+      const startDate = getChapterDate(1);
+      const diffPhase1 = Math.round((examDate - today) / 86400000);
+      const diffPhase2 = Math.round((phase2Date - today) / 86400000);
+      const phase1Chapters = D.chapters.filter((c) => c.phase === 1);
+      const phase2Chapters = D.chapters.filter((c) => c.phase === 2);
+      const pendingP1 = phase1Chapters.filter((c) => !pState.completedDays.includes(c.day));
+      const pendingAll = D.chapters.filter((c) => !pState.completedDays.includes(c.day));
+      const overdue = D.chapters.filter((c) => getChapterDate(c.day) < today && !pState.completedDays.includes(c.day));
+      const nextChapter = (diffPhase1 >= 0 ? pendingP1[0] : pendingAll[0]) || pendingAll[0] || D.chapters[D.chapters.length - 1];
+      return { today, examDate, phase2Date, startDate, diffPhase1, diffPhase2, phase1Chapters, phase2Chapters, pendingP1, pendingAll, overdue, nextChapter };
     }
 
     function updateTopHud() {
       const st = getScheduleStatus();
-      document.getElementById("topCountdown").textContent = st.diffDays > 0 ? `⏳ Faltam ${st.diffDays}d` : (st.diffDays === 0 ? "🎯 PROVA HOJE" : "✅ Concluído");
-      document.getElementById("topChapters").textContent = `🗺️ ${pState.completedDays.length}/14 dias`;
-      document.getElementById("topCards").textContent = `🃏 ${cState.known.length}/${D.flashcards.length} cards`;
-      document.getElementById("topXp").textContent = `⭐ ${cState.xp} XP • 🔥 ${cState.streak}`;
+      const cdEl = document.getElementById("topCountdown");
+      if (cdEl) {
+        if (st.diffPhase1 > 0) cdEl.textContent = `⏳ 04/12: ${st.diffPhase1}d`;
+        else if (st.diffPhase1 === 0) cdEl.textContent = "🎯 PROVA HOJE (04/12)";
+        else if (st.diffPhase2 > 0) cdEl.textContent = `🛠️ 08/12: ${st.diffPhase2}d`;
+        else if (st.diffPhase2 === 0) cdEl.textContent = "🛠️ 2ª FASE HOJE!";
+        else cdEl.textContent = "✅ Concluído";
+      }
+      const chEl = document.getElementById("topChapters");
+      if (chEl) chEl.textContent = `🗺️ ${pState.completedDays.length}/${D.chapters.length} dias`;
+      const caEl = document.getElementById("topCards");
+      if (caEl) caEl.textContent = `🃏 ${cState.known.length}/${D.flashcards.length}`;
+      const xpEl = document.getElementById("topXp");
+      if (xpEl) xpEl.textContent = `⭐ ${cState.xp} XP • 🔥 ${cState.streak}`;
+    }
+
+    const NAV_ORDER = ["home", "story", "sim", "phase2", "apostila", "cards", "labs"];
+    function syncNavHighlights() {
+      document.querySelectorAll("#mainNav .nav-btn").forEach((b, i) => b.classList.toggle("active", NAV_ORDER[i] === activeTab));
+      document.querySelectorAll("#mobileNav .mb-btn").forEach((b) => b.classList.toggle("active", b.dataset.tab === activeTab));
     }
 
     function goTab(tab) {
       activeTab = tab;
       if (tab !== "story") activeChapter = null;
       if (tab !== "sim") revancheMode = false;
-      const order = ["home", "story", "sim", "apostila", "cards", "labs"];
-      document.querySelectorAll("#mainNav .nav-btn").forEach((b, i) => b.classList.toggle("active", order[i] === tab));
+      syncNavHighlights();
       renderMain();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -367,7 +590,7 @@
       simSession = null;
       revancheMode = true;
       revancheAnswers = {};
-      document.querySelectorAll("#mainNav .nav-btn").forEach((b, i) => b.classList.toggle("active", i === 2));
+      syncNavHighlights();
       renderMain();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -382,7 +605,7 @@
       }
       activeChapter = day;
       chapterStep = step;
-      document.querySelectorAll("#mainNav .nav-btn").forEach((b, i) => b.classList.toggle("active", i === 1));
+      syncNavHighlights();
       renderMain();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -390,15 +613,17 @@
     function startExamInSim(examId, mode = "instant") {
       activeTab = "sim";
       revancheMode = false;
-      document.querySelectorAll("#mainNav .nav-btn").forEach((b, i) => b.classList.toggle("active", i === 2));
+      lastReportMsg = "";
+      syncNavHighlights();
       const ex = D.exams[examId];
+      if (!ex) return;
       if (simTimerId) clearInterval(simTimerId);
       simSession = { examId, mode, curIdx: 0, answers: {}, submitted: false, secLeft: ex.minutes * 60 };
       simTimerId = setInterval(() => {
         if (!simSession || simSession.submitted) return;
         simSession.secLeft = Math.max(0, simSession.secLeft - 1);
         const tel = document.getElementById("simTimerDisplay");
-        if (tel) tel.textContent = fmtTimer(simSession.secLeft);
+        if (tel) tel.textContent = "⏱️ " + fmtTimer(simSession.secLeft);
       }, 1000);
       renderMain();
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -409,6 +634,7 @@
       return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
     }
 
+    // ==================== SYNC PC ↔ CELULAR ====================
     let showSyncPanel = false;
     let syncMsg = "";
     function encodeSyncPayload() {
@@ -424,9 +650,7 @@
       for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
       const jsonStr = new TextDecoder().decode(bytes);
       const parsed = JSON.parse(jsonStr);
-      if (!parsed || typeof parsed.p !== "object" || typeof parsed.c !== "object") {
-        throw new Error("Código inválido");
-      }
+      if (!parsed || typeof parsed.p !== "object" || typeof parsed.c !== "object") throw new Error("Código inválido");
       return parsed;
     }
     function toggleSyncPanel() {
@@ -453,23 +677,19 @@
       try {
         const data = decodeSyncPayload(raw);
         pState = {
-          startDate: D.defaultStartIso || "2026-11-19",
-          completedDays: [],
-          examScores: {},
-          moduleScores: {},
-          qHistory: {},
-          wrongQueue: [],
-          vfHistory: {},
-          checks: {},
+          startDate: D.defaultStartIso || "2026-11-21",
+          completedDays: [], examScores: {}, moduleScores: {}, qHistory: {}, wrongQueue: [], vfHistory: {}, checks: {},
           ...data.p,
         };
         cState = { xp: 0, streak: 0, hearts: 5, known: [], review: [], ...data.c };
+        cState.known = (cState.known || []).filter((i) => i >= 0 && i < D.flashcards.length);
+        cState.review = (cState.review || []).filter((i) => i >= 0 && i < D.flashcards.length);
         savePlatformState();
         saveCardsState();
         syncMsg = "🎉 Progresso sincronizado com sucesso!";
         renderMain();
       } catch (e) {
-        syncMsg = "❌ Código inválido ou incompleto. Copie o texto inteiro sem espaços cortados.";
+        syncMsg = "❌ Código inválido ou incompleto. Copie o texto inteiro sem cortar.";
         const el = document.getElementById("syncStatusMsg");
         if (el) { el.textContent = syncMsg; el.style.color = "var(--red)"; }
       }
@@ -480,13 +700,13 @@
       if (!showSyncPanel) { host.innerHTML = ""; return; }
       const ok = syncMsg.startsWith("🎉") || syncMsg.startsWith("✅");
       host.innerHTML = `
-        <section class="panel" style="background:#f5f3ff; border-color:#c4b5fd; margin-top:14px;">
+        <section class="panel" style="background:var(--purple-soft); border-color:var(--purple); margin-top:10px;">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
             <h3 style="margin:0;">📲 Sincronizar Progresso PC ↔ Celular (Via WhatsApp)</h3>
             <button class="btn sm outline" onclick="toggleSyncPanel()">✕ Fechar</button>
           </div>
-          <p style="margin:0 0 10px 0; font-size:13.5px; color:#334155;">Para continuar de onde parou em outro aparelho: clique em <strong>Gerar &amp; Copiar Meu Código</strong> no aparelho atual, mande para você mesmo no WhatsApp e cole na caixa abaixo no outro aparelho clicando em <strong>Carregar Código Colado</strong>.</p>
-          <textarea id="syncCodeBox" rows="3" placeholder="Cole aqui o código de sincronização..." style="width:100%; padding:8px; border:1px solid #94a3b8; border-radius:8px; font-family:monospace; font-size:12px;">${encodeSyncPayload()}</textarea>
+          <p style="margin:0 0 10px 0; font-size:13.5px; color:var(--muted);">Clique em <strong>Gerar &amp; Copiar</strong>, mande no WhatsApp e cole abaixo no outro aparelho clicando em <strong>Carregar Código</strong>.</p>
+          <textarea id="syncCodeBox" rows="3" placeholder="Cole aqui o código de sincronização..." style="width:100%; padding:8px; border:1px solid var(--border); border-radius:8px; font-family:monospace; font-size:12px; background:var(--surface); color:var(--text);">${encodeSyncPayload()}</textarea>
           <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; align-items:center;">
             <button class="btn sm purple" onclick="exportSyncCode(false)">📋 Gerar &amp; Copiar Meu Código</button>
             <button class="btn sm green" onclick="importSyncCode()">📥 Carregar Código Colado</button>
@@ -503,18 +723,18 @@
       if (activeTab === "home") renderHome(root);
       else if (activeTab === "story") renderStory(root);
       else if (activeTab === "sim") renderSim(root);
+      else if (activeTab === "phase2") renderPhase2(root);
       else if (activeTab === "apostila") renderApostila(root);
       else if (activeTab === "cards") renderCardsArea(root);
       else if (activeTab === "labs") renderLabsArea(root);
     }
 
+    // ==================== RADAR DE PONTOS FRACOS ====================
     function getAreaStats() {
       const areas = D.areas || [];
       const qAreaMap = {};
       Object.entries(D.exams || {}).forEach(([exId, ex]) => {
-        (ex.questions || []).forEach((q) => {
-          qAreaMap[`${exId}_${q.num}`] = q.area;
-        });
+        (ex.questions || []).forEach((q) => { qAreaMap[`${exId}_${q.num}`] = q.area; });
       });
       const vfAreaMap = {};
       (D.vfStatements || []).forEach((v) => { vfAreaMap[String(v.id)] = v.area; });
@@ -524,17 +744,11 @@
 
       Object.entries(pState.qHistory || {}).forEach(([key, ok]) => {
         const aId = qAreaMap[key];
-        if (aId && map[aId]) {
-          map[aId].total += 1;
-          if (ok) map[aId].hits += 1;
-        }
+        if (aId && map[aId]) { map[aId].total += 1; if (ok) map[aId].hits += 1; }
       });
       Object.entries(pState.vfHistory || {}).forEach(([vid, ok]) => {
         const aId = vfAreaMap[String(vid)];
-        if (aId && map[aId]) {
-          map[aId].total += 1;
-          if (ok) map[aId].hits += 1;
-        }
+        if (aId && map[aId]) { map[aId].total += 1; if (ok) map[aId].hits += 1; }
       });
       return areas.map((a) => {
         const s = map[a.id];
@@ -557,10 +771,10 @@
         let color = "#94a3b8", tagCls = "", statusTxt = "⚪ Sem dados ainda";
         if (r.total > 0) {
           if (r.pct >= 75) { color = "var(--green)"; tagCls = "done"; statusTxt = `🟢 Forte (${r.hits}/${r.total} • ${r.pct}%)`; }
-          else if (r.pct >= 50) { color = "var(--amber)"; tagCls = "today"; statusTxt = `🟡 Atenção (${r.hits}/${r.total} • ${r.pct}%)`; }
-          else { color = "var(--red)"; tagCls = "late"; statusTxt = `🔴 Ponto Fraco (${r.hits}/${r.total} • ${r.pct}%)`; }
+          else if (r.pct >= 50) { color = "var(--amber)"; tagCls = "amber"; statusTxt = `🟡 Atenção (${r.hits}/${r.total} • ${r.pct}%)`; }
+          else { color = "var(--red)"; tagCls = "late"; statusTxt = `🔴 Reforçar (${r.hits}/${r.total} • ${r.pct}%)`; }
         }
-        return `<div style="padding:10px; border:1px solid #e2e8f0; border-radius:10px; background:#f8fafc;">
+        return `<div style="padding:11px; border:1px solid var(--border-soft); border-radius:12px; background:var(--surface-alt);">
           <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:6px;">
             <strong style="font-size:13.5px;">${r.title}</strong>
             <span class="tag-pill ${tagCls}">${statusTxt}</span>
@@ -571,17 +785,17 @@
 
       const diagHtml = weakest
         ? `<div class="callout ${weakest.pct < 50 ? "callout-caution" : (weakest.pct < 75 ? "callout-warning" : "callout-note")}" style="margin:10px 0 12px 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-            <div><strong>${weakest.pct < 75 ? "⚠️ Ponto que pede reforço:" : "🏆 Melhor atenção:"}</strong> sua menor taxa atual é em <strong>${weakest.title}</strong> (<strong>${weakest.pct}%</strong> em ${weakest.total} itens).</div>
-            <button class="btn sm ${weakest.pct < 50 ? "red" : "amber"}" onclick="openChapter(${weakest.recommendedDay}, 1)">🎯 Revisar Matéria Mais Fraca (Ir ao Dia ${weakest.recommendedDay})</button>
+            <div><strong>${weakest.pct < 75 ? "🎯 Prioridade de Reforço:" : "🏆 Ponto a Manter:"}</strong> <strong>${weakest.title}</strong> (<strong>${weakest.pct}%</strong> em ${weakest.total} itens).</div>
+            <button class="btn sm ${weakest.pct < 50 ? "red" : "amber"}" onclick="openChapter(${weakest.recommendedDay}, 1)">Ir ao Dia ${weakest.recommendedDay} ▶</button>
           </div>`
-        : `<div class="callout callout-note" style="margin:10px 0 12px 0;">Responda questões nos <strong>Módulos</strong>, nos <strong>Simulados</strong> ou no mini-game <strong>Verdade ou Fake</strong> para calibrar automaticamente seu Radar por matéria!</div>`;
+        : `<div class="callout callout-note" style="margin:10px 0 12px 0;">Faça a <strong>Prova Diagnóstica Taboão 2026 (05/12/2025)</strong> ou responda questões dos módulos para calibrar automaticamente seu Radar!</div>`;
 
       return `<section class="panel">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-          <h2 style="margin:0; font-size:18px;">📊 Radar de Pontos Fracos por Matéria (Diagnóstico Ao Vivo)</h2>
+          <h2 style="margin:0; font-size:18px;">📊 Radar Taboão da Serra (6 Blocos Oficiais)</h2>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <button class="btn sm ${wrongCnt > 0 ? "red" : "green"}" onclick="openRevanche()">🩹 Caderno de Erros (${wrongCnt})</button>
-            <button class="btn sm purple" onclick="goTab('cards'); cardsMode='vf'; renderMain();">⚡ Jogar Verdade ou Fake (${vfCnt})</button>
+            <button class="btn sm purple" onclick="goTab('cards'); cardsMode='vf'; renderMain();">⚡ Verdade ou Fake (${vfCnt})</button>
           </div>
         </div>
         ${diagHtml}
@@ -594,65 +808,91 @@
       const st = getScheduleStatus();
       const ch = st.nextChapter;
       const doneCount = pState.completedDays.length;
-      const pace = st.pending.length > 0 ? (st.pending.length / Math.max(1, st.diffDays)).toFixed(1) : "0";
+      const doneP1 = st.phase1Chapters.filter((c) => pState.completedDays.includes(c.day)).length;
+      const diagDone = !!pState.examScores["taboao2026"];
+      const primaryIds = D.primaryExamIds || ["taboao2026", "taboao2025", "sim_taboao2027", "mtec2022"];
 
       let coachCls = "ok", coachTitle = "", coachMsg = "";
-      if (st.pending.length === 0) {
-        coachTitle = "🏆 Jornada dos 14 Dias Concluída!";
-        coachMsg = "Você completou todos os capítulos! Use o Simulador (M-Tec 40Q e 30 Apostas) e releia a Cola de Bolso antes da prova em 04/12.";
-      } else if (st.today < st.startDate) {
-        coachTitle = `🚀 Aquecimento (${fmtBr(st.today)}) — Trilha oficial começa amanhã (${fmtBr(st.startDate)})!`;
-        coachMsg = `Você já pode apertar o botão abaixo para começar o <strong>Capítulo 1</strong> hoje mesmo e ganhar folga extra antes de 04/12!`;
+      if (!diagDone && st.diffPhase1 > 0) {
+        coachTitle = "🎯 1º Passo Recomendado: Diagnóstico Real Taboão (05/12/2025 — 40Q)";
+        coachMsg = "Faça a prova real mais recente da Etec de Taboão em <strong>Modo Prova Real</strong> (sem consultar), clique em <strong>📋 Copiar Diagnóstico p/ WhatsApp</strong> no final e descubra exatamente onde subir +10 pontos até 04/12! Lembre: o corte eliminatório é <strong>20/40 (50%)</strong>.";
+      } else if (st.diffPhase1 < 0 && st.diffPhase2 >= 0) {
+        coachTitle = "🛠️ FOCO TOTAL NA 2ª FASE (08/12 — Laboratório Prático + Entrevista)!";
+        coachMsg = "A escrita já passou! Nos últimos 3 anos, <strong>0 de 7 candidatos</strong> passaram na prática em Taboão porque não treinaram código. Faça os <strong>Dias 14 a 16</strong> e treine na aba <strong>🛠️ 2ª Fase</strong> (HTML+CSS, C# Console, DER+SQL e Entrevista)!";
+      } else if (st.pendingAll.length === 0) {
+        coachTitle = "🏆 Trilha Completa de 16 Dias Concluída!";
+        coachMsg = "Você completou toda a preparação para a 1ª Fase (04/12) e a 2ª Fase (08/12). Revise a Cola de Bolso e ensaie a entrevista em voz alta!";
       } else if (st.overdue.length === 0) {
-        coachTitle = "🟢 Ritmo Perfeito! Você está em dia para a prova de 04/12!";
-        coachMsg = `Continue a história no <strong>Dia ${ch.day}: ${ch.title}</strong>. São apenas 3 passos rápidos (Lição + Prática + Desafio) direto aqui na tela.`;
+        coachTitle = `🟢 Ritmo Perfeito para Taboão da Serra (${fmtBr(st.today)})!`;
+        coachMsg = `Sua próxima missão é o <strong>Dia ${ch.day} (${ch.dateLabel}): ${ch.title}</strong>. Meta na escrita: <strong>25+/40</strong> (corte oficial 20/40).`;
       } else if (st.overdue.length === 1) {
         coachCls = "warn";
-        coachTitle = `🟡 Atenção: 1 capítulo atrasado (Dia ${st.overdue[0].day})!`;
-        coachMsg = `Faça o <strong>Dia ${st.overdue[0].day}</strong> hoje (+30 min) ou recupere no Dia Curinga (03/12) para manter tudo em dia.`;
+        coachTitle = `🟡 Atenção: 1 módulo pendente (Dia ${st.overdue[0].day} — ${st.overdue[0].dateLabel})`;
+        coachMsg = `Faça o <strong>Dia ${st.overdue[0].day}</strong> hoje (+30 min) para chegar leve na véspera (03/12)!`;
       } else {
         coachCls = "danger";
         const rescue = st.overdue.slice(0, 2).map((x) => `Dia ${x.day}`).join(" e ");
-        coachTitle = `🔴 ALERTA DE ATRASO: ${st.overdue.length} capítulos pendentes para ${st.diffDays} dia(s)!`;
-        coachMsg = `Ritmo necessário: <strong>${pace} capítulos/dia</strong>. <strong>Plano de Resgate:</strong> priorize <strong>${rescue}</strong> hoje (peso Máxima: SQL, Matriz/Teste de Mesa, Redes/Cookies e Base M-Tec).`;
+        coachTitle = `🔴 ${st.overdue.length} módulos pendentes — Plano de Resgate Ativo!`;
+        coachMsg = `Priorize <strong>${rescue}</strong> hoje (os 6 blocos técnicos de Taboão rendem 14 a 18 pontos diretos na prova!).`;
       }
 
       const simVal = simDateOverride || toIso(st.today);
-      const bestScoresHtml = Object.values(D.exams).map((ex) => {
+      const primaryExamsHtml = primaryIds.map((id) => {
+        const ex = D.exams[id];
+        if (!ex) return "";
         const sc = pState.examScores[ex.id];
-        return `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 10px; border:1px solid #e2e8f0; border-radius:10px; background:#f8fafc;">
-          <div><strong>${ex.title}</strong><br><small style="color:var(--muted)">${ex.badge}</small></div>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <span class="tag-pill ${sc ? "done" : ""}">${sc ? `${sc.hits}/${sc.total} (${sc.pct}%)` : "Não feita"}</span>
-            <button class="btn sm" onclick="startExamInSim('${ex.id}')">▶ Abrir</button>
+        let badgeHtml = `<span class="tag-pill">Não feita</span>`;
+        if (sc) {
+          if (sc.hits >= (ex.target || 25)) badgeHtml = `<span class="tag-pill done">🏆 ${sc.hits}/${sc.total} (${sc.pct}%)</span>`;
+          else if (sc.hits >= (ex.cutoff || 20)) badgeHtml = `<span class="tag-pill amber">✅ ${sc.hits}/${sc.total} (${sc.pct}%)</span>`;
+          else badgeHtml = `<span class="tag-pill late">🎯 ${sc.hits}/${sc.total} (${sc.pct}%)</span>`;
+        }
+        return `<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding:11px 12px; border:1px solid ${ex.recommended ? "var(--amber)" : "var(--border-soft)"}; border-radius:12px; background:${ex.recommended ? "var(--amber-soft)" : "var(--surface-alt)"};">
+          <div>
+            <strong>${ex.title}</strong><br>
+            <small style="color:var(--muted)">${ex.badge} • Corte: 20/40 | Meta: 25+/40</small>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            ${badgeHtml}
+            <button class="btn sm ${ex.recommended ? "amber" : ""}" onclick="startExamInSim('${ex.id}', '${ex.recommended ? "real" : "instant"}')">▶ Abrir</button>
           </div>
         </div>`;
       }).join("");
 
+      const heroBtns = !diagDone
+        ? `<button class="btn lg amber" onclick="startExamInSim('taboao2026', 'real')">⭐ Fazer Diagnóstico Taboão 2026 (40Q)</button>
+           <button class="btn lg green" onclick="openChapter(${ch.day}, 1)">▶ Trilha Dia ${ch.day}</button>
+           <button class="btn lg purple" onclick="goTab('phase2')">🛠️ Ver 2ª Fase (08/12)</button>`
+        : `<button class="btn lg green" onclick="openChapter(${ch.day}, 1)">▶ Continuar Dia ${ch.day} (${ch.dateLabel})</button>
+           <button class="btn lg purple" onclick="goTab('phase2')">🛠️ Treinar 2ª Fase (08/12)</button>
+           <button class="btn lg amber" onclick="goTab('apostila'); selectApostila('cola')">⚡ Cola de Bolso</button>`;
+
       root.innerHTML = `
         <section class="hero">
           <div>
-            <span style="display:inline-block; background:rgba(255,255,255,0.18); padding:4px 10px; border-radius:999px; font-size:12px; font-weight:700;">ETEC M-TEC DESENVOLVIMENTO DE SISTEMAS • ZERO PDF</span>
-            <h1 style="margin:8px 0 6px 0; font-size:25px;">${doneCount === 14 ? "Você está pronto para a Etec!" : `Próxima Missão: Dia ${ch.day} — ${ch.title}`}</h1>
-            <p style="margin:0 0 14px 0; opacity:0.92; font-size:14px;">${ch.storyIntro}</p>
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="btn lg green" onclick="openChapter(${ch.day}, 1)">▶ Continuar Modo História (Dia ${ch.day})</button>
-              <button class="btn lg amber" onclick="goTab('apostila'); selectApostila('cola')">⚡ Cola de Bolso (04/12)</button>
-            </div>
+            <span style="display:inline-block; background:rgba(255,255,255,0.18); padding:4px 11px; border-radius:999px; font-size:12px; font-weight:800;">ETEC DE TABOÃO DA SERRA • 2ª SÉRIE M-TEC-PI (DS)</span>
+            <h1 style="margin:10px 0 6px 0; font-size:24px; line-height:1.25;">${!diagDone ? "Comece pelo Diagnóstico Oficial de Taboão (40Q)!" : `Próxima Missão: Dia ${ch.day} — ${ch.title}`}</h1>
+            <p style="margin:0 0 15px 0; opacity:0.93; font-size:14px;">${!diagDone ? "Plataforma 100% recalibrada sobre as provas reais de Taboão da Serra (2022–2025) e o Plano de Curso 612 — com 4 provas 40Q, 16 dias reais e Laboratório completo para a 2ª Fase (08/12)!" : ch.storyIntro}</p>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">${heroBtns}</div>
           </div>
           <div class="countdown-box">
-            <div style="font-size:12px; font-weight:700; text-transform:uppercase; opacity:0.85;">Prova: Sexta, 04/12/2026</div>
-            <div class="countdown-num">${st.diffDays > 0 ? `Faltam ${st.diffDays} dias` : (st.diffDays === 0 ? "É HOJE!" : "Concluída")}</div>
-            <div style="font-size:12.5px; opacity:0.9; margin-top:4px;">Progresso total: ${doneCount}/14 capítulos • ${cState.known.length}/${D.flashcards.length} cards</div>
+            <div class="cd-row">
+              <div><div style="font-size:11px; opacity:0.85; font-weight:700;">1ª FASE • PROVA ESCRITA (40Q)</div><div style="font-size:12.5px;">Sex 04/12 • Corte: <strong>20/40 (50%)</strong></div></div>
+              <div class="countdown-num">${st.diffPhase1 > 0 ? `${st.diffPhase1}d` : (st.diffPhase1 === 0 ? "HOJE" : "OK")}</div>
+            </div>
+            <div class="cd-row">
+              <div><div style="font-size:11px; opacity:0.85; font-weight:700;">2ª FASE • LAB PRÁTICO + ENTREVISTA</div><div style="font-size:12.5px;">Ter 08/12 • Menção <strong>R, B ou MB</strong></div></div>
+              <div class="countdown-num">${st.diffPhase2 > 0 ? `${st.diffPhase2}d` : (st.diffPhase2 === 0 ? "HOJE" : "OK")}</div>
+            </div>
+            <div style="font-size:12px; opacity:0.9; text-align:center;">Trilha: <strong>${doneCount}/${D.chapters.length}</strong> dias • Cards: <strong>${cState.known.length}/${D.flashcards.length}</strong> • ⭐ <strong>${cState.xp} XP</strong></div>
           </div>
         </section>
 
         <section class="coach ${coachCls}">
           <div class="coach-head">
-            <h2 style="margin:0; font-size:17.5px;">${coachTitle}</h2>
-            <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; font-size:12px; background:rgba(255,255,255,0.75); padding:5px 9px; border-radius:8px;">
-              <label><strong>Início:</strong> <input type="date" value="${pState.startDate}" onchange="pState.startDate=this.value; savePlatformState(); renderMain();" style="border:1px solid #94a3b8; border-radius:5px; padding:2px 4px;"></label>
-              <label><strong>Simular hoje:</strong> <input type="date" value="${simVal}" min="2026-11-18" max="2026-12-05" onchange="simDateOverride=this.value||null; renderMain();" style="border:1px solid #94a3b8; border-radius:5px; padding:2px 4px;"></label>
+            <h2 style="margin:0; font-size:17px;">${coachTitle}</h2>
+            <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; font-size:12px; background:rgba(255,255,255,0.65); color:#0f172a; padding:5px 9px; border-radius:8px;">
+              <label><strong>Simular data:</strong> <input type="date" value="${simVal}" min="2026-11-20" max="2026-12-09" onchange="simDateOverride=this.value||null; renderMain();" style="border:1px solid #94a3b8; border-radius:5px; padding:2px 4px;"></label>
               ${simDateOverride ? `<button class="btn sm dark" onclick="simDateOverride=null; renderMain();">Hoje Real</button>` : ""}
             </div>
           </div>
@@ -660,71 +900,83 @@
         </section>
 
         <section class="kpi-grid">
-          <div class="kpi"><div class="kpi-label">Capítulos História</div><div class="kpi-val">${doneCount} / 14</div><div class="track"><div class="fill" style="width:${Math.round(doneCount/14*100)}%"></div></div></div>
-          <div class="kpi"><div class="kpi-label">Flashcards Dominados</div><div class="kpi-val">${cState.known.length} / ${D.flashcards.length}</div><div class="track"><div class="fill" style="width:${Math.round(cState.known.length/D.flashcards.length*100)}%; background:var(--purple)"></div></div></div>
-          <div class="kpi"><div class="kpi-label">XP Acumulado</div><div class="kpi-val">⭐ ${cState.xp} XP</div><small style="color:var(--muted)">+50 XP por capítulo concluído</small></div>
-          <div class="kpi"><div class="kpi-label">Provas Resolvidas</div><div class="kpi-val">${Object.keys(pState.examScores).length} / 7</div><small style="color:var(--muted)">220 questões disponíveis na tela</small></div>
+          <div class="kpi"><div class="kpi-label">1ª Fase (Escrita 04/12)</div><div class="kpi-val">${doneP1} / 13 dias</div><div class="track"><div class="fill" style="width:${Math.round(doneP1/13*100)}%"></div></div></div>
+          <div class="kpi"><div class="kpi-label">2ª Fase (Lab 08/12)</div><div class="kpi-val">${doneCount - doneP1} / 3 dias</div><div class="track"><div class="fill" style="width:${Math.round((doneCount - doneP1)/3*100)}%; background:var(--purple)"></div></div></div>
+          <div class="kpi"><div class="kpi-label">Flashcards Taboão</div><div class="kpi-val">${cState.known.length} / ${D.flashcards.length}</div><div class="track"><div class="fill" style="width:${Math.round(cState.known.length/D.flashcards.length*100)}%; background:var(--primary)"></div></div></div>
+          <div class="kpi"><div class="kpi-label">Provas 40Q Feitas</div><div class="kpi-val">${primaryIds.filter((id) => !!pState.examScores[id]).length} / ${primaryIds.length}</div><small style="color:var(--muted)">+6 provas extras disponíveis</small></div>
         </section>
 
         ${buildRadarHtml()}
 
         <section class="panel">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
-            <h2 style="margin:0; font-size:18px;">📝 Acesso Rápido às Provas &amp; Simulados (100% na Tela)</h2>
-            <button class="btn sm outline" onclick="if(confirm('Zerar progresso da jornada?')){pState.completedDays=[];pState.examScores={};pState.moduleScores={};pState.qHistory={};pState.wrongQueue=[];pState.vfHistory={};revancheAnswers={};vfSessionPicked={};savePlatformState();renderMain();}">↺ Zerar Progresso</button>
+            <h2 style="margin:0; font-size:18px;">📝 Provas Oficiais &amp; Premonição — Padrão Taboão (40 Questões)</h2>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="btn sm outline" onclick="goTab('apostila')">📖 Apostila &amp; Cola</button>
+              <button class="btn sm outline" onclick="goTab('labs')">🧪 Micro-Labs</button>
+              <button class="btn sm outline" onclick="if(confirm('Zerar todo o progresso salvo neste aparelho?')){pState.completedDays=[];pState.examScores={};pState.moduleScores={};pState.qHistory={};pState.wrongQueue=[];pState.vfHistory={};pState.checks={};revancheAnswers={};vfSessionPicked={};savePlatformState();renderMain();}">↺ Zerar</button>
+            </div>
           </div>
-          <div style="display:grid; gap:8px;">${bestScoresHtml}</div>
-        </section>
-
-        <section class="panel" style="background:#fffbeb; border-color:#fcd34d;">
-          <strong>📱 Usar como App no Celular (PWA) &amp; Sincronizar PC ↔ Celular:</strong> No celular (Chrome no Android ou Safari no iPhone), abra este site e toque em <strong>Adicionar à tela inicial</strong> para estudar os <strong>120 Flashcards</strong>, o <strong>Verdade ou Fake</strong> e os <strong>Simulados</strong> em tela cheia! Sempre que quiser levar seu progresso do PC para o celular (ou voltar para o PC), clique em <strong>📲 Sincronizar</strong> na barra superior.
+          <div style="display:grid; gap:8px;">${primaryExamsHtml}</div>
         </section>
       `;
     }
 
-    // ==================== 2. MODO HISTÓRIA (14 CAPÍTULOS) ====================
+    // ==================== 2. TRILHA 16 DIAS (FASE 1 + FASE 2) ====================
     function renderStory(root) {
       if (activeChapter !== null) {
         renderChapterFocus(root, activeChapter);
         return;
       }
       const st = getScheduleStatus();
-      const cardsHtml = D.chapters.map((ch) => {
-        const cDate = addDays(st.startDate, ch.day - 1);
+      const buildCard = (ch) => {
+        const cDate = getChapterDate(ch.day);
         const done = pState.completedDays.includes(ch.day);
         const isToday = toIso(cDate) === toIso(st.today);
         const isLate = !done && cDate < st.today;
         const mSc = (pState.moduleScores || {})[ch.day];
         let cls = "chap-card", pillCls = "", pillTxt = "⏳ Agendado";
         if (done) { cls += " done"; pillCls = "done"; pillTxt = "✅ Concluído"; }
-        else if (isToday) { cls += " today"; pillCls = "today"; pillTxt = "🎯 Missão de Hoje"; }
-        else if (isLate) { cls += " late"; pillCls = "late"; pillTxt = "⚠️ Atrasado"; }
+        else if (isToday) { cls += " today"; pillCls = "today"; pillTxt = "🎯 Hoje"; }
+        else if (isLate) { cls += " late"; pillCls = "late"; pillTxt = "⚠️ Pendente"; }
 
         const scoreBadge = mSc
-          ? `<span class="tag-pill ${mSc.pct >= 70 ? "done" : "late"}" style="margin-left:4px;">Nota: ${mSc.hits}/${mSc.total} (${mSc.pct}%)</span>`
+          ? `<span class="tag-pill ${mSc.pct >= 70 ? "done" : "late"}" style="margin-left:4px;">${mSc.hits}/${mSc.total} (${mSc.pct}%)</span>`
           : "";
 
         return `<div class="${cls}">
           <div>
             <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; font-size:12px; font-weight:800; flex-wrap:wrap;">
-              <span>Dia ${String(ch.day).padStart(2,"0")} • ${fmtBr(cDate)}</span>
+              <span>Dia ${String(ch.day).padStart(2,"0")} • ${ch.dateLabel || fmtBr(cDate)}</span>
               <div><span class="tag-pill ${pillCls}">${pillTxt}</span>${scoreBadge}</div>
             </div>
-            <h3 style="margin:6px 0; font-size:15.5px;">${ch.title}</h3>
+            <h3 style="margin:7px 0 5px 0; font-size:15.5px;">${ch.title}</h3>
             <p style="margin:0; font-size:13px; color:var(--muted);">${ch.storyIntro}</p>
           </div>
-          <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #e2e8f0; padding-top:8px;">
-            <small><strong>Peso:</strong> ${ch.weight} • Teste: ${ch.challengeRefs.length}Q</small>
-            <button class="btn sm ${done ? "dark" : "green"}" onclick="openChapter(${ch.day}, 1)">${done ? "Rever Módulo" : "Iniciar Módulo ▶"}</button>
+          <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-soft); padding-top:9px; gap:8px;">
+            <small style="color:var(--muted);"><strong>${ch.weight}</strong> • Quiz ${ch.challengeRefs.length}Q</small>
+            <button class="btn sm ${done ? "dark" : "green"}" onclick="openChapter(${ch.day}, 1)">${done ? "Rever" : "Iniciar ▶"}</button>
           </div>
         </div>`;
-      }).join("");
+      };
+
+      const p1Cards = D.chapters.filter((c) => c.phase === 1).map(buildCard).join("");
+      const p2Cards = D.chapters.filter((c) => c.phase === 2).map(buildCard).join("");
 
       root.innerHTML = `
         <section class="panel">
-          <h2 style="margin-top:0;">🗺️ Modo História — Sua Jornada de 14 Módulos até 04/12</h2>
-          <p style="color:var(--muted); font-size:14px; margin-top:0;">Clique em qualquer dia para seguir o ciclo completo na tela: <strong>1. Parte Teórica Completa &rarr; 2. Parte Prática Interativa &rarr; 3. Teste Pós-Módulo (8 a 10 questões com nota)</strong>.</p>
-          <div class="story-map">${cardsHtml}</div>
+          <h2 style="margin-top:0;">🗺️ Fase 1 — Rumo à Prova Escrita (Dias 1 a 13 • 21/11 → 03/12)</h2>
+          <p style="color:var(--muted); font-size:14px; margin-top:0;">100% alinhado às 6 matérias técnicas + Base Comum do 1º ano de <strong>Taboão da Serra (Plano 612)</strong>. Cada dia tem <strong>1. Lição + Caixas "Sua Vez" &rarr; 2. Prática Interativa &rarr; 3. Quiz Real (8–10Q)</strong>.</p>
+          <div class="story-map">${p1Cards}</div>
+        </section>
+
+        <section class="panel" style="border-color:var(--purple); background:var(--purple-soft);">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+            <h2 style="margin:0;">🛠️ Fase 2 — Sprint Laboratório Prático &amp; Entrevista (Dias 14 a 16 • 05/12 → 07/12)</h2>
+            <button class="btn sm purple" onclick="goTab('phase2')">Abrir Lab 2ª Fase Direto ▶</button>
+          </div>
+          <p style="color:var(--muted); font-size:14px; margin-top:0;"><strong>Dia 04/12 (sexta)</strong> é a Prova Escrita! Do sábado <strong>05/12</strong> à segunda <strong>07/12</strong>, você treina mão na massa para arrasar no laboratório de <strong>08/12 (13h00–15h30)</strong>!</p>
+          <div class="story-map">${p2Cards}</div>
         </section>
       `;
     }
@@ -732,10 +984,7 @@
     let chapterAnswers = {};
     let openVideoClips = {};
     let miniPlayerNote = {};
-    function fmtMmSs(s) {
-      const m = Math.floor(s / 60), sec = s % 60;
-      return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
-    }
+    function fmtMmSs(s) { return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`; }
     function fmtClipDur(sec) {
       const m = Math.floor(sec / 60), s = sec % 60;
       return m > 0 ? (s > 0 ? `${m}m${String(s).padStart(2,"0")}s` : `${m} min`) : `${s}s`;
@@ -764,40 +1013,35 @@
         const embedUrl = `https://www.youtube.com/embed/${v.videoId}?start=${v.startSec}&end=${v.endSec}&autoplay=1&rel=0`;
         const watchUrl = `https://www.youtube.com/watch?v=${v.videoId}&t=${v.startSec}s`;
         const iframeHtml = (isHttp && isOpen)
-          ? `<div style="margin-top:10px;"><iframe src="${embedUrl}" title="${escapeHtml(v.title)}" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%; max-width:680px; height:360px; border:0; border-radius:10px; background:#0f172a;"></iframe><div style="font-size:12px; color:var(--muted); margin-top:4px;">Player embutido ativo: começa em <strong>${sStr}</strong> e para sozinho em <strong>${eStr}</strong>.</div></div>`
+          ? `<div style="margin-top:10px;"><iframe src="${embedUrl}" title="${escapeHtml(v.title)}" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%; max-width:680px; height:360px; border:0; border-radius:10px; background:#0f172a;"></iframe><div style="font-size:12px; color:var(--muted); margin-top:4px;">Player embutido ativo: começa em <strong>${sStr}</strong> e para em <strong>${eStr}</strong>.</div></div>`
           : "";
         const miniNoteHtml = (!isHttp && hasMiniNote)
-          ? `<div class="callout callout-note" style="margin-top:10px; background:#dcfce7; border-color:#16a34a; color:#14532d;">⏱️ <strong>Mini-Player aberto no minuto ${sStr}!</strong> Assista apenas até <strong>${eStr}</strong> (${durStr} de trecho).</div>`
+          ? `<div class="callout callout-note" style="margin-top:10px;">⏱️ <strong>Mini-Player aberto no minuto ${sStr}!</strong> Assista até <strong>${eStr}</strong> (${durStr}).</div>`
           : "";
-        const mainBtnLabel = (isHttp && isOpen)
-          ? `Ocultar Player Embutido`
-          : `Assistir Aqui (Mini-Player no Ponto Exato: ${sStr} &rarr; ${eStr})`;
-        return `<div style="border:1px solid #cbd5e1; border-radius:12px; padding:12px; background:#ffffff;">
+        const mainBtnLabel = (isHttp && isOpen) ? "Ocultar Player" : `Assistir Trecho (${sStr} → ${eStr})`;
+        return `<div style="border:1px solid var(--border); border-radius:12px; padding:12px; background:var(--surface);">
           <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:6px;">
             <div>
               <strong style="font-size:14.5px;">${escapeHtml(v.title)}</strong>
               <div style="font-size:12.5px; color:var(--muted);">${escapeHtml(v.channel)}</div>
             </div>
-            <span class="tag-pill today">✂️ Corte: ${sStr} até ${eStr} (${durStr})</span>
+            <span class="tag-pill today">✂️ ${sStr}–${eStr} (${durStr})</span>
           </div>
-          <p style="margin:8px 0; font-size:13px; color:#334155;">${escapeHtml(v.tip)}</p>
+          <p style="margin:8px 0; font-size:13px; color:var(--muted);">${escapeHtml(v.tip)}</p>
           <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
             <button class="btn sm green" onclick="openClipPlayer('${v.videoId}', ${v.startSec}, ${v.endSec}, '${key}')">📺 ${mainBtnLabel}</button>
-            <a class="btn sm outline" href="${watchUrl}" target="_blank" rel="noopener">▶️ Abrir no YouTube em Nova Aba (começa em ${sStr} &rarr; pare em ${eStr})</a>
+            <a class="btn sm outline" href="${watchUrl}" target="_blank" rel="noopener">▶️ Abrir no YouTube</a>
           </div>
           ${miniNoteHtml}
           ${iframeHtml}
         </div>`;
       }).join("");
-      const subText = isHttp
-        ? `Rodando via servidor local: clique em <strong>Assistir Aqui</strong> para abrir o trecho embutido na tela (ele inicia em <code>start</code> e para sozinho em <code>end</code>).`
-        : `Para evitar bloqueio do YouTube em arquivos locais (<code>file://</code>), o botão verde abre um <strong>Mini-Player flutuante</strong> direto no segundo exato do trecho (ou use o botão <code>[1]</code> do <code>INICIAR_ESTUDO_WINDOWS.bat</code> para habilitar player embutido com parada automática):`;
-      return `<div class="panel" style="background:#f0f9ff; border-color:#bae6fd; padding:14px; margin-bottom:16px;">
-        <h3 style="margin:0 0 6px 0; font-size:16px;">🎬 Vídeos Rápidos da Lição (Trechos Cortados Direto ao Ponto)</h3>
-        <p style="margin:0 0 10px 0; font-size:13px; color:#334155;">${subText}</p>
+      return `<div class="panel" style="background:var(--primary-soft); border-color:var(--primary); padding:14px; margin-bottom:16px;">
+        <h3 style="margin:0 0 8px 0; font-size:15.5px;">🎬 Vídeos Curtos da Lição (Trechos Direto ao Ponto)</h3>
         <div style="display:grid; gap:10px;">${cards}</div>
       </div>`;
     }
+
     function getChapterQuizStats(ch) {
       const total = ch.challengeRefs.length;
       const answered = Object.keys(chapterAnswers).length;
@@ -814,24 +1058,25 @@
       const ch = D.chapters.find((c) => c.day === dayNum);
       const isDone = pState.completedDays.includes(dayNum);
       const savedSc = (pState.moduleScores || {})[dayNum];
+      const totalDays = D.chapters.length;
 
       root.innerHTML = `
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-          <button class="btn sm outline" onclick="activeChapter=null; renderMain();">◀ Voltar ao Mapa dos 14 Dias</button>
+          <button class="btn sm outline" onclick="activeChapter=null; renderMain();">◀ Voltar à Trilha (${totalDays} Dias)</button>
           <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
             ${savedSc ? `<span class="tag-pill ${savedSc.pct >= 70 ? "done" : "late"}">Melhor Nota: ${savedSc.hits}/${savedSc.total} (${savedSc.pct}%)</span>` : ""}
-            <span class="tag-pill ${isDone ? "done" : "today"}">Dia ${ch.day} de 14 ${isDone ? "• ✅ Concluído" : ""}</span>
+            <span class="tag-pill ${isDone ? "done" : "today"}">Dia ${ch.day}/${totalDays} • ${ch.dateLabel || ""} ${isDone ? "• ✅ Concluído" : ""}</span>
           </div>
         </div>
 
         <section class="panel">
-          <h2 style="margin:0 0 6px 0;">Dia ${ch.day}: ${ch.title}</h2>
+          <h2 style="margin:0 0 6px 0;">Dia ${ch.day} (${ch.dateLabel || ""}): ${ch.title}</h2>
           <p style="margin:0 0 14px 0; color:var(--muted); font-size:14px;">${ch.storyIntro}</p>
 
           <div class="stepper">
-            <button class="step-pill ${chapterStep === 1 ? "active" : (chapterStep > 1 ? "done" : "")}" onclick="chapterStep=1; renderMain();">1. 📖 Parte Teórica Completa</button>
-            <button class="step-pill ${chapterStep === 2 ? "active" : (chapterStep > 2 ? "done" : "")}" onclick="chapterStep=2; renderMain();">2. 🧪 Parte Prática do Módulo</button>
-            <button class="step-pill ${chapterStep === 3 ? "active" : ""}" onclick="chapterStep=3; renderMain();">3. 📝 Teste Pós-Módulo (${ch.challengeRefs.length}Q)</button>
+            <button class="step-pill ${chapterStep === 1 ? "active" : (chapterStep > 1 ? "done" : "")}" onclick="chapterStep=1; renderMain();">1. 📖 Lição</button>
+            <button class="step-pill ${chapterStep === 2 ? "active" : (chapterStep > 2 ? "done" : "")}" onclick="chapterStep=2; renderMain();">2. 🧪 Prática</button>
+            <button class="step-pill ${chapterStep === 3 ? "active" : ""}" onclick="chapterStep=3; renderMain();">3. 📝 Quiz (${ch.challengeRefs.length}Q)</button>
           </div>
 
           <div id="chapterStepBody"></div>
@@ -840,24 +1085,36 @@
 
       const body = document.getElementById("chapterStepBody");
       if (chapterStep === 1) {
+        const day1DiagCta = ch.day === 1
+          ? `<div class="callout callout-warning" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <div><strong>⭐ Missão Principal do Dia 1:</strong> Faça a <strong>Prova Real Taboão 2026 (05/12/2025 — 40Q)</strong> para gerar seu Diagnóstico Inicial!</div>
+              <button class="btn sm amber" onclick="startExamInSim('taboao2026', 'real')">▶ Abrir Prova Diagnóstica</button>
+            </div>`
+          : "";
         body.innerHTML = `
+          ${day1DiagCta}
           ${renderVideoClipsHtml(ch)}
           <div class="lesson-body">${ch.lessonHtml}</div>
-          <div style="display:flex; justify-content:flex-end; margin-top:18px; border-top:1px solid #e2e8f0; padding-top:14px;">
-            <button class="btn lg green" onclick="chapterStep=2; renderMain(); window.scrollTo({top:0,behavior:'smooth'});">Avançar para Passo 2: Parte Prática Interativa ▶</button>
+          <div style="display:flex; justify-content:flex-end; margin-top:18px; border-top:1px solid var(--border-soft); padding-top:14px;">
+            <button class="btn lg green" onclick="chapterStep=2; renderMain(); window.scrollTo({top:0,behavior:'smooth'});">Avançar para Passo 2: Prática ▶</button>
           </div>
         `;
       } else if (chapterStep === 2) {
-        const extraSimHtml = ch.day === 14
-          ? `<div class="callout callout-note" style="margin-bottom:14px;"><strong>Simulados Completos Opcionais:</strong> Se quiser treinar resistência completa antes da prova de 04/12, você também pode abrir aqui a <button class="btn sm green" onclick="startExamInSim('mtec2022', 'instant')">🎓 Prova Real M-Tec (40Q)</button> ou <button class="btn sm purple" onclick="startExamInSim('apostas', 'instant')">🔮 30 Apostas Inéditas</button>.</div>`
+        const extraSimHtml = ch.day === 13
+          ? `<div class="callout callout-note" style="margin-bottom:14px;"><strong>Simulados Finais Recomendados (Véspera 03/12):</strong> <button class="btn sm green" onclick="startExamInSim('taboao2025', 'real')">📝 Prova Real Taboão 2025 (40Q)</button> <button class="btn sm purple" onclick="startExamInSim('sim_taboao2027', 'real')">🎯 Premonição Taboão 2027 (40Q)</button></div>`
           : "";
         body.innerHTML = `${extraSimHtml}<div id="chapPracticeTarget"></div>
-          <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-top:18px; border-top:1px solid #e2e8f0; padding-top:14px;">
-            <button class="btn outline" onclick="chapterStep=1; renderMain(); window.scrollTo({top:0,behavior:'smooth'});">◀ Voltar à Parte Teórica</button>
-            <button class="btn lg green" onclick="chapterStep=3; renderMain(); window.scrollTo({top:0,behavior:'smooth'});">Avançar para Passo 3: Teste Pós-Módulo (${ch.challengeRefs.length}Q) ▶</button>
+          <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-top:18px; border-top:1px solid var(--border-soft); padding-top:14px;">
+            <button class="btn outline" onclick="chapterStep=1; renderMain(); window.scrollTo({top:0,behavior:'smooth'});">◀ Voltar à Lição</button>
+            <button class="btn lg green" onclick="chapterStep=3; renderMain(); window.scrollTo({top:0,behavior:'smooth'});">Avançar para Passo 3: Quiz (${ch.challengeRefs.length}Q) ▶</button>
           </div>`;
         const target = document.getElementById("chapPracticeTarget");
-        if (ch.practiceType === "lab_tipos") renderLabTiposInto(target);
+        if (ch.practiceType === "phase2") {
+          const p2Map = { 14: "p2_web", 15: "p2_csharp", 16: "p2_bd" };
+          activePhase2Tab = p2Map[ch.day] || "p2_web";
+          renderPhase2Into(target, ch.day === 16);
+        } else if (ch.practiceType === "vf") renderVfInto(target);
+        else if (ch.practiceType === "lab_tipos") renderLabTiposInto(target);
         else if (ch.practiceType === "lab01") renderLab01Into(target);
         else if (ch.practiceType === "lab02") renderLab02Into(target);
         else if (ch.practiceType === "lab03") renderLab03Into(target);
@@ -867,9 +1124,8 @@
         else if (ch.practiceType === "pairs") renderPairsInto(target);
         else renderCardsOnlyInto(target, ch.practiceTag);
       } else {
-        // Step 3: Post-Module Test with Scoreboard
         const stats = getChapterQuizStats(ch);
-        let statusHtml = `<span class="tag-pill today">Responda às ${stats.total} questões para fechar a nota do módulo</span>`;
+        let statusHtml = `<span class="tag-pill today">Responda às ${stats.total} questões para fechar a nota</span>`;
         if (stats.allDone) {
           statusHtml = stats.pct >= 70
             ? `<span class="tag-pill done">✅ Aprovado no Módulo (≥ 70%)</span>`
@@ -877,15 +1133,15 @@
         }
 
         const scoreboardHtml = `
-          <div class="panel" style="background:#f8fafc; margin-bottom:16px; padding:14px;">
+          <div class="panel" style="background:var(--surface-alt); margin-bottom:16px; padding:14px;">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
               <div>
-                <strong style="font-size:15.5px;">📊 Placar do Teste do Dia ${ch.day}: ${stats.hits} de ${stats.total} acertos (${stats.pct}%)</strong>
-                <div style="font-size:12.5px; color:var(--muted); margin-top:2px;">Respondidas: ${stats.answered}/${stats.total} • Meta de domínio: ≥ 70%</div>
+                <strong style="font-size:15.5px;">📊 Placar Dia ${ch.day}: ${stats.hits}/${stats.total} acertos (${stats.pct}%)</strong>
+                <div style="font-size:12.5px; color:var(--muted); margin-top:2px;">Respondidas: ${stats.answered}/${stats.total} • Meta: ≥ 70%</div>
               </div>
               <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
                 ${statusHtml}
-                <button class="btn sm purple" onclick="chapterAnswers={}; renderMain(); window.scrollTo({top:0,behavior:'smooth'});">🔄 Refazer Teste do Módulo</button>
+                <button class="btn sm purple" onclick="chapterAnswers={}; renderMain(); window.scrollTo({top:0,behavior:'smooth'});">🔄 Refazer</button>
               </div>
             </div>
             <div class="track" style="margin-top:10px;"><div class="fill" style="width:${stats.pct}%; background:${stats.pct >= 70 ? "var(--green)" : "var(--amber)"};"></div></div>
@@ -908,19 +1164,19 @@
             ? `<div class="q-exp ${picked === q.answer ? "ok" : "bad"}">${picked === q.answer ? "✅ Correto!" : `❌ Gabarito: (${"ABCDE"[q.answer]}).`} ${q.explain}</div>`
             : "";
           return `<div class="q-card">
-            <div style="font-size:12px; font-weight:800; color:var(--primary); margin-bottom:6px;">Questão ${idx + 1}/${ch.challengeRefs.length} • Fonte: ${ex.badge} (Q${q.num})</div>
+            <div style="font-size:12px; font-weight:800; color:var(--primary); margin-bottom:6px;">Questão ${idx + 1}/${ch.challengeRefs.length} • ${ex.badge} (Q${q.num})</div>
             <div>${q.stemHtml}</div>
             <div class="opts-list">${optsHtml}</div>
             ${expHtml}
           </div>`;
         }).join("");
 
-        const nextBtn = ch.day < 14
-          ? `<button class="btn lg green" onclick="completeChapter(${ch.day}, true)">🎉 Concluir Dia ${ch.day} (+50 XP) e Ir ao Dia ${ch.day + 1} ▶</button>`
-          : `<button class="btn lg green" onclick="completeChapter(${ch.day}, false)">🏆 Concluir Jornada Completa (+50 XP)!</button>`;
+        const nextBtn = ch.day < totalDays
+          ? `<button class="btn lg green" onclick="completeChapter(${ch.day}, true)">🎉 Concluir Dia ${ch.day} (+50 XP) → Dia ${ch.day + 1}</button>`
+          : `<button class="btn lg green" onclick="completeChapter(${ch.day}, false)">🏆 Concluir Trilha Completa (+50 XP)!</button>`;
 
         const reviewBtn = (stats.allDone && stats.pct < 70)
-          ? `<button class="btn amber" onclick="chapterStep=1; renderMain(); window.scrollTo({top:0,behavior:'smooth'});">📖 Voltar à Parte Teórica para Revisar</button>`
+          ? `<button class="btn amber" onclick="chapterStep=1; renderMain(); window.scrollTo({top:0,behavior:'smooth'});">📖 Revisar Lição</button>`
           : "";
 
         body.innerHTML = `${scoreboardHtml}${qsHtml}${stats.allDone ? scoreboardHtml : ""}
@@ -975,7 +1231,64 @@
       else goTab("home");
     }
 
-    // ==================== 3. SIMULADOR DE PROVAS & CADERNO DE ERROS ====================
+    // ==================== 3. SIMULADOR DE PROVAS & DIAGNÓSTICO WHATSAPP ====================
+    function buildExamReportData(ex, answers) {
+      const qs = ex.questions;
+      const total = qs.length;
+      const hits = qs.filter((q) => answers[q.num] === q.answer).length;
+      const pct = Math.round((hits / total) * 100);
+      const cutoff = ex.cutoff || Math.ceil(total * 0.5);
+      const target = ex.target || Math.ceil(total * 0.625);
+
+      const techQs = qs.filter((q) => q.isTech);
+      const baseQs = qs.filter((q) => !q.isTech);
+      const techHits = techQs.filter((q) => answers[q.num] === q.answer).length;
+      const baseHits = baseQs.filter((q) => answers[q.num] === q.answer).length;
+
+      const byArea = (D.areas || []).map((a) => {
+        const aqs = qs.filter((q) => q.area === a.id);
+        const ah = aqs.filter((q) => answers[q.num] === q.answer).length;
+        return { id: a.id, title: a.title, hits: ah, total: aqs.length, pct: aqs.length ? Math.round((ah / aqs.length) * 100) : null };
+      }).filter((x) => x.total > 0);
+
+      const status = hits >= target
+        ? "🏆 ACIMA DA META SEGURA!"
+        : (hits >= cutoff ? "✅ APROVADO NO CORTE (≥ 50%) — vamos subir para a meta segura!" : "🎯 ABAIXO DO CORTE POR ENQUANTO — ótimo diagnóstico para focar certo!");
+
+      const lines = [
+        `📊 *DIAGNÓSTICO ETEC TABOÃO DA SERRA*`,
+        `📝 Prova: ${ex.title}`,
+        `🎯 Placar: *${hits}/${total} (${pct}%)* | Corte: ${cutoff}/${total} | Meta: ${target}+/${total}`,
+        `📌 Status: ${status}`,
+      ];
+      if (techQs.length > 0 && baseQs.length > 0) {
+        lines.push(`💻 Técnico: *${techHits}/${techQs.length}* (${Math.round(techHits/techQs.length*100)}%) | 📚 Base Comum: *${baseHits}/${baseQs.length}* (${Math.round(baseHits/baseQs.length*100)}%)`);
+      }
+      lines.push(`\n*Por matéria:*`);
+      byArea.forEach((a) => {
+        const emo = a.pct >= 75 ? "🟢" : (a.pct >= 50 ? "🟡" : "🔴");
+        lines.push(`${emo} ${a.title}: ${a.hits}/${a.total} (${a.pct}%)`);
+      });
+      const wrongNums = qs.filter((q) => answers[q.num] !== q.answer).map((q) => `Q${q.num}`);
+      if (wrongNums.length > 0) lines.push(`\n❌ Errei (${wrongNums.length}): ${wrongNums.join(", ")}`);
+      return { hits, total, pct, cutoff, target, techHits, techTotal: techQs.length, baseHits, baseTotal: baseQs.length, byArea, status, whatsappText: lines.join("\n") };
+    }
+
+    function copyExamWhatsappReport() {
+      if (!simSession) return;
+      const ex = D.exams[simSession.examId];
+      const rep = buildExamReportData(ex, simSession.answers);
+      if (typeof navigator !== "undefined" && navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+        navigator.clipboard.writeText(rep.whatsappText).catch(() => {});
+      }
+      lastReportMsg = "✅ Diagnóstico copiado! Agora é só colar no WhatsApp e enviar!";
+      const box = document.getElementById("waReportFallback");
+      if (box) { box.style.display = "block"; box.value = rep.whatsappText; }
+      const st = document.getElementById("waReportStatus");
+      if (st) st.textContent = lastReportMsg;
+      return rep.whatsappText;
+    }
+
     function renderSim(root) {
       if (revancheMode) {
         const pendingKeys = pState.wrongQueue || [];
@@ -989,10 +1302,10 @@
           root.innerHTML = `
             <section class="panel" style="text-align:center; padding:28px;">
               <h2>🎉 Caderno de Erros Zerado!</h2>
-              <p style="color:var(--muted);">Você ainda não tem nenhum erro pendente (ou já superou todas as questões que havia errado na revanche!).</p>
+              <p style="color:var(--muted);">Nenhum erro pendente no momento! Qualquer questão que você errar nos quizzes ou simulados entra automaticamente aqui.</p>
               <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-top:14px;">
-                <button class="btn green" onclick="revancheMode=false; renderMain();">📝 Voltar aos Simulados</button>
-                <button class="btn purple" onclick="goTab('cards'); cardsMode='vf'; renderMain();">⚡ Jogar Verdade ou Fake</button>
+                <button class="btn green" onclick="revancheMode=false; renderMain();">📝 Voltar às Provas</button>
+                <button class="btn purple" onclick="goTab('cards'); cardsMode='vf'; renderMain();">⚡ Verdade ou Fake</button>
               </div>
             </section>
           `;
@@ -1000,8 +1313,9 @@
         }
 
         const revHtml = displayKeys.map((qKey, idx) => {
-          const [exId, qNumStr] = qKey.split("_");
-          const qNum = Number(qNumStr);
+          const splitAt = qKey.lastIndexOf("_");
+          const exId = qKey.slice(0, splitAt);
+          const qNum = Number(qKey.slice(splitAt + 1));
           const ex = D.exams[exId];
           const q = ex && ex.questions.find((x) => x.num === qNum);
           if (!ex || !q) return "";
@@ -1019,8 +1333,8 @@
           let expHtml = "";
           if (picked !== undefined) {
             expHtml = ansObj.isCorrect
-              ? `<div class="q-exp ok"><strong>🎉 Erro Superado! (+20 XP) — Questão limpa do seu Caderno de Erros!</strong><br>${q.explain}</div>`
-              : `<div class="q-exp bad"><strong>❌ Ainda não! Gabarito oficial: (${"ABCDE"[q.answer]}).</strong> A questão permanece na sua fila de erros para revisão.<br>${q.explain}</div>`;
+              ? `<div class="q-exp ok"><strong>🎉 Erro Superado! (+20 XP) — Saiu do Caderno de Erros!</strong><br>${q.explain}</div>`
+              : `<div class="q-exp bad"><strong>❌ Ainda não! Gabarito: (${"ABCDE"[q.answer]}).</strong> Permanece na fila para revisão.<br>${q.explain}</div>`;
           }
 
           return `<div class="q-card">
@@ -1035,15 +1349,15 @@
         }).join("");
 
         root.innerHTML = `
-          <section class="panel" style="background:#fff1f2; border-color:#fecdd3;">
+          <section class="panel" style="background:var(--red-soft); border-color:var(--red);">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
               <div>
                 <h2 style="margin:0;">🩹 Caderno Automático de Erros — Modo Revanche</h2>
-                <p style="margin:4px 0 0 0; font-size:13.5px; color:#334155;">Restam <strong>${pendingKeys.length}</strong> questão(ões) na sua fila de erros. Ao acertar uma questão aqui, ela sai automaticamente do Caderno de Erros e melhora seu Radar!</p>
+                <p style="margin:4px 0 0 0; font-size:13.5px; color:var(--muted);">Restam <strong>${pendingKeys.length}</strong> questão(ões) na fila. Acertou aqui = saiu da fila!</p>
               </div>
               <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <button class="btn sm purple" onclick="revancheAnswers={}; renderMain();">🔄 Atualizar Fila (${pendingKeys.length})</button>
-                <button class="btn sm outline" onclick="revancheMode=false; renderMain();">◀ Voltar aos Simulados</button>
+                <button class="btn sm purple" onclick="revancheAnswers={}; renderMain();">🔄 Atualizar (${pendingKeys.length})</button>
+                <button class="btn sm outline" onclick="revancheMode=false; renderMain();">◀ Voltar às Provas</button>
               </div>
             </div>
           </section>
@@ -1054,43 +1368,60 @@
 
       if (!simSession) {
         const wrongCount = (pState.wrongQueue || []).length;
-        const revancheBanner = `
-          <section class="panel" style="background:${wrongCount > 0 ? "#fff1f2" : "#f0fdf4"}; border-color:${wrongCount > 0 ? "#fda4af" : "#86efac"}; margin-bottom:16px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-              <div>
-                <h3 style="margin:0 0 4px 0;">🩹 Caderno Automático de Erros (Modo Revanche)</h3>
-                <div style="font-size:13.5px; color:#334155;">${wrongCount > 0 ? `Você tem <strong>${wrongCount} questão(ões)</strong> que errou nos Módulos ou Simulados aguardando revanche!` : "Nenhum erro pendente no momento! Qualquer questão que você errar nos testes cai automaticamente aqui."}</div>
-              </div>
-              <button class="btn ${wrongCount > 0 ? "red" : "green"}" onclick="openRevanche()">⚔️ ${wrongCount > 0 ? `Iniciar Revanche dos Meus Erros (${wrongCount}Q)` : "Ver Caderno de Erros (0Q)"}</button>
-            </div>
-          </section>
-        `;
+        const primaryIds = D.primaryExamIds || ["taboao2026", "taboao2025", "sim_taboao2027", "mtec2022"];
+        const extraIds = D.extraExamIds || ["ds2025", "info2025", "ds2019", "apostas", "sim1", "sim2"];
 
-        const cards = Object.values(D.exams).map((ex) => {
+        const buildExamCard = (id) => {
+          const ex = D.exams[id];
+          if (!ex) return "";
           const sc = pState.examScores[ex.id];
-          return `<div class="chap-card ${sc ? "done" : ""}">
+          const cutoff = ex.cutoff || Math.ceil(ex.questions.length * 0.5);
+          const target = ex.target || Math.ceil(ex.questions.length * 0.625);
+          const cardCls = `chap-card ${ex.recommended ? "featured" : (sc && sc.hits >= cutoff ? "done" : "")}`;
+          return `<div class="${cardCls}">
             <div>
-              <span class="tag-pill ${sc ? "done" : "today"}">${ex.badge}</span>
-              <h3 style="margin:8px 0 6px 0;">${ex.title}</h3>
+              <span class="tag-pill ${ex.recommended ? "amber" : (sc ? "done" : "today")}">${ex.badge}</span>
+              <h3 style="margin:8px 0 6px 0; font-size:16px;">${ex.title}</h3>
               <p style="margin:0; font-size:13.5px; color:var(--muted);">${ex.desc}</p>
             </div>
-            <div style="display:grid; gap:6px; border-top:1px solid #e2e8f0; padding-top:10px;">
-              <div style="font-size:12.5px; font-weight:700;">Melhor nota: ${sc ? `${sc.hits}/${sc.total} (${sc.pct}%)` : "Ainda não realizada"}</div>
+            <div style="display:grid; gap:8px; border-top:1px solid var(--border-soft); padding-top:10px;">
+              <div style="font-size:12.5px; font-weight:700;">
+                Melhor nota: ${sc ? `${sc.hits}/${sc.total} (${sc.pct}%) ${sc.hits >= target ? "🏆" : (sc.hits >= cutoff ? "✅" : "🎯")}` : "Ainda não realizada"}
+                <span style="color:var(--muted); font-weight:600;"> • Corte: ${cutoff}/${ex.questions.length}</span>
+              </div>
               <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <button class="btn sm green" onclick="startExamInSim('${ex.id}', 'real')">⏱️ Modo Prova Real</button>
                 <button class="btn sm" onclick="startExamInSim('${ex.id}', 'instant')">⚡ Treino (Corrige na hora)</button>
-                <button class="btn sm green" onclick="startExamInSim('${ex.id}', 'real')">⏱️ Modo Prova (Nota no final)</button>
               </div>
             </div>
           </div>`;
-        }).join("");
+        };
+
+        const primaryCards = primaryIds.map(buildExamCard).join("");
+        const extraCards = extraIds.map(buildExamCard).join("");
 
         root.innerHTML = `
-          ${revancheBanner}
-          <section class="panel">
-            <h2 style="margin-top:0;">📝 Simulador Completo de Provas (Sem Sair da Página!)</h2>
-            <p style="color:var(--muted); font-size:14px; margin-top:0;">Escolha qualquer uma das <strong>7 provas completas (220 questões no total)</strong> e responda direto na tela com cronômetro, cartão de respostas e gabarito comentado:</p>
-            <div class="story-map">${cards}</div>
+          <section class="panel" style="background:${wrongCount > 0 ? "var(--red-soft)" : "var(--green-soft)"}; border-color:${wrongCount > 0 ? "var(--red)" : "var(--green)"};">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <div>
+                <h3 style="margin:0 0 4px 0;">🩹 Caderno Automático de Erros (Modo Revanche)</h3>
+                <div style="font-size:13.5px; color:var(--muted);">${wrongCount > 0 ? `Você tem <strong>${wrongCount} questão(ões)</strong> erradas aguardando revanche!` : "Nenhum erro pendente no momento!"}</div>
+              </div>
+              <button class="btn ${wrongCount > 0 ? "red" : "green"}" onclick="openRevanche()">⚔️ ${wrongCount > 0 ? `Revanche (${wrongCount}Q)` : "Ver Caderno (0Q)"}</button>
+            </div>
           </section>
+
+          <section class="panel">
+            <h2 style="margin-top:0;">🎯 Provas Oficiais &amp; Premonição — Padrão Etec Taboão (40 Questões)</h2>
+            <p style="color:var(--muted); font-size:14px; margin-top:0;">Estas <strong>4 provas de 40 questões (160Q no total)</strong> seguem exatamente o molde da prova de <strong>04/12/2026</strong> (corte eliminatório <strong>20/40</strong> • meta segura <strong>25+/40</strong>). Ao entregar, você pode copiar seu diagnóstico pronto para o WhatsApp!</p>
+            <div class="story-map">${primaryCards}</div>
+          </section>
+
+          <details class="extra-exams-box">
+            <summary><span>📂 Treino Técnico Extra (6 Provas FAT &amp; Simulados Anteriores — 180Q)</span><span class="tag-pill">Opcional • Histórico preservado</span></summary>
+            <p style="color:var(--muted); font-size:13.5px; margin:10px 0 12px 0;">Provas técnicas modulares (30Q cada) da Fundação FAT mantidas para reforço extra e preservação do seu histórico anterior. Priorize sempre as <strong>4 provas de 40Q de Taboão</strong> acima!</p>
+            <div class="story-map">${extraCards}</div>
+          </details>
         `;
         return;
       }
@@ -1108,9 +1439,7 @@
         if (simSession.submitted || (simSession.mode === "instant" && ans !== undefined)) {
           if (ans === q.answer) cls += " ok";
           else if (ans !== undefined) cls += " bad";
-        } else if (ans !== undefined) {
-          cls += " ans";
-        }
+        } else if (ans !== undefined) cls += " ans";
         return `<button class="${cls}" onclick="simSession.curIdx=${idx}; renderMain();">${q.num}</button>`;
       }).join("");
 
@@ -1119,9 +1448,7 @@
         if (showCorrection) {
           if (oi === curQ.answer) cls += " correct";
           else if (oi === picked) cls += " wrong";
-        } else if (oi === picked) {
-          cls += " selected";
-        }
+        } else if (oi === picked) cls += " selected";
         return `<button class="${cls}" onclick="answerSimQ(${curQ.num}, ${oi}, ${curQ.answer})"><span class="opt-letter">(${"ABCDE"[oi]})</span><span>${opt}</span></button>`;
       }).join("");
 
@@ -1131,16 +1458,49 @@
 
       let summaryHtml = "";
       if (simSession.submitted) {
-        const hits = qs.filter((q) => simSession.answers[q.num] === q.answer).length;
-        const pct = Math.round((hits / qs.length) * 100);
-        summaryHtml = `<div class="callout callout-note"><strong>🏁 Prova Entregue!</strong> Você acertou <strong>${hits} de ${qs.length} questões (${pct}%)</strong>. Clique nos números acima para revisar cada questão comentada!</div>`;
+        const rep = buildExamReportData(ex, simSession.answers);
+        const cutoffPct = Math.round((rep.cutoff / rep.total) * 100);
+        const targetPct = Math.round((rep.target / rep.total) * 100);
+        const fillColor = rep.hits >= rep.target ? "var(--green)" : (rep.hits >= rep.cutoff ? "var(--amber)" : "var(--red)");
+        const areaChips = rep.byArea.map((a) => {
+          const cls = a.pct >= 75 ? "done" : (a.pct >= 50 ? "amber" : "late");
+          return `<span class="tag-pill ${cls}">${a.title}: ${a.hits}/${a.total} (${a.pct}%)</span>`;
+        }).join(" ");
+        const splitHtml = (rep.techTotal > 0 && rep.baseTotal > 0)
+          ? `<div style="display:flex; gap:10px; flex-wrap:wrap; margin:8px 0; font-size:13.5px;">
+              <span class="tag-pill today">💻 Técnico: ${rep.techHits}/${rep.techTotal} (${Math.round(rep.techHits/rep.techTotal*100)}%)</span>
+              <span class="tag-pill">📚 Base Comum: ${rep.baseHits}/${rep.baseTotal} (${Math.round(rep.baseHits/rep.baseTotal*100)}%)</span>
+            </div>`
+          : "";
+
+        summaryHtml = `<div class="panel" style="background:var(--surface-alt); border-color:${fillColor}; margin-bottom:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <div>
+              <strong style="font-size:17px;">🏁 Resultado: ${rep.hits} de ${rep.total} (${rep.pct}%)</strong>
+              <div style="font-size:13.5px; margin-top:2px;">${rep.status}</div>
+            </div>
+            <button class="btn green" onclick="copyExamWhatsappReport()">📋 Copiar Diagnóstico p/ WhatsApp</button>
+          </div>
+          <div class="meter-wrap" title="Corte: ${rep.cutoff}/${rep.total} | Meta: ${rep.target}/${rep.total}">
+            <div class="meter-fill" style="width:${rep.pct}%; background:${fillColor};"></div>
+            <div class="meter-mark" style="left:${cutoffPct}%;"></div>
+            <div class="meter-mark" style="left:${targetPct}%; background:var(--green);"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--muted);">
+            <span>0</span><span>Corte: ${rep.cutoff}/${rep.total} (${cutoffPct}%)</span><span>Meta Segura: ${rep.target}/${rep.total}</span><span>${rep.total}</span>
+          </div>
+          ${splitHtml}
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;">${areaChips}</div>
+          <div id="waReportStatus" style="margin-top:8px; font-size:13px; font-weight:700; color:var(--green);">${escapeHtml(lastReportMsg)}</div>
+          <textarea id="waReportFallback" rows="6" readonly style="display:none; width:100%; margin-top:8px; padding:8px; border-radius:8px; border:1px solid var(--border); font-family:monospace; font-size:12px; background:var(--surface); color:var(--text);"></textarea>
+        </div>`;
       }
 
       root.innerHTML = `
         <section class="panel">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
-            <div><strong>${ex.title}</strong> <span class="tag-pill">${simSession.mode === "instant" ? "Modo Treino" : "Modo Prova Real"}</span></div>
-            <div style="display:flex; gap:8px; align-items:center;">
+            <div><strong>${ex.title}</strong> <span class="tag-pill">${simSession.mode === "instant" ? "⚡ Treino" : "⏱️ Prova Real"}</span></div>
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
               <span class="tag-pill today" id="simTimerDisplay">⏱️ ${fmtTimer(simSession.secLeft)}</span>
               ${!simSession.submitted ? `<button class="btn sm green" onclick="submitSim()">✅ Entregar Prova</button>` : ""}
               <button class="btn sm outline" onclick="if(simTimerId)clearInterval(simTimerId); simSession=null; renderMain();">✕ Trocar Prova</button>
@@ -1151,16 +1511,19 @@
           <div class="sim-palette">${palette}</div>
 
           <div class="q-card">
-            <div style="font-weight:800; color:var(--primary); margin-bottom:8px;">Questão ${curQ.num} de ${qs.length}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:8px;">
+              <span style="font-weight:800; color:var(--primary);">Questão ${curQ.num} de ${qs.length}</span>
+              <span class="tag-pill ${curQ.isTech ? "today" : ""}">${curQ.isTech ? "💻 Bloco Técnico" : "📚 Base Comum"}</span>
+            </div>
             <div>${curQ.stemHtml}</div>
             <div class="opts-list">${optsHtml}</div>
             ${expHtml}
           </div>
 
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-            <button class="btn outline" ${simSession.curIdx === 0 ? "disabled" : ""} onclick="simSession.curIdx--; renderMain();">◀ Anterior</button>
+            <button class="btn outline" ${simSession.curIdx === 0 ? "disabled" : ""} onclick="simSession.curIdx--; renderMain(); window.scrollTo({top:0,behavior:'smooth'});">◀ Anterior</button>
             <span style="font-size:13px; color:var(--muted);">Respondidas: ${Object.keys(simSession.answers).length} / ${qs.length}</span>
-            <button class="btn" ${simSession.curIdx >= qs.length - 1 ? "disabled" : ""} onclick="simSession.curIdx++; renderMain();">Próxima ▶</button>
+            <button class="btn" ${simSession.curIdx >= qs.length - 1 ? "disabled" : ""} onclick="simSession.curIdx++; renderMain(); window.scrollTo({top:0,behavior:'smooth'});">Próxima ▶</button>
           </div>
         </section>
       `;
@@ -1208,9 +1571,136 @@
       saveCardsState();
       savePlatformState();
       renderMain();
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    // ==================== 4. APOSTILA & COLA NA TELA ====================
+    // ==================== 4. 2ª FASE (08/12 — LAB PRÁTICO + ENTREVISTA) ====================
+    function copyP2Code(labId, slot, btnEl) {
+      const lab = (D.phase2.labs || []).find((x) => x.id === labId);
+      if (!lab) return;
+      const text = slot === 2 ? lab.code2 : lab.code;
+      if (typeof navigator !== "undefined" && navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+        navigator.clipboard.writeText(text).catch(() => {});
+      }
+      if (btnEl) {
+        const old = btnEl.textContent;
+        btnEl.textContent = "✅ Copiado!";
+        setTimeout(() => { btnEl.textContent = old; }, 1600);
+      }
+    }
+
+    function toggleP2Check(key) {
+      pState.checks = pState.checks || {};
+      pState.checks[key] = !pState.checks[key];
+      if (pState.checks[key]) { cState.xp += 10; sfxOk(); saveCardsState(); }
+      savePlatformState();
+      renderMain();
+    }
+
+    function renderPhase2(root) {
+      const p2 = D.phase2;
+      if (!p2) { root.innerHTML = "<div class='panel'>Conteúdo da 2ª Fase indisponível.</div>"; return; }
+      const totalChecks = p2.labs.reduce((acc, l) => acc + (l.checklist || []).length, 0);
+      const doneChecks = p2.labs.reduce((acc, l) => acc + (l.checklist || []).filter((_, i) => !!(pState.checks || {})[`${l.id}_${i}`]).length, 0);
+
+      root.innerHTML = `
+        <section class="panel" style="border-color:var(--purple); background:var(--purple-soft);">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div>
+              <span class="tag-pill today">🛠️ 2ª FASE ELIMINATÓRIA • ${p2.dateLabel}</span>
+              <h2 style="margin:8px 0 4px 0;">Treinador Prático de Laboratório + Entrevista Individual</h2>
+            </div>
+            <span class="tag-pill ${doneChecks === totalChecks && totalChecks > 0 ? "done" : "amber"}">Checklist Prático: ${doneChecks}/${totalChecks}</span>
+          </div>
+          <p style="margin:8px 0 0 0; font-size:14px;">${p2.introAlert}</p>
+        </section>
+
+        <section class="panel">
+          <div id="phase2Mount"></div>
+        </section>
+      `;
+      renderPhase2Into(document.getElementById("phase2Mount"), false);
+    }
+
+    function renderPhase2Into(container, forceShowInterviewHint = false) {
+      const p2 = D.phase2;
+      const labs = p2.labs || [];
+      const interviews = p2.interview || [];
+      const tabBtns = [
+        ...labs.map((l) => `<button class="chip ${activePhase2Tab === l.id ? "active" : ""}" onclick="activePhase2Tab='${l.id}'; renderMain();">${l.badge.split("•")[1] ? l.badge.split("•")[1].trim() : l.title}</button>`),
+        `<button class="chip ${activePhase2Tab === "interview" ? "active" : ""}" onclick="activePhase2Tab='interview'; renderMain();">🎤 Simulador de Entrevista (${interviews.length}Q)</button>`
+      ].join("");
+
+      if (activePhase2Tab === "interview") {
+        const qaHtml = interviews.map((item) => `
+          <details class="recall-box">
+            <summary>${escapeHtml(item.q)}</summary>
+            <div style="font-size:13.5px; color:var(--muted); margin-bottom:8px;"><strong>💡 Dica da Banca:</strong> ${escapeHtml(item.tip)}</div>
+            <div class="callout callout-note" style="margin:0;"><strong>🗣️ Modelo de Resposta Segura:</strong><br>${escapeHtml(item.model)}</div>
+          </details>
+        `).join("");
+        container.innerHTML = `
+          <div class="subtabs">${tabBtns}</div>
+          <h3 style="margin-top:0;">🎤 Simulador da Entrevista Individual (08/12)</h3>
+          <p style="font-size:14px; color:var(--muted);">Leia a pergunta, <strong>responda em voz alta</strong> com suas palavras e só depois abra o modelo de resposta segura!</p>
+          ${qaHtml}
+        `;
+        return;
+      }
+
+      const lab = labs.find((l) => l.id === activePhase2Tab) || labs[0];
+      const stepsHtml = (lab.steps || []).map((s, i) => `<li style="margin-bottom:6px;">${s}</li>`).join("");
+      const checksHtml = (lab.checklist || []).map((c, i) => {
+        const key = `${lab.id}_${i}`;
+        const checked = !!(pState.checks || {})[key];
+        return `<label class="check-item" style="${checked ? "border-color:var(--green); background:var(--green-soft);" : ""}">
+          <input type="checkbox" ${checked ? "checked" : ""} onchange="toggleP2Check('${key}')">
+          <span style="font-size:14px;">${c}</span>
+        </label>`;
+      }).join("");
+
+      const interviewNudge = forceShowInterviewHint
+        ? `<div class="callout callout-warning" style="margin-bottom:12px;"><strong>Dica do Dia 16:</strong> Depois de praticar o DER + SQL abaixo, clique na aba <strong>🎤 Simulador de Entrevista</strong> acima para ensaiar em voz alta!</div>`
+        : "";
+
+      container.innerHTML = `
+        <div class="subtabs">${tabBtns}</div>
+        ${interviewNudge}
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+          <div>
+            <span class="tag-pill today">${escapeHtml(lab.badge)}</span>
+            <h3 style="margin:6px 0 2px 0; font-size:19px;">${escapeHtml(lab.title)}</h3>
+          </div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <span class="tag-pill">⏱️ ${escapeHtml(lab.time)}</span>
+            <span class="tag-pill">💻 ${escapeHtml(lab.tool)}</span>
+          </div>
+        </div>
+        <div class="callout callout-note">${lab.mission}</div>
+
+        <h4>📋 Passo a passo (como fazer no laboratório):</h4>
+        <ol style="padding-left:20px; font-size:14px;">${stepsHtml}</ol>
+
+        <div class="code-head">
+          <span>📄 ${escapeHtml(lab.codeTitle)}</span>
+          <button class="btn sm purple" onclick="copyP2Code('${lab.id}', 1, this)">📋 Copiar Código</button>
+        </div>
+        <pre class="q-code code-block-p2">${escapeHtml(lab.code)}</pre>
+
+        ${lab.code2 ? `
+          <div class="code-head">
+            <span>📄 ${escapeHtml(lab.code2Title)}</span>
+            <button class="btn sm purple" onclick="copyP2Code('${lab.id}', 2, this)">📋 Copiar Código</button>
+          </div>
+          <pre class="q-code code-block-p2">${escapeHtml(lab.code2)}</pre>
+        ` : ""}
+
+        <h4>✅ Checklist de Autoavaliação (+10 XP cada item concluído!):</h4>
+        <div style="display:grid; gap:8px;">${checksHtml}</div>
+      `;
+    }
+
+    // ==================== 5. APOSTILA & COLA NA TELA ====================
     function selectApostila(id) { activeApostilaId = id; renderMain(); }
     function renderApostila(root) {
       const tabs = D.apostilaSections.map((s) => `<button class="chip ${activeApostilaId === s.id ? "active" : ""}" onclick="selectApostila('${s.id}')">${s.title}</button>`).join("");
@@ -1219,7 +1709,7 @@
         const q = apostilaQuery.trim().toLowerCase();
         const matches = D.apostilaSections.filter((s) => s.html.toLowerCase().includes(q));
         bodyHtml = matches.length
-          ? matches.map((m) => `<div style="border-bottom:2px solid #e2e8f0; padding-bottom:14px; margin-bottom:14px;"><span class="tag-pill today">${m.title}</span>${m.html}</div>`).join("")
+          ? matches.map((m) => `<div style="border-bottom:2px solid var(--border-soft); padding-bottom:14px; margin-bottom:14px;"><span class="tag-pill today">${m.title}</span>${m.html}</div>`).join("")
           : `<p>Nenhum resultado encontrado para "<strong>${escapeHtml(apostilaQuery)}</strong>".</p>`;
       } else {
         const sec = D.apostilaSections.find((s) => s.id === activeApostilaId) || D.apostilaSections[0];
@@ -1229,8 +1719,8 @@
       root.innerHTML = `
         <section class="panel">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
-            <h2 style="margin:0;">📖 Apostila &amp; Cola de Bolso (Leitura Direta)</h2>
-            <input type="search" value="${escapeHtml(apostilaQuery)}" placeholder="🔍 Buscar assunto (ex: SMTP, 1FN, Cultismo)..." oninput="apostilaQuery=this.value; renderMain();" style="padding:8px 12px; border:2px solid var(--border); border-radius:10px; min-width:260px;" />
+            <h2 style="margin:0;">📖 Apostila Taboão &amp; Cola de Bolso</h2>
+            <input type="search" value="${escapeHtml(apostilaQuery)}" placeholder="🔍 Buscar (ex: Flexbox, 187, CLI, Bohr)..." oninput="apostilaQuery=this.value; renderMain();" style="padding:9px 12px; border:2px solid var(--border); border-radius:10px; min-width:240px; flex:1; max-width:340px; background:var(--surface); color:var(--text);" />
           </div>
           <div class="subtabs">${tabs}</div>
           <div class="lesson-body">${bodyHtml}</div>
@@ -1238,17 +1728,16 @@
       `;
     }
 
-    // ==================== 5. FLASHCARDS & PARES ====================
+    // ==================== 6. FLASHCARDS, V/F & PARES ====================
     const TAG_LABELS = {
-      "ALL": "Todos (120)",
+      "ALL": `Todos (${D.flashcards.length})`,
       "REVIEW": "📌 Revisar",
-      "00_Moldes_FAT": "0. Moldes FAT",
-      "01_Programacao": "1. Programação",
-      "02_Banco_Dados": "2. Banco de Dados",
-      "03_Design_Digital": "3. Design & UX",
-      "04_Web_Redes_SO": "4. Web, Redes & SO",
-      "05_Ingles_Etica": "5. Inglês & Ética",
-      "06_MTec_Base_Comum": "6. Base Comum M-Tec"
+      "01_TPA_CSharp": "1. TPA & C#",
+      "02_Web_Design": "2. Web I & UX",
+      "03_BD_APS_FI": "3. BD, APS & Fund.",
+      "04_Port_Ingles": "4. Port. & Inglês",
+      "05_Hum_Aprof": "5. Pesq/Arte/EdF/Hist",
+      "06_Exatas": "6. Mat/Fís/Quím",
     };
 
     function renderCardsArea(root) {
@@ -1256,10 +1745,10 @@
       root.innerHTML = `
         <section class="panel">
           <div class="subtabs">
-            <button class="chip ${cardsMode === "cards" && cardViewStyle === "mc" ? "active" : ""}" onclick="cardsMode='cards'; cardViewStyle='mc'; clearCardMc(); renderMain();">🎯 Flashcards Múltipla Escolha (${D.flashcards.length})</button>
-            <button class="chip ${cardsMode === "cards" && cardViewStyle === "flip" ? "active" : ""}" onclick="cardsMode='cards'; cardViewStyle='flip'; isFlipped=false; renderMain();">🃏 Flashcards 3D (Virar Card)</button>
-            <button class="chip ${cardsMode === "vf" ? "active" : ""}" onclick="cardsMode='vf'; renderMain();">⚡ Verdade ou Fake da Banca (${vfTotal})</button>
-            <button class="chip ${cardsMode === "pairs" ? "active" : ""}" onclick="cardsMode='pairs'; renderMain();">🔗 Associação de Pares</button>
+            <button class="chip ${cardsMode === "cards" && cardViewStyle === "mc" ? "active" : ""}" onclick="cardsMode='cards'; cardViewStyle='mc'; clearCardMc(); renderMain();">🎯 Flashcards Quiz (${D.flashcards.length})</button>
+            <button class="chip ${cardsMode === "cards" && cardViewStyle === "flip" ? "active" : ""}" onclick="cardsMode='cards'; cardViewStyle='flip'; isFlipped=false; renderMain();">🃏 Flashcards 3D</button>
+            <button class="chip ${cardsMode === "vf" ? "active" : ""}" onclick="cardsMode='vf'; renderMain();">⚡ Verdade ou Fake (${vfTotal})</button>
+            <button class="chip ${cardsMode === "pairs" ? "active" : ""}" onclick="cardsMode='pairs'; renderMain();">🔗 Pares (${D.pairs.length})</button>
           </div>
           <div id="cardsMount"></div>
         </section>
@@ -1284,10 +1773,7 @@
     function renderVfInto(container) {
       const areas = D.areas || [];
       const pool = getVfPool();
-      if (!pool.length) {
-        container.innerHTML = "<p>Nenhuma afirmativa encontrada.</p>";
-        return;
-      }
+      if (!pool.length) { container.innerHTML = "<p>Nenhuma afirmativa encontrada.</p>"; return; }
       if (vfIdx >= pool.length) vfIdx = 0;
       const item = pool[vfIdx];
       const picked = vfSessionPicked[item.id];
@@ -1306,7 +1792,7 @@
       if (picked !== undefined) {
         const acertou = picked === item.isTrue;
         fbHtml = `<div class="q-exp ${acertou ? "ok" : "bad"}" style="margin-top:12px;">
-          <strong>${item.verdictTitle}</strong> — ${acertou ? "✅ Você acertou (+10 XP)!" : "❌ Ops! Atenção à pegadinha:"}<br>
+          <strong>${item.verdictTitle}</strong> — ${acertou ? "✅ Acertou (+10 XP)!" : "❌ Atenção à pegadinha:"}<br>
           ${fmtInlineCode(item.explain)}
         </div>`;
       }
@@ -1314,28 +1800,27 @@
       container.innerHTML = `
         <div class="subtabs">${filterTabs}</div>
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px; font-size:13px;">
-          <div><strong>⚡ Treino Arcade de Pegadinhas (Estilo I, II e III):</strong> julgue rápido se a frase é <strong>Verdade</strong> ou <strong>Fake da Banca</strong>!</div>
+          <div><strong>⚡ Verdade ou Fake de Taboão:</strong> julgue rápido (teclas V / F / Espaço)!</div>
           <div style="display:flex; gap:8px; align-items:center;">
-            <span class="tag-pill done">Placar Geral: ${totalHits}/${totalAns} acertos</span>
+            <span class="tag-pill done">Placar: ${totalHits}/${totalAns}</span>
             <span class="tag-pill today">🔥 ${cState.streak} • ${vfIdx + 1}/${pool.length}</span>
           </div>
         </div>
-        <div class="q-card" style="background:#f8fafc;">
+        <div class="q-card" style="background:var(--surface-alt);">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:10px;">
             <span class="tag-pill today">${areaObj ? areaObj.title : item.area}</span>
-            <span class="tag-pill">${escapeHtml(item.topic)}</span>
           </div>
-          <h3 style="margin:6px 0 16px 0; font-size:18.5px; line-height:1.45;">${fmtInlineCode(item.text)}</h3>
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:10px;">
-            <button id="vfBtnTrue" class="btn lg ${picked === undefined ? "green" : (item.isTrue ? "green" : (picked === true ? "red" : "outline"))}" onclick="answerVf(true, ${item.id})">✅ É VERDADE (Tecla V)</button>
-            <button id="vfBtnFalse" class="btn lg ${picked === undefined ? "red" : (!item.isTrue ? "green" : (picked === false ? "red" : "outline"))}" onclick="answerVf(false, ${item.id})">❌ É FAKE DA BANCA! (Tecla F)</button>
+          <h3 style="margin:6px 0 16px 0; font-size:18px; line-height:1.45;">${fmtInlineCode(item.text)}</h3>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:10px;">
+            <button id="vfBtnTrue" class="btn lg ${picked === undefined ? "green" : (item.isTrue ? "green" : (picked === true ? "red" : "outline"))}" onclick="answerVf(true, ${item.id})">✅ É VERDADE (V)</button>
+            <button id="vfBtnFalse" class="btn lg ${picked === undefined ? "red" : (!item.isTrue ? "green" : (picked === false ? "red" : "outline"))}" onclick="answerVf(false, ${item.id})">❌ É FAKE! (F)</button>
           </div>
           ${fbHtml}
         </div>
         <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:12px;">
           <button class="btn sm dark" onclick="vfIdx=(vfIdx-1+${pool.length})%${pool.length}; renderMain();">◀ Anterior</button>
-          <button class="btn sm purple" onclick="pickRandomVf(${pool.length})">🎲 Sortear Pegadinha</button>
-          <button id="vfNextBtn" class="btn sm green" onclick="vfIdx=(vfIdx+1)%${pool.length}; renderMain();">Próxima Afirmativa ▶ (Espaço/Seta)</button>
+          <button class="btn sm purple" onclick="pickRandomVf(${pool.length})">🎲 Sortear</button>
+          <button id="vfNextBtn" class="btn sm green" onclick="vfIdx=(vfIdx+1)%${pool.length}; renderMain();">Próxima ▶</button>
           <button class="btn sm outline" onclick="vfSessionPicked={}; renderMain();">🔄 Nova Rodada</button>
         </div>
       `;
@@ -1368,12 +1853,8 @@
     function getOrBuildCardMc(item) {
       if (cardMcCache[item.idx]) return cardMcCache[item.idx];
       const usedTexts = new Set([item.back]);
-      const sameTag = D.flashcards
-        .filter((c) => c.tag === item.tag && c.front !== item.front)
-        .sort(() => Math.random() - 0.5);
-      const others = D.flashcards
-        .filter((c) => c.tag !== item.tag && c.front !== item.front)
-        .sort(() => Math.random() - 0.5);
+      const sameTag = D.flashcards.filter((c) => c.tag === item.tag && c.front !== item.front).sort(() => Math.random() - 0.5);
+      const others = D.flashcards.filter((c) => c.tag !== item.tag && c.front !== item.front).sort(() => Math.random() - 0.5);
       const distractors = [];
       for (const cand of [...sameTag, ...others]) {
         if (!usedTexts.has(cand.back)) {
@@ -1395,14 +1876,11 @@
       if (isRight) {
         if (!cState.known.includes(cardGlobalIdx)) cState.known.push(cardGlobalIdx);
         cState.review = cState.review.filter((i) => i !== cardGlobalIdx);
-        cState.xp += 15;
-        cState.streak += 1;
-        sfxOk();
+        cState.xp += 15; cState.streak += 1; sfxOk();
       } else {
         if (!cState.review.includes(cardGlobalIdx)) cState.review.push(cardGlobalIdx);
         cState.known = cState.known.filter((i) => i !== cardGlobalIdx);
-        cState.streak = 0;
-        sfxBad();
+        cState.streak = 0; sfxBad();
       }
       saveCardsState();
       renderMain();
@@ -1414,9 +1892,7 @@
         if (next === cardIdx) next = (cardIdx + 1) % listLen;
         cardIdx = next;
       }
-      isFlipped = false;
-      clearCardMc();
-      renderMain();
+      isFlipped = false; clearCardMc(); renderMain();
     }
 
     function renderCardsOnlyInto(container, tagFilter, showTrail = false) {
@@ -1426,7 +1902,7 @@
         const activeMcIds = Object.keys(cardMcCache).filter((k) => cardMcCache[k].picked !== null).map(Number);
         const rev = list.filter((c) => cState.review.includes(c.idx) || activeMcIds.includes(c.idx));
         if (rev.length > 0 || showTrail) list = rev;
-        else fallbackNote = `<div class="callout callout-note" style="margin-bottom:10px;">Sem cards pendentes na fila de revisão — exibindo o baralho completo de revisão final (${list.length} cards).</div>`;
+        else fallbackNote = `<div class="callout callout-note" style="margin-bottom:10px;">Sem cards pendentes na fila — exibindo o baralho completo (${list.length} cards).</div>`;
       } else if (tagFilter !== "ALL") list = list.filter((c) => c.tag === tagFilter);
 
       const trailHtml = showTrail
@@ -1441,14 +1917,14 @@
       const item = list[cardIdx];
       const known = cState.known.includes(item.idx);
       const inReview = cState.review.includes(item.idx);
-      const statusLabel = known ? "• ✅ Dominado" : (inReview ? "• 🔁 Para Revisar" : "");
+      const statusLabel = known ? "• ✅ Dominado" : (inReview ? "• 🔁 Revisar" : "");
 
       const modeSwitcherHtml = `
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
-          <span style="font-size:13px; color:var(--muted);">Card ${cardIdx + 1} de ${list.length} <strong>${statusLabel}</strong></span>
+          <span style="font-size:13px; color:var(--muted);">Card ${cardIdx + 1}/${list.length} <strong>${statusLabel}</strong></span>
           <div style="display:flex; gap:6px; flex-wrap:wrap;">
-            <button class="chip ${cardViewStyle === "mc" ? "active" : ""}" onclick="cardViewStyle='mc'; clearCardMc(); renderMain();">🎯 Múltipla Escolha (A-D)</button>
-            <button class="chip ${cardViewStyle === "flip" ? "active" : ""}" onclick="cardViewStyle='flip'; isFlipped=false; renderMain();">🃏 Virar Card 3D</button>
+            <button class="chip ${cardViewStyle === "mc" ? "active" : ""}" onclick="cardViewStyle='mc'; clearCardMc(); renderMain();">🎯 Quiz (A-D)</button>
+            <button class="chip ${cardViewStyle === "flip" ? "active" : ""}" onclick="cardViewStyle='flip'; isFlipped=false; renderMain();">🃏 Virar 3D</button>
           </div>
         </div>
       `;
@@ -1466,45 +1942,44 @@
 
         let fbHtml = "";
         if (mc.picked !== null) {
-          const isOk = mc.options[mc.picked].isCorrect;
-          fbHtml = isOk
+          fbHtml = mc.options[mc.picked].isCorrect
             ? `<div class="q-exp ok">✅ Correto! (+15 XP) — Card marcado como <strong>Dominado</strong>!</div>`
-            : `<div class="q-exp bad">❌ Ops! Card enviado para <strong>'Revisar depois'</strong>. Veja a resposta correta destacada em verde acima.</div>`;
+            : `<div class="q-exp bad">❌ Enviado para <strong>'Revisar'</strong>. Veja a resposta correta destacada em verde.</div>`;
         }
 
         container.innerHTML = `
           ${trailHtml}${fallbackNote}${modeSwitcherHtml}
-          <div class="q-card" style="background:#f8fafc;">
+          <div class="q-card" style="background:var(--surface-alt);">
             <div style="margin-bottom:8px;"><span class="tag-pill today">${TAG_LABELS[item.tag] || item.tag}</span></div>
-            <h3 style="margin:6px 0 12px 0; font-size:18px;">${escapeHtml(item.front)}</h3>
+            <h3 style="margin:6px 0 12px 0; font-size:17.5px;">${escapeHtml(item.front)}</h3>
             <div class="opts-list">${optsHtml}</div>
             ${fbHtml}
           </div>
           <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:12px;">
-            <button class="btn sm dark" onclick="cardIdx=(cardIdx-1+${list.length})%${list.length}; isFlipped=false; clearCardMc(); renderMain();">◀ Card Anterior</button>
-            <button class="btn sm purple" onclick="pickRandomCard(${list.length})">🎲 Sortear Outro Card</button>
-            <button class="btn sm green" onclick="cardIdx=(cardIdx+1)%${list.length}; isFlipped=false; clearCardMc(); renderMain();">Próximo Card ▶</button>
+            <button class="btn sm dark" onclick="cardIdx=(cardIdx-1+${list.length})%${list.length}; isFlipped=false; clearCardMc(); renderMain();">◀ Anterior</button>
+            <button class="btn sm purple" onclick="pickRandomCard(${list.length})">🎲 Sortear</button>
+            <button class="btn sm green" onclick="cardIdx=(cardIdx+1)%${list.length}; isFlipped=false; clearCardMc(); renderMain();">Próximo ▶</button>
           </div>
         `;
       } else {
         container.innerHTML = `
           ${trailHtml}${fallbackNote}${modeSwitcherHtml}
-          <div style="text-align:right; font-size:12.5px; color:var(--muted); margin-bottom:4px;">Toque no card abaixo para virar</div>
+          <div style="text-align:right; font-size:12.5px; color:var(--muted); margin-bottom:4px;">Toque no card para virar</div>
           <div class="scene">
             <div class="card3d ${isFlipped ? "flipped" : ""}" onclick="isFlipped=!isFlipped; renderMain();">
               <div class="face front">
                 <span class="tag-pill today" style="margin-bottom:10px;">${TAG_LABELS[item.tag] || item.tag}</span>
-                <div style="font-size:18px; font-weight:700;">${escapeHtml(item.front)}</div>
+                <div style="font-size:17.5px; font-weight:700;">${escapeHtml(item.front)}</div>
               </div>
               <div class="face back">
-                <span class="tag-pill done" style="margin-bottom:10px;">Resposta &amp; Pegadinha</span>
-                <div style="font-size:16px; font-weight:600; color:#14532d;">${escapeHtml(item.back)}</div>
+                <span class="tag-pill done" style="margin-bottom:10px;">Resposta Oficial</span>
+                <div style="font-size:15.5px; font-weight:600;">${escapeHtml(item.back)}</div>
               </div>
             </div>
           </div>
           <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:12px;">
             <button class="btn sm dark" onclick="cardIdx=(cardIdx-1+${list.length})%${list.length}; isFlipped=false; clearCardMc(); renderMain();">◀ Anterior</button>
-            <button class="btn sm amber" onclick="markCardReview(${item.idx}, ${list.length})">🔁 Revisar depois</button>
+            <button class="btn sm amber" onclick="markCardReview(${item.idx}, ${list.length})">🔁 Revisar</button>
             <button class="btn sm green" onclick="markCardKnown(${item.idx}, ${list.length})">✅ Já sei (+10 XP)</button>
             <button class="btn sm dark" onclick="cardIdx=(cardIdx+1)%${list.length}; isFlipped=false; clearCardMc(); renderMain();">Próximo ▶</button>
           </div>
@@ -1535,7 +2010,7 @@
 
       container.innerHTML = `
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-          <div><strong>🔗 Associação de Pares:</strong> ligue cada termo da esquerda à definição da direita.</div>
+          <div><strong>🔗 Associação de Pares:</strong> ligue cada conceito da esquerda à definição correta.</div>
           <button class="btn sm purple" onclick="renderPairsInto(this.parentElement.parentElement)">🔄 Nova Rodada</button>
         </div>
         <div class="pairs-wrap">
@@ -1585,18 +2060,18 @@
       }
     }
 
-    // ==================== 6. MICRO-LABS INTERATIVOS NA TELA ====================
+    // ==================== 7. MICRO-LABS INTERATIVOS NA TELA ====================
     function renderLabsArea(root) {
       root.innerHTML = `
         <section class="panel">
           <div class="subtabs">
-            <button class="chip ${activeLabTab === "lab_tipos" ? "active" : ""}" onclick="activeLabTab='lab_tipos'; renderMain();">🔤 Casting &amp; Lógica (Dia 1)</button>
-            <button class="chip ${activeLabTab === "lab02" ? "active" : ""}" onclick="activeLabTab='lab02'; renderMain();">🧮 Teste de Mesa &amp; Matriz (Dias 2-3)</button>
-            <button class="chip ${activeLabTab === "lab03" ? "active" : ""}" onclick="activeLabTab='lab03'; renderMain();">🗄️ SQL &amp; 1FN (Dias 6-7)</button>
-            <button class="chip ${activeLabTab === "lab04" ? "active" : ""}" onclick="activeLabTab='lab04'; renderMain();">🎨 Vetor vs Bitmap &amp; Cores (Dia 8)</button>
-            <button class="chip ${activeLabTab === "lab01" ? "active" : ""}" onclick="activeLabTab='lab01'; renderMain();">🌐 Web &amp; Cookies (Dia 9)</button>
-            <button class="chip ${activeLabTab === "lab_bin" ? "active" : ""}" onclick="activeLabTab='lab_bin'; renderMain();">🔢 Binário, Hex &amp; Linux (Dia 10)</button>
-            <button class="chip ${activeLabTab === "lab_mtec" ? "active" : ""}" onclick="activeLabTab='lab_mtec'; renderMain();">🎓 Base M-Tec Mat/Quím/Óptica (Dia 13)</button>
+            <button class="chip ${activeLabTab === "lab_tipos" ? "active" : ""}" onclick="activeLabTab='lab_tipos'; renderMain();">🔤 Tipos, % &amp; Lógica</button>
+            <button class="chip ${activeLabTab === "lab02" ? "active" : ""}" onclick="activeLabTab='lab02'; renderMain();">🧮 Teste de Mesa &amp; Matriz</button>
+            <button class="chip ${activeLabTab === "lab01" ? "active" : ""}" onclick="activeLabTab='lab01'; renderMain();">🌐 Web, Cookies &amp; DOM</button>
+            <button class="chip ${activeLabTab === "lab03" ? "active" : ""}" onclick="activeLabTab='lab03'; renderMain();">🗄️ SQL &amp; 1FN</button>
+            <button class="chip ${activeLabTab === "lab04" ? "active" : ""}" onclick="activeLabTab='lab04'; renderMain();">🎨 Vetor vs Bitmap &amp; Cores</button>
+            <button class="chip ${activeLabTab === "lab_bin" ? "active" : ""}" onclick="activeLabTab='lab_bin'; renderMain();">🔢 Binário &amp; Hex (187=BB)</button>
+            <button class="chip ${activeLabTab === "lab_mtec" ? "active" : ""}" onclick="activeLabTab='lab_mtec'; renderMain();">🎓 Mat/Quím/Óptica</button>
           </div>
           <div id="labMount"></div>
         </section>
@@ -1613,7 +2088,7 @@
 
     function renderLab01Into(el) {
       el.innerHTML = `
-        <h3>🌐 Lab 01 — Links (_blank vs _self), Cookies Locais (~4 KB) e DOM</h3>
+        <h3>🌐 Lab Web — Links (_blank), Cookies Locais (~4 KB) e DOM</h3>
         <div class="lab-grid">
           <div class="q-card">
             <strong>1. Tag &lt;a&gt; (target)</strong><br><br>
@@ -1622,7 +2097,7 @@
           </div>
           <div class="q-card">
             <strong>2. Cookies Locais (F12 &gt; Application)</strong><br><br>
-            <input id="l1CVal" value="Aluno_ETEC" style="padding:6px; border:1px solid #94a3b8; border-radius:6px; width:140px;">
+            <input id="l1CVal" value="Aluno_Taboao" style="padding:6px; border:1px solid var(--border); border-radius:6px; width:140px; background:var(--surface); color:var(--text);">
             <button class="btn sm green" onclick="document.cookie='etec_s='+encodeURIComponent(document.getElementById('l1CVal').value)+'; path=/'; showL1Cookie('Cookie de SESSÃO gravado!')">Sessão</button>
             <button class="btn sm purple" onclick="document.cookie='etec_p='+encodeURIComponent(document.getElementById('l1CVal').value)+'; max-age=604800; path=/'; showL1Cookie('Cookie PERMANENTE (7 dias) gravado!')">Permanente</button>
             <button class="btn sm red" onclick="document.cookie='etec_s=; max-age=0; path=/'; document.cookie='etec_p=; max-age=0; path=/'; showL1Cookie('Cookies apagados!')">Limpar</button>
@@ -1631,14 +2106,14 @@
         </div>
         <div class="q-card">
           <strong>3. Árvore DOM no JavaScript:</strong>
-          <button class="btn sm" onclick="l1TestDom()">Testar getElementById / createTextNode / documentElement / parentNode</button>
-          <div id="l1DomTarget" style="margin-top:8px; padding:8px; background:#eff6ff; border-radius:6px;">Elemento alvo (id="l1DomTarget")</div>
+          <button class="btn sm" onclick="l1TestDom()">Testar getElementById / createTextNode</button>
+          <div id="l1DomTarget" style="margin-top:8px; padding:8px; background:var(--primary-soft); border-radius:6px;">Elemento alvo (id="l1DomTarget")</div>
           <pre class="q-code" id="l1DomOut">Clique no botão para inspecionar a árvore DOM...</pre>
         </div>
       `;
     }
     function showL1Cookie(msg) {
-      const c = document.cookie || "(vazio em file:// — alguns navegadores só exibem cookies via http://localhost)";
+      const c = document.cookie || "(vazio em file:// — em https:// aparece normalmente)";
       document.getElementById("l1COut").textContent = `${msg}\ndocument.cookie => ${c}`;
     }
     function l1TestDom() {
@@ -1650,57 +2125,58 @@
     let l2Stack = [10];
     function renderLab02Into(el) {
       el.innerHTML = `
-        <h3>🧮 Lab 02 — Teste de Mesa (DIV/MOD), Matriz 3x3 e Pilha LIFO</h3>
+        <h3>🧮 Lab C# / Algoritmos — Teste de Mesa, Matriz int[,] e Pilha LIFO</h3>
         <div class="lab-grid">
           <div class="q-card">
-            <strong>1. Teste de Mesa Linha a Linha (Decimal &rarr; Binário)</strong><br><br>
-            <input id="l2Num" type="number" value="250" min="1" max="255" style="padding:6px; width:80px; border:1px solid #94a3b8; border-radius:6px;">
-            <button class="btn sm" onclick="runL2Mesa()">Executar Teste de Mesa</button>
+            <strong>1. Teste de Mesa Linha a Linha (Decimal → Binário / Hex)</strong><br><br>
+            <input id="l2Num" type="number" value="187" min="1" max="255" style="padding:6px; width:80px; border:1px solid var(--border); border-radius:6px; background:var(--surface); color:var(--text);">
+            <button class="btn sm" onclick="runL2Mesa()">Executar</button>
             <pre class="q-code" id="l2MesaOut">Clique para rastrear passo a passo...</pre>
           </div>
           <div class="q-card">
-            <strong>2. Matriz 3x3 &amp; Pilha LIFO (PUSH / POP)</strong><br><br>
+            <strong>2. Matriz C# int[,] (Taboão 2025 Q22) &amp; Pilha LIFO</strong><br><br>
             <button class="btn sm green" onclick="l2Stack.push(Math.floor(Math.random()*90)+10); updateL2Stack()">PUSH(novo)</button>
             <button class="btn sm red" onclick="l2Stack.pop(); updateL2Stack()">POP() (remove topo)</button>
-            <pre class="q-code" id="l2StackOut">Pilha atual: [${l2Stack.join(", ")}] (topo à direita)\n\nMatriz M = [[1,3,5],[2,4,8],[1,1,1]]:\nDiagonal Principal (i==j): M[0][0](1)+M[1][1](4)+M[2][2](1) = 6\nPegadinha Secundária: 5+4+1 = 10</pre>
+            <pre class="q-code" id="l2StackOut"></pre>
           </div>
         </div>
       `;
       runL2Mesa();
+      updateL2Stack();
     }
     function runL2Mesa() {
-      const num = Math.max(1, Math.min(255, Number(document.getElementById("l2Num").value) || 250));
+      const num = Math.max(1, Math.min(255, Number(document.getElementById("l2Num").value) || 187));
       let y = num, x = "", passo = 1;
-      const out = ["Passo | y | y MOD 2 | y DIV 2 | x"];
+      const out = ["Passo | y   | y % 2 | y / 2 | binário"];
       while (y > 0) {
         const r = y % 2, p = Math.floor(y / 2);
         x = String(r) + x;
-        out.push(`${String(passo).padEnd(5)} | ${String(y).padEnd(3)} | ${r}       | ${String(p).padEnd(7)} | ${x}`);
+        out.push(`${String(passo).padEnd(5)} | ${String(y).padEnd(3)} | ${r}     | ${String(p).padEnd(5)} | ${x}`);
         y = p; passo += 1;
       }
       out.push(`Final: ${num}(10) = ${x}(2) = ${num.toString(16).toUpperCase()}(16)`);
       document.getElementById("l2MesaOut").textContent = out.join("\n");
     }
     function updateL2Stack() {
-      document.getElementById("l2StackOut").textContent = `Pilha LIFO atual: [${l2Stack.join(", ")}] (topo = ${l2Stack.length ? l2Stack[l2Stack.length - 1] : "vazia"})\n\nMatriz M = [[1,3,5],[2,4,8],[1,1,1]]:\nDiagonal Principal: 1 + 4 + 1 = 6 | Secundária: 10`;
+      document.getElementById("l2StackOut").textContent = `Pilha LIFO: [${l2Stack.join(", ")}] (topo = ${l2Stack.length ? l2Stack[l2Stack.length - 1] : "vazia"})\n\nMatriz C# Taboão 2025 Q22:\nint[,] m = {{1,2,3}, {4,5,6}, {7,8,9}};\nm[1, 2] -> Linha 1, Coluna 2 => 6!`;
     }
 
-    let l3Rows = [{ id: 1, nome: "Ana Paula", cidade: "São Paulo" }, { id: 2, nome: "Bruno Silva", cidade: "Campinas" }, { id: 3, nome: "Carla Dias", cidade: "São Paulo" }];
+    let l3Rows = [{ id: 1, nome: "Henrique", turma: "2º DS" }, { id: 2, nome: "Ana Paula", turma: "2º DS" }, { id: 3, nome: "Lucas", turma: "1º DS" }];
     let l3Normalized = false;
     function renderLab03Into(el) {
       el.innerHTML = `
-        <h3>🗄️ Lab 03 — Sublinguagens SQL (DDL, DML, DQL) e 1ª Forma Normal (1FN)</h3>
+        <h3>🗄️ Lab Banco de Dados — SQL (DDL/DML/DQL) e 1ª Forma Normal (1FN)</h3>
         <div class="lab-grid">
           <div class="q-card">
             <strong>1. Simulador DDL / DML / DQL Interativo</strong><br><br>
-            <button class="btn sm" onclick="l3Rows.push({id:l3Rows.length+1, nome:'Novo Aluno', cidade:'São Paulo'}); drawL3()">DML: INSERT (SP)</button>
+            <button class="btn sm" onclick="l3Rows.push({id:l3Rows.length+1, nome:'Novo Aluno', turma:'2º DS'}); drawL3()">DML: INSERT</button>
             <button class="btn sm amber" onclick="if(l3Rows.length>1)l3Rows.pop(); drawL3()">DML: DELETE último</button>
-            <button class="btn sm green" onclick="drawL3(true)">DQL: SELECT COUNT(*) WHERE cidade='São Paulo'</button>
+            <button class="btn sm green" onclick="drawL3(true)">DQL: SELECT COUNT(*) WHERE turma='2º DS'</button>
             <pre class="q-code" id="l3SqlOut"></pre>
           </div>
           <div class="q-card">
             <strong>2. Normalização 1FN (Valores Atômicos)</strong><br><br>
-            <button class="btn sm purple" onclick="l3Normalized=!l3Normalized; drawL3()">${"Alternar Tabela Fora da 1FN ↔ Normalizada 1FN"}</button>
+            <button class="btn sm purple" onclick="l3Normalized=!l3Normalized; drawL3()">Alternar Fora da 1FN ↔ Normalizada 1FN</button>
             <pre class="q-code" id="l3NormOut"></pre>
           </div>
         </div>
@@ -1708,27 +2184,25 @@
       drawL3(false);
     }
     function drawL3(showCount = false) {
-      const sp = l3Rows.filter((r) => r.cidade === "São Paulo").length;
-      const lines = ["Tabela clientes (DDL CREATE TABLE):"];
-      l3Rows.forEach((r) => lines.push(`  id=${r.id} | ${r.nome} | ${r.cidade}`));
-      if (showCount) lines.push(`\nDQL SELECT COUNT(*) FROM clientes WHERE cidade='São Paulo';\n=> Resultado: ${sp} clientes! (NUNCA ponha COUNT() dentro do WHERE!)`);
+      const sp = l3Rows.filter((r) => r.turma === "2º DS").length;
+      const lines = ["Tabela alunos (PK = id):"];
+      l3Rows.forEach((r) => lines.push(`  id=${r.id} | ${r.nome} | ${r.turma}`));
+      if (showCount) lines.push(`\nSELECT COUNT(*) FROM alunos WHERE turma='2º DS';\n=> Resultado: ${sp} alunos!`);
       document.getElementById("l3SqlOut").textContent = lines.join("\n");
       document.getElementById("l3NormOut").textContent = l3Normalized
-        ? "[CERTO — 1FN Aplicada (1 valor atômico por célula)]:\nTabela Alunos:     id=1 | nome='Carlos'\nTabela Telefones:  aluno_id=1 | tel='119999-0000'\n                   aluno_id=1 | tel='118888-1111'"
-        : "[ERRADO — Viola a 1FN (dois telefones juntos!)]:\nid=1 | nome='Carlos' | telefones='119999-0000, 118888-1111'";
+        ? "[CERTO — 1FN Aplicada (1 valor atômico por célula)]:\nTabela Alunos:     id=1 | nome='Henrique'\nTabela Telefones:  aluno_id=1 (FK) | tel='119999-0000'\n                   aluno_id=1 (FK) | tel='118888-1111'"
+        : "[ERRADO — Viola a 1FN (dois telefones juntos!)]:\nid=1 | nome='Henrique' | telefones='119999-0000, 118888-1111'";
     }
 
     function renderLab04Into(el) {
       el.innerHTML = `
-        <h3>🎨 Lab 04 — Vetorial (SVG) vs Bitmap (Raster), Cores RGB/Hex/CMYK &amp; CSS3</h3>
+        <h3>🎨 Lab Design — Vetorial (SVG) vs Bitmap, Cores RGB/Hex &amp; CSS3</h3>
         <label><strong>Zoom: <span id="l4Zv">100</span>%</strong></label>
         <input type="range" id="l4Zoom" min="100" max="800" step="50" value="100" style="width:100%; max-width:340px;" oninput="l4SetZoom(this.value)">
         <div class="lab-grid" style="margin-top:10px;">
           <div class="q-card">
-            <strong>Vetorial (&lt;svg&gt;) — Sem Perda!</strong>
-            <div class="viewport">
-              <svg id="l4Svg" width="75" height="75" viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="#2563eb"/><polygon points="40,14 62,56 18,56" fill="#facc15"/></svg>
-            </div>
+            <strong>Vetorial (&lt;svg&gt;) — Ideal p/ Logotipos!</strong>
+            <div class="viewport"><svg id="l4Svg" width="75" height="75" viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="#2563eb"/><polygon points="40,14 62,56 18,56" fill="#facc15"/></svg></div>
           </div>
           <div class="q-card">
             <strong>Bitmap / Raster (40x40 px) — Pixelado!</strong>
@@ -1737,14 +2211,14 @@
         </div>
         <div class="lab-grid">
           <div class="q-card">
-            <strong>Cores RGB / Hex / CMYK</strong><br>
+            <strong>Cores RGB / Hex</strong><br>
             R <input type="range" id="l4R" min="0" max="255" value="37" oninput="l4UpdateColor()">
             G <input type="range" id="l4G" min="0" max="255" value="99" oninput="l4UpdateColor()">
             B <input type="range" id="l4B" min="0" max="255" value="235" oninput="l4UpdateColor()">
             <div id="l4Swatch" style="margin-top:8px; padding:12px; border-radius:8px; font-weight:700; text-align:center;">#2563EB</div>
           </div>
           <div class="q-card" style="text-align:center;">
-            <strong>Transformações CSS3 (Q17 - 2019)</strong><br><br>
+            <strong>Transformações CSS3</strong><br><br>
             <button class="btn sm" onclick="l4Tf('scale(1.35)')">scale</button>
             <button class="btn sm" onclick="l4Tf('skew(20deg,5deg)')">skew</button>
             <button class="btn sm" onclick="l4Tf('translate(30px,-8px)')">translate</button>
@@ -1755,9 +2229,11 @@
         </div>
       `;
       const cvs = document.getElementById("l4Cvs");
-      const ctx = cvs.getContext("2d");
-      ctx.fillStyle = "#2563eb"; ctx.beginPath(); ctx.arc(20,20,17,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle = "#facc15"; ctx.beginPath(); ctx.moveTo(20,7); ctx.lineTo(31,28); ctx.lineTo(9,28); ctx.closePath(); ctx.fill();
+      if (cvs && cvs.getContext) {
+        const ctx = cvs.getContext("2d");
+        ctx.fillStyle = "#2563eb"; ctx.beginPath(); ctx.arc(20,20,17,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle = "#facc15"; ctx.beginPath(); ctx.moveTo(20,7); ctx.lineTo(31,28); ctx.lineTo(9,28); ctx.closePath(); ctx.fill();
+      }
       l4UpdateColor();
     }
     function l4SetZoom(v) {
@@ -1777,106 +2253,71 @@
     }
     function l4Tf(t) { document.getElementById("l4Box").style.transform = t; }
 
-    // --- Lab Tipos, Casting, DIV/MOD & Tabela Verdade (Dia 1) ---
     let ltP = true, ltQ = false;
     function renderLabTiposInto(el) {
       el.innerHTML = `
-        <h3>🔤 Lab 00 — Tipos Primitivos, Casting Explícito, DIV/MOD e Tabela Verdade</h3>
+        <h3>🔤 Lab C# — Tipos, Casting, Resto (%) e Tabela Verdade (&& / || / !)</h3>
         <div class="lab-grid">
           <div class="q-card">
-            <strong>1. Simulador de Casting &amp; Conversão Implícita vs. Explícita</strong><br><br>
-            <label>Valor decimal real (<code>double</code>):
-              <input id="ltFloat" type="number" step="0.01" value="8.99" style="padding:5px; width:90px; border:1px solid #94a3b8; border-radius:6px;" oninput="ltUpdateCast()">
-            </label>
-            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;">
-              <button class="btn sm" onclick="document.getElementById('ltFloat').value='8.99'; ltUpdateCast()">8.99</button>
-              <button class="btn sm" onclick="document.getElementById('ltFloat').value='3.75'; ltUpdateCast()">3.75</button>
-              <button class="btn sm" onclick="document.getElementById('ltFloat').value='-4.8'; ltUpdateCast()">-4.8</button>
-            </div>
+            <strong>1. Casting Explícito em C#</strong><br><br>
+            <label>double x = <input id="ltFloat" type="number" step="0.01" value="8.99" style="padding:5px; width:90px; border:1px solid var(--border); border-radius:6px; background:var(--surface); color:var(--text);" oninput="ltUpdateCast()"></label>
             <pre class="q-code" id="ltCastOut"></pre>
           </div>
           <div class="q-card">
-            <strong>2. Calculadora DIV &amp; MOD (Portugol / Python / JS)</strong><br><br>
+            <strong>2. Operador % (Resto da Divisão em C#)</strong><br><br>
             <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-              <label>Dividendo <input id="ltA" type="number" value="17" style="padding:5px; width:70px; border:1px solid #94a3b8; border-radius:6px;" oninput="ltUpdateDivMod()"></label>
-              <label>Divisor <input id="ltB" type="number" value="5" min="1" style="padding:5px; width:70px; border:1px solid #94a3b8; border-radius:6px;" oninput="ltUpdateDivMod()"></label>
+              <label>A <input id="ltA" type="number" value="17" style="padding:5px; width:70px; border:1px solid var(--border); border-radius:6px; background:var(--surface); color:var(--text);" oninput="ltUpdateDivMod()"></label>
+              <label>B <input id="ltB" type="number" value="2" min="1" style="padding:5px; width:70px; border:1px solid var(--border); border-radius:6px; background:var(--surface); color:var(--text);" oninput="ltUpdateDivMod()"></label>
             </div>
             <pre class="q-code" id="ltDivOut"></pre>
           </div>
         </div>
         <div class="q-card">
-          <strong>3. Tabela Verdade Interativa (<code>E / ∧</code>, <code>OU / ∨</code>, <code>NÃO / ¬</code>)</strong><br><br>
+          <strong>3. Tabela Verdade em C# (<code>&amp;&amp;</code>, <code>||</code>, <code>!</code>)</strong><br><br>
           <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
-            <button class="btn sm" id="ltBtnP" onclick="ltP=!ltP; ltUpdateLogic()">P = Verdadeiro</button>
-            <button class="btn sm" id="ltBtnQ" onclick="ltQ=!ltQ; ltUpdateLogic()">Q = Falso</button>
+            <button class="btn sm" id="ltBtnP" onclick="ltP=!ltP; ltUpdateLogic()">P</button>
+            <button class="btn sm" id="ltBtnQ" onclick="ltQ=!ltQ; ltUpdateLogic()">Q</button>
           </div>
           <pre class="q-code" id="ltLogicOut"></pre>
         </div>
       `;
-      ltUpdateCast();
-      ltUpdateDivMod();
-      ltUpdateLogic();
+      ltUpdateCast(); ltUpdateDivMod(); ltUpdateLogic();
     }
     function ltUpdateCast() {
       const v = Number(document.getElementById("ltFloat").value);
       const val = Number.isFinite(v) ? v : 0;
-      const castInt = Math.trunc(val);
-      const rounded = Math.round(val);
-      document.getElementById("ltCastOut").textContent =
-        `double x = ${val};\nint y = (int) x; // Casting EXPLÍCITO (forçado pelo dev)\n=> Resultado em y: ${castInt}  (ATENÇÃO FAT: trunca/corta casas, NÃO arredonda para ${rounded}!)\n\nConversão IMPLÍCITA: int a = 7; double b = a; -> b = 7.0 (sem perda)\nJS concatenação implícita: "5" + 2 -> "52" (string!) | parseInt("5") + 2 -> 7`;
+      document.getElementById("ltCastOut").textContent = `double x = ${val};\nint y = (int)x; // Casting EXPLÍCITO\n=> y vale ${Math.trunc(val)} (trunca casas decimais, não arredonda!)`;
     }
     function ltUpdateDivMod() {
       const a = Math.trunc(Number(document.getElementById("ltA").value) || 0);
       const b = Math.max(1, Math.trunc(Number(document.getElementById("ltB").value) || 1));
-      const div = Math.trunc(a / b);
-      const mod = a % b;
-      const par = a % 2 === 0 ? "PAR (A MOD 2 == 0)" : "ÍMPAR (A MOD 2 != 0)";
-      document.getElementById("ltDivOut").textContent =
-        `${a} DIV ${b} = ${div}   (quociente inteiro: ${b} cabe ${div}x em ${a})\n${a} MOD ${b} = ${mod}   (resto inteiro: ${a} - ${div}*${b} = ${a - div * b})\nParidade de ${a}: ${par}`;
+      document.getElementById("ltDivOut").textContent = `Quociente inteiro (${a} / ${b}) = ${Math.trunc(a / b)}\nResto (${a} % ${b})             = ${a % b}\nParidade: ${a % 2 === 0 ? "PAR (a % 2 == 0)" : "ÍMPAR (a % 2 != 0)"}`;
     }
     function ltUpdateLogic() {
       const bp = document.getElementById("ltBtnP"), bq = document.getElementById("ltBtnQ");
-      bp.textContent = `P = ${ltP ? "Verdadeiro (V)" : "Falso (F)"}`;
-      bp.className = `btn sm ${ltP ? "green" : "red"}`;
-      bq.textContent = `Q = ${ltQ ? "Verdadeiro (V)" : "Falso (F)"}`;
-      bq.className = `btn sm ${ltQ ? "green" : "red"}`;
-      const f = (x) => (x ? "V (Verdadeiro)" : "F (Falso)");
-      document.getElementById("ltLogicOut").textContent =
-        `NÃO P  (¬P)       => ${f(!ltP)}\nP E Q  (P ∧ Q)    => ${f(ltP && ltQ)}  (exige TODOS verdadeiros)\nP OU Q (P ∨ Q)    => ${f(ltP || ltQ)}  (basta UM verdadeiro)\n(NÃO P) OU Q      => ${f(!ltP || ltQ)}\nP E (NÃO Q)       => ${f(ltP && !ltQ)}`;
+      bp.textContent = `P = ${ltP ? "true (V)" : "false (F)"}`; bp.className = `btn sm ${ltP ? "green" : "red"}`;
+      bq.textContent = `Q = ${ltQ ? "true (V)" : "false (F)"}`; bq.className = `btn sm ${ltQ ? "green" : "red"}`;
+      const f = (x) => (x ? "true (V)" : "false (F)");
+      document.getElementById("ltLogicOut").textContent = `!P      (NÃO P)  => ${f(!ltP)}\nP && Q  (P E Q)  => ${f(ltP && ltQ)}\nP || Q  (P OU Q) => ${f(ltP || ltQ)}`;
     }
 
-    // --- Lab Binário 8-Bit, Hex & Linux (Dia 10) ---
-    let lbBits = [0, 1, 1, 0, 0, 1, 0, 0]; // 100 default
+    let lbBits = [1, 0, 1, 1, 1, 0, 1, 1]; // 187 = BB default! (Taboão!)
     const LB_WEIGHTS = [128, 64, 32, 16, 8, 4, 2, 1];
-    const LINUX_FHS = {
-      "/": "Raiz absoluta do sistema de arquivos Linux (topo de toda a árvore). Nunca confunda com /root!",
-      "/home": "Pastas pessoais dos usuários comuns (ex.: /home/henrique). Equivalente ao C:\\Users do Windows.",
-      "/root": "Pasta pessoal exclusiva do superusuário administrador (root). Fica dentro de /, não é a raiz!",
-      "/etc": "Arquivos de CONFIGURAÇÃO do sistema e serviços (ex.: hosts, passwd, fstab).",
-      "/var": "Arquivos VARIÁVEIS que crescem continuamente, especialmente LOGS do sistema (/var/log) e caches.",
-      "/bin": "Binários/comandos executáveis essenciais disponíveis no sistema (ex.: ls, cp, mv, cat).",
-    };
     function renderLabBinInto(el) {
       el.innerHTML = `
-        <h3>🔢 Lab 05 — Conversor Interativo 1 Byte (Binário ↔ Decimal ↔ Hex) &amp; Linux FHS</h3>
+        <h3>🔢 Lab Fundamentos — Conversor Interativo Binário ↔ Decimal ↔ Hexadecimal</h3>
         <div class="q-card">
-          <strong>1. Ligue ou Desligue os 8 Bits de 1 Byte (Peso: 128 a 1)</strong><br><br>
+          <strong>Ligue ou Desligue os 8 Bits de 1 Byte (187 = BB repetiu 2x em Taboão!)</strong><br><br>
           <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;" id="lbBitRow"></div>
           <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin-bottom:8px;">
-            <small><strong>Atalhos da Prova FAT:</strong></small>
-            <button class="btn sm" onclick="lbSetVal(255)">255 (INFO 2025)</button>
-            <button class="btn sm" onclick="lbSetVal(100)">100 (DS 2019)</button>
-            <button class="btn sm" onclick="lbSetVal(250)">250 / FA₁₆ (DS 2019)</button>
-            <button class="btn sm dark" onclick="lbSetVal(0)">Zerar (0)</button>
+            <small><strong>Atalhos Taboão:</strong></small>
+            <button class="btn sm amber" onclick="lbSetVal(187)">⭐ 187 = BB (2024 &amp; 2025!)</button>
+            <button class="btn sm" onclick="lbSetVal(205)">205 = CD</button>
+            <button class="btn sm" onclick="lbSetVal(250)">250 = FA</button>
+            <button class="btn sm" onclick="lbSetVal(255)">255 = FF</button>
+            <button class="btn sm dark" onclick="lbSetVal(0)">Zerar</button>
           </div>
           <pre class="q-code" id="lbOut"></pre>
-        </div>
-        <div class="q-card">
-          <strong>2. Inspetor de Diretórios Linux (FHS — Caiu na INFO 2025 &amp; DS 2019)</strong><br><br>
-          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
-            ${Object.keys(LINUX_FHS).map((p) => `<button class="btn sm outline" onclick="document.getElementById('lbLinuxOut').textContent='${p} -> '+LINUX_FHS['${p}']">${p}</button>`).join("")}
-          </div>
-          <pre class="q-code" id="lbLinuxOut">Clique em qualquer diretório acima para revisar sua função oficial no Linux...</pre>
         </div>
       `;
       lbDraw();
@@ -1886,15 +2327,12 @@
       lbBits = LB_WEIGHTS.map((w) => ((x & w) ? 1 : 0));
       lbDraw();
     }
-    function lbToggleBit(i) {
-      lbBits[i] = lbBits[i] ? 0 : 1;
-      lbDraw();
-    }
+    function lbToggleBit(i) { lbBits[i] = lbBits[i] ? 0 : 1; lbDraw(); }
     function lbDraw() {
       const row = document.getElementById("lbBitRow");
       if (!row) return;
       row.innerHTML = LB_WEIGHTS.map((w, i) => `
-        <button class="btn sm ${lbBits[i] ? "green" : "dark"}" style="min-width:58px; display:flex; flex-direction:column; align-items:center; padding:8px 6px;" onclick="lbToggleBit(${i})">
+        <button class="btn sm ${lbBits[i] ? "green" : "dark"}" style="min-width:56px; display:flex; flex-direction:column; align-items:center; padding:8px 6px;" onclick="lbToggleBit(${i})">
           <span style="font-size:16px; font-weight:800;">${lbBits[i]}</span>
           <small style="opacity:0.85; font-size:11px;">${w}</small>
         </button>
@@ -1902,25 +2340,23 @@
       let dec = 0;
       const parts = [];
       lbBits.forEach((b, i) => { if (b) { dec += LB_WEIGHTS[i]; parts.push(LB_WEIGHTS[i]); } });
-      const bin = lbBits.join("");
       const hex = dec.toString(16).toUpperCase().padStart(2, "0");
       const q16 = Math.floor(dec / 16), r16 = dec % 16;
       const hexDig = (n) => n.toString(16).toUpperCase();
       document.getElementById("lbOut").textContent =
-        `Binário (Base 2):     ${bin}₂  (sem zeros à esq.: ${dec.toString(2)}₂)\nDecimal (Base 10):    ${dec}₁₀   (${parts.length ? parts.join(" + ") : "0"} = ${dec})\nHexadecimal (Base 16): ${hex}₁₆   (passo: ${dec} ÷ 16 = quociente ${q16} [${hexDig(q16)}] e resto ${r16} [${hexDig(r16)}])`;
+        `Binário (Base 2):      ${lbBits.join("")}₂\nDecimal (Base 10):     ${dec}₁₀   (${parts.length ? parts.join(" + ") : "0"} = ${dec})\nHexadecimal (Base 16): ${hex}₁₆   (${dec} ÷ 16 = quociente ${q16} [${hexDig(q16)}], resto ${r16} [${hexDig(r16)}])`;
     }
 
-    // --- Lab Base Comum M-Tec: Química, Conjuntos/Contagem, Terreno 3-4-5 & Óptica (Dia 13) ---
     function renderLabMTecInto(el) {
       el.innerHTML = `
-        <h3>🎓 Lab 06 — Simulador Base M-Tec (Química, Matemática &amp; Física Óptica)</h3>
+        <h3>🎓 Lab Base Comum — Logaritmo, Venn, Massa Molar &amp; Óptica</h3>
         <div class="lab-grid">
           <div class="q-card">
-            <strong>1. Massa Molar (C=12, H=1, O=16) &amp; Condutividade Elétrica</strong><br><br>
+            <strong>1. Massa Molar (C=12, H=1, O=16) &amp; Condutividade</strong><br><br>
             <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
-              <button class="btn sm" onclick="lmSetMol(2,6,1,'Etanol (C₂H₅OH)')">Etanol (C₂H₅OH)</button>
-              <button class="btn sm" onclick="lmSetMol(2,4,2,'Ácido Acético (C₂H₄O₂)')">Ác. Acético (C₂H₄O₂)</button>
-              <button class="btn sm" onclick="lmSetMol(0,2,1,'Água (H₂O)')">Água (H₂O)</button>
+              <button class="btn sm" onclick="lmSetMol(2,6,1,'Etanol (C₂H₅OH)')">Etanol</button>
+              <button class="btn sm" onclick="lmSetMol(2,4,2,'Ácido Acético (C₂H₄O₂)')">Ác. Acético</button>
+              <button class="btn sm" onclick="lmSetMol(0,2,1,'Água (H₂O)')">Água</button>
             </div>
             <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
               <label>C <input id="lmC" type="number" min="0" max="20" value="2" style="width:52px; padding:4px;" oninput="lmCalcMol()"></label>
@@ -1929,80 +2365,70 @@
             </div>
             <pre class="q-code" id="lmMolOut"></pre>
             <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
-              <button class="btn sm outline" onclick="lmCond('metal')">Ligação Metálica</button>
-              <button class="btn sm outline" onclick="lmCond('ionica')">Ligação Iônica (NaCl)</button>
-              <button class="btn sm outline" onclick="lmCond('covalente')">Covalente (Açúcar/Álcool)</button>
+              <button class="btn sm outline" onclick="lmCond('metal')">Metal</button>
+              <button class="btn sm outline" onclick="lmCond('ionica')">Iônico (Sal)</button>
+              <button class="btn sm outline" onclick="lmCond('covalente')">Molecular</button>
             </div>
-            <pre class="q-code" id="lmCondOut">Escolha um tipo de ligação química acima para ver quando conduz eletricidade.</pre>
+            <pre class="q-code" id="lmCondOut">Escolha um material acima para ver quando conduz eletricidade.</pre>
           </div>
           <div class="q-card">
-            <strong>2. Conjuntos, Contagem 3 Dígitos &amp; Óptica da Cor (M-Tec)</strong><br><br>
+            <strong>2. Macetes de Matemática &amp; Física Taboão</strong><br><br>
             <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
-              <button class="btn sm green" onclick="lmMathDemo('conj')">Conjuntos (A∩B)∪C</button>
-              <button class="btn sm purple" onclick="lmMathDemo('cont')">Contagem 3 Algarismos</button>
-              <button class="btn sm amber" onclick="lmMathDemo('geom')">Terreno 3-4-5 &amp; 2.320 m²</button>
+              <button class="btn sm green" onclick="lmMathDemo('venn')">Venn (Taboão)</button>
+              <button class="btn sm purple" onclick="lmMathDemo('log')">Logaritmo</button>
+              <button class="btn sm amber" onclick="lmMathDemo('gas')">Gases p×V</button>
             </div>
             <pre class="q-code" id="lmMathOut"></pre>
             <div style="margin-top:8px;">
-              <strong>Física Óptica (Q33 M-Tec):</strong>
-              <select id="lmObj" onchange="lmOptics()" style="padding:4px;"><option value="red">Objeto Vermelho (tomate)</option><option value="white">Objeto Branco</option><option value="blue">Objeto Azul</option></select>
+              <strong>Óptica das Cores:</strong>
+              <select id="lmObj" onchange="lmOptics()" style="padding:4px;"><option value="red">Objeto Vermelho</option><option value="white">Objeto Branco</option><option value="blue">Objeto Azul</option></select>
               sob luz
-              <select id="lmLight" onchange="lmOptics()" style="padding:4px;"><option value="green">Verde (monocromática)</option><option value="white">Branca (Sol)</option><option value="red">Vermelha</option></select>
+              <select id="lmLight" onchange="lmOptics()" style="padding:4px;"><option value="white">Branca</option><option value="green">Verde</option><option value="red">Vermelha</option></select>
               <div id="lmOptOut" style="margin-top:6px; padding:8px 12px; border-radius:8px; font-weight:800;"></div>
             </div>
           </div>
         </div>
       `;
-      lmCalcMol("Etanol (C₂H₅OH)");
-      lmMathDemo("conj");
-      lmOptics();
+      lmCalcMol("Etanol (C₂H₅OH)"); lmMathDemo("venn"); lmOptics();
     }
     function lmSetMol(c, h, o, nome) {
-      document.getElementById("lmC").value = c;
-      document.getElementById("lmH").value = h;
-      document.getElementById("lmO").value = o;
+      document.getElementById("lmC").value = c; document.getElementById("lmH").value = h; document.getElementById("lmO").value = o;
       lmCalcMol(nome);
     }
-    function lmCalcMol(label = "Molécula customizada") {
-      const c = Number(document.getElementById("lmC").value) || 0;
-      const h = Number(document.getElementById("lmH").value) || 0;
-      const o = Number(document.getElementById("lmO").value) || 0;
-      const m = c * 12 + h * 1 + o * 16;
-      document.getElementById("lmMolOut").textContent =
-        `${label}\nConta: (${c}×12) + (${h}×1) + (${o}×16) = ${c * 12} + ${h} + ${o * 16} = ${m} g/mol`;
+    function lmCalcMol(label = "Molécula") {
+      const c = Number(document.getElementById("lmC").value) || 0, h = Number(document.getElementById("lmH").value) || 0, o = Number(document.getElementById("lmO").value) || 0;
+      document.getElementById("lmMolOut").textContent = `${label}: (${c}×12) + (${h}×1) + (${o}×16) = ${c*12 + h + o*16} g/mol`;
     }
     function lmCond(tipo) {
       const map = {
-        metal: "LIGAÇÃO METÁLICA (ex.: Ferro, Cobre): Nuvem/mar de elétrons livres -> CONDUZ eletricidade no estado SÓLIDO e também fundido!",
-        ionica: "LIGAÇÃO IÔNICA (ex.: NaCl): Sólido tem íons presos na rede -> NÃO conduz sólido! Só CONDUZ quando fundido (líquido) ou dissolvido em água!",
-        covalente: "LIGAÇÃO COVALENTE / MOLECULAR (ex.: Açúcar, H₂O pura): Sem íons nem elétrons livres -> NÃO conduz eletricidade nem sólido nem puro!",
+        metal: "METAL (Ferro, Cobre): CONDUZ eletricidade no estado SÓLIDO (e líquido)!",
+        ionica: "IÔNICO (NaCl): NÃO conduz sólido! Só CONDUZ líquido/fundido ou dissolvido em água!",
+        covalente: "MOLECULAR (Açúcar, H₂O pura): NÃO conduz nem sólido nem líquido!",
       };
       document.getElementById("lmCondOut").textContent = map[tipo];
     }
     function lmMathDemo(kind) {
       const el = document.getElementById("lmMathOut");
-      if (kind === "conj") {
-        el.textContent = "Dados: A={1,2,3,4}, B={3,4,5,6}, C={5,7}\n1) Resolva o parêntese (A ∩ B) = {3, 4}  (apenas em comum)\n2) Una com C: {3, 4} ∪ {5, 7} = {3, 4, 5, 7}";
-      } else if (kind === "cont") {
-        el.textContent = "Quantos números naturais de 3 algarismos existem?\n- Cuidado: o 1º dígito (centena) NÃO pode ser ZERO!\n- Com repetição: 9 (1..9) × 10 × 10 = 900 números (100 a 999)\n- Distintos:     9 × 9 × 8 = 648 números";
-      } else {
-        el.textContent = "Terreno composto (Q21 M-Tec): Retângulo 40m × 58m = 2.320 m²\nDica Triângulo 3-4-5: se catetos = 30 e 40 -> hipotenusa = 50 (30²+40²=2500=50²)!";
-      }
+      if (kind === "venn") el.textContent = "Venn Taboão: Total=170, A=92, B=88, Nenhum=20\n1) 170 - 20 = 150 leem algo\n2) 92 + 88 = 180\n3) Interseção (os dois) = 180 - 150 = 30!";
+      else if (kind === "log") el.textContent = "Log Taboão: log_a(m)=11, log_a(n)=6\nlog_a(m² · n²) = 2·log_a(m) + 2·log_a(n)\n= 2(11) + 2(6) = 22 + 12 = 34!";
+      else el.textContent = "Gases Taboão (repetiu 2x!):\n(P₁·V₁)/T₁ = (P₂·V₂)/T₂ (T sempre em Kelvin!)\nSe P é constante e V dobra (V -> 2V), então T também DOBRA: 300 K -> 600 K!";
     }
     function lmOptics() {
-      const obj = document.getElementById("lmObj").value;
-      const lig = document.getElementById("lmLight").value;
-      let seen = "PRETO", bg = "#0f172a", fg = "#ffffff", why = "absorve a luz incidente e não reflete nada aos olhos!";
+      const obj = (document.getElementById("lmObj") && document.getElementById("lmObj").value) || "red";
+      const lig = (document.getElementById("lmLight") && document.getElementById("lmLight").value) || "white";
+      let seen = "PRETO", bg = "#0f172a", fg = "#ffffff", why = "absorve a luz e não reflete nada!";
       if (obj === "white") {
-        const names = { white: ["BRANCO", "#f8fafc", "#0f172a"], red: ["VERMELHO", "#dc2626", "#fff"], green: ["VERDE", "#16a34a", "#fff"] }[lig];
-        seen = names[0]; bg = names[1]; fg = names[2]; why = "superfície branca reflete toda a luz que chega nela!";
+        const names = ({ white: ["BRANCO", "#f8fafc", "#0f172a"], red: ["VERMELHO", "#dc2626", "#fff"], green: ["VERDE", "#16a34a", "#fff"] })[lig] || ["BRANCO", "#f8fafc", "#0f172a"];
+        seen = names[0]; bg = names[1]; fg = names[2]; why = "superfície branca reflete toda cor recebida!";
       } else if (lig === "white" || obj === lig) {
-        const names = { red: ["VERMELHO", "#dc2626", "#fff"], blue: ["AZUL", "#2563eb", "#fff"] }[obj];
-        seen = names[0]; bg = names[1]; fg = names[2]; why = "reflete a própria cor presente na iluminação!";
+        const names = ({ red: ["VERMELHO", "#dc2626", "#fff"], blue: ["AZUL", "#2563eb", "#fff"] })[obj] || ["VERMELHO", "#dc2626", "#fff"];
+        seen = names[0]; bg = names[1]; fg = names[2]; why = "reflete a própria cor presente na luz!";
       }
       const out = document.getElementById("lmOptOut");
-      out.style.background = bg; out.style.color = fg;
-      out.textContent = `Cor enxergada: ${seen} — porque ${why}`;
+      if (out) {
+        out.style.background = bg; out.style.color = fg;
+        out.textContent = `Cor enxergada: ${seen} — ${why}`;
+      }
     }
 
     function escapeHtml(s) {
@@ -2014,17 +2440,9 @@
         if (activeTab !== "cards" || cardsMode !== "vf") return;
         const tag = e.target && e.target.tagName;
         if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
-        if (e.key === "v" || e.key === "V") {
-          const btn = document.getElementById("vfBtnTrue");
-          if (btn) btn.click();
-        } else if (e.key === "f" || e.key === "F") {
-          const btn = document.getElementById("vfBtnFalse");
-          if (btn) btn.click();
-        } else if (e.key === "ArrowRight" || e.key === " ") {
-          e.preventDefault();
-          const btn = document.getElementById("vfNextBtn");
-          if (btn) btn.click();
-        }
+        if (e.key === "v" || e.key === "V") { const btn = document.getElementById("vfBtnTrue"); if (btn) btn.click(); }
+        else if (e.key === "f" || e.key === "F") { const btn = document.getElementById("vfBtnFalse"); if (btn) btn.click(); }
+        else if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); const btn = document.getElementById("vfNextBtn"); if (btn) btn.click(); }
       });
     }
 
@@ -2032,6 +2450,7 @@
       navigator.serviceWorker.register("./sw.js").catch(() => {});
     }
 
+    initTheme();
     renderMain();
   </script>
 </body>

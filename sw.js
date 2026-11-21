@@ -1,11 +1,17 @@
-const CACHE_NAME = "etec-ds-henrique-v2";
+const CACHE_NAME = "etec-ds-henrique-v3";
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./COMECE_AQUI.html",
   "./dados_plataforma.js",
   "./manifest.json",
-  "./icon.svg"
+  "./icon.svg",
+  "./img/t26_p4_i1.png",
+  "./img/t26_p5_i1.jpg",
+  "./img/t26_p6_i1.png",
+  "./img/t26_p6_i2.png",
+  "./img/t26_p7_i1.png",
+  "./img/t25_p8_i1.jpg"
 ];
 
 self.addEventListener("install", (event) => {
