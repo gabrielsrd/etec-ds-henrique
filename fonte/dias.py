@@ -87,6 +87,7 @@ DIAS = [
      "title": "Fundamentos da Informática: bases numéricas, hardware, SO e segurança",
      "intro": "Binário, octal e hexadecimal (o 187 = BB), hardware × software, RAM, ROM, BIOS, sistema operacional, CLI × GUI, comandos do CMD, software livre e segurança.",
      "practice": "lab_bin", "tag": "03_BD_APS_FI",
+     "examTask": {"examId": "prev_tec_a", "label": "Depois da aula, fazer o Simulado de Previsão Técnico A (20 questões, 50 min)"},
      "videos": [("binarios", 120, 480, "Como contar em binário."), ("hexa", 150, 510, "Octal e hexadecimal.")],
      "quiz": refs("taboao2021:32", "taboao2021:34", "mtec2022:36", "taboao2026:32", "taboao2026:33",
                   "irma2024ipi:29", "irma2024ipi:30", "irma2025inf:10", "irma2025inf:17", "irma2024ipi:31")},
@@ -113,6 +114,7 @@ DIAS = [
                   "taboao2023:28", "taboao2026:12", "taboao2026:14", "irma2025inf:8", "irma2025inf:9")},
     {"day": 12, "date": "Qua 02/12", "phase": 1, "weight": "Média",
      "title": "Ciências da Natureza: Física, Química e Biologia",
+     "examTask": {"examId": "prev_tec_b", "label": "Antes da aula, fazer o Simulado de Previsão Técnico B (20 questões, 50 min) — a parte técnica é onde você mais ganha pontos"},
      "intro": "Gases, movimento, força, lentes, calor; modelos atômicos, ligações, reações, oxirredução e massa molar; biotecnologia, doenças, ecologia e meio ambiente.",
      "practice": "lab_mtec", "tag": "06_Exatas",
      "videos": [("ligacoes", 45, 360, "Ligação iônica, covalente e metálica.")],
@@ -171,10 +173,22 @@ EXAM_META = {
     "irma2024ipi": {"group": "bank", "title": "Taboão — Informática para Internet, 06/12/2024", "badge": "Banco", "desc": ""},
     "irma2025inf": {"group": "bank", "title": "Taboão — Informática, 05/12/2025", "badge": "Banco", "desc": ""},
     "irma2025ipi": {"group": "bank", "title": "Taboão — Informática para Internet, 05/12/2025", "badge": "Banco", "desc": ""},
+    "prev_tec_a": {"group": "primary", "minutes": 50, "cutoff": 10, "target": 15,
+                   "title": "Simulado de Previsão — Técnico A (20 questões)",
+                   "badge": "🎯 Previsão • só parte técnica • 50 min",
+                   "desc": "Questões inéditas montadas sobre o que mais se repete nas provas de Taboão: hexadecimal, CLI, binário, tags, laços, matriz com índices trocados, exceções, chaves, requisitos e UML. Fazer no Dia 8."},
+    "prev_tec_b": {"group": "primary", "minutes": 50, "cutoff": 10, "target": 15,
+                   "title": "Simulado de Previsão — Técnico B (20 questões)",
+                   "badge": "🎯 Previsão • só parte técnica • 50 min",
+                   "desc": "Os temas técnicos do 1º ano com mais chance de cair a seguir: breakpoint, compilador, vetores, fluxograma, tabela verdade, CSS, JavaScript, normalização, DER, SQL, cascata, classes, cores e software livre. Fazer no Dia 12."},
+    "prev_completo": {"group": "primary", "minutes": 240, "cutoff": 20, "target": 24,
+                      "title": "Simulado de Previsão — Completo (40 questões)",
+                      "badge": "🎯 Previsão • formato real (20 Base Comum + 20 técnicas)",
+                      "desc": "Uma prova inteira no formato de Taboão, com variações das questões que mais se repetem. Treino extra: faça em partes (modo treino) se não tiver 4 horas."},
     "novas": {"group": "bank", "title": "Questões inéditas no estilo de Taboão", "badge": "Banco", "desc": ""},
 }
 
-PRIMARY = ["taboao2026", "taboao2025", "repetidas"]
+PRIMARY = ["taboao2026", "taboao2025", "repetidas", "prev_tec_a", "prev_tec_b", "prev_completo"]
 EXTRA = ["taboao2023", "mtec2022", "taboao2021"]
 
 # Repetições que a comparação automática não pega (alternativas embaralhadas) e

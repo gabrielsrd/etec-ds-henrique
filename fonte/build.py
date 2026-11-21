@@ -182,7 +182,8 @@ def main():
 
     for v in VF:
         assert v["area"] in AREA_IDS, v
-    apostila = [{"id": f"dia{c['day']}", "title": f"Dia {c['day']} ({c['dateLabel']}) • {c['title']}", "html": c["lessonHtml"]}
+    mapa = md_to_html((FONTE / "aulas" / "mapa_da_prova.md").read_text(encoding="utf-8"))
+    apostila = [{"id": "mapa", "title": "📊 Como a Etec de Taboão monta a prova (padrões, pegadinhas e chute)", "html": mapa}] + [{"id": f"dia{c['day']}", "title": f"Dia {c['day']} ({c['dateLabel']}) • {c['title']}", "html": c["lessonHtml"]}
                 for c in chapters]
 
     data = {

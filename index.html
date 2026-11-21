@@ -375,7 +375,7 @@
     <button class="mb-btn" data-tab="cards" onclick="goTab('cards')"><span class="mb-ico">🃏</span><span>Cards</span></button>
   </nav>
 
-  <script src="./dados_plataforma.js?v=20261121g"></script>
+  <script src="./dados_plataforma.js?v=20261121h"></script>
   <script>
     const D = window.ETEC_DATA;
     if (!D) {
@@ -416,7 +416,7 @@
     let activePhase2Tab = "p2_web";
 
     // Apostila state
-    let activeApostilaId = "cola";
+    let activeApostilaId = "mapa";
     let apostilaQuery = "";
 
     // Cards/VF/Labs state
@@ -891,10 +891,12 @@
       const heroBtns = !diagDone
         ? `<button class="btn lg amber" onclick="startExamInSim('taboao2026', 'real')">⭐ Fazer o diagnóstico (prova de 05/12/2025)</button>
            <button class="btn lg green" onclick="openChapter(${ch.day}, 1)">▶ Trilha Dia ${ch.day}</button>
-           <button class="btn lg purple" onclick="goTab('phase2')">🛠️ Ver 2ª Fase (08/12)</button>`
+           <button class="btn lg purple" onclick="goTab('phase2')">🛠️ Ver 2ª Fase (08/12)</button>
+           <button class="btn lg outline" onclick="goTab('apostila'); selectApostila('mapa')">📊 Como a prova é montada</button>`
         : `<button class="btn lg green" onclick="openChapter(${ch.day}, 1)">▶ Continuar Dia ${ch.day} (${ch.dateLabel})</button>
            <button class="btn lg purple" onclick="goTab('phase2')">🛠️ Treinar 2ª Fase (08/12)</button>
-           <button class="btn lg amber" onclick="startExamInSim('repetidas', 'instant')">🔁 Treino das Repetidas</button>`;
+           <button class="btn lg amber" onclick="startExamInSim('repetidas', 'instant')">🔁 Treino das Repetidas</button>
+           <button class="btn lg outline" onclick="goTab('apostila'); selectApostila('mapa')">📊 Como a prova é montada</button>`;
 
       root.innerHTML = `
         <section class="hero">
@@ -1117,7 +1119,7 @@
         const task = ch.examTask;
         const day1DiagCta = task && D.exams[task.examId]
           ? `<div class="callout callout-warning" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-              <div><strong>⭐ Missão principal de hoje:</strong> ${escapeHtml(task.label)}. Modo prova real: 4 horas, sem consulta.</div>
+              <div><strong>⭐ Missão principal de hoje:</strong> ${escapeHtml(task.label)}. Modo prova real: ${D.exams[task.examId].minutes >= 60 ? Math.round(D.exams[task.examId].minutes / 60) + " horas" : D.exams[task.examId].minutes + " minutos"}, sem consulta.</div>
               <button class="btn sm amber" onclick="startExamInSim('${task.examId}', 'real')">▶ Abrir a prova</button>
             </div>`
           : "";
