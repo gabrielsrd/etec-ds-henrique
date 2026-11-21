@@ -119,7 +119,9 @@
     .mb-btn .mb-ico { font-size: 18px; line-height: 1; }
     .mb-btn.active { color: var(--primary); background: var(--primary-soft); }
 
-    .container { max-width: 1140px; margin: 16px auto; padding: 0 14px; display: grid; gap: 16px; }
+    .container { max-width: 1140px; margin: 16px auto; padding: 0 14px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+    .panel, .lesson-body, #chapterStepBody { min-width: 0; }
+    .lesson-body { overflow-wrap: break-word; }
     .panel {
       background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
       padding: 20px; box-shadow: var(--shadow);
@@ -354,7 +356,7 @@
     <button class="mb-btn" data-tab="cards" onclick="goTab('cards')"><span class="mb-ico">🃏</span><span>Cards</span></button>
   </nav>
 
-  <script src="./dados_plataforma.js"></script>
+  <script src="./dados_plataforma.js?v=20261120b"></script>
   <script>
     const D = window.ETEC_DATA;
     if (!D) {
@@ -810,7 +812,7 @@
       const doneCount = pState.completedDays.length;
       const doneP1 = st.phase1Chapters.filter((c) => pState.completedDays.includes(c.day)).length;
       const diagDone = !!pState.examScores["taboao2026"];
-      const primaryIds = D.primaryExamIds || ["taboao2026", "taboao2025", "sim_taboao2027", "mtec2022"];
+      const primaryIds = D.primaryExamIds || ["taboao2026", "taboao2025", "sim_taboao2027"];
 
       let coachCls = "ok", coachTitle = "", coachMsg = "";
       if (!diagDone && st.diffPhase1 > 0) {
@@ -824,7 +826,7 @@
         coachMsg = "Você completou toda a preparação para a 1ª Fase (04/12) e a 2ª Fase (08/12). Revise a Cola de Bolso e ensaie a entrevista em voz alta!";
       } else if (st.overdue.length === 0) {
         coachTitle = `🟢 Ritmo Perfeito para Taboão da Serra (${fmtBr(st.today)})!`;
-        coachMsg = `Sua próxima missão é o <strong>Dia ${ch.day} (${ch.dateLabel}): ${ch.title}</strong>. Meta na escrita: <strong>25+/40</strong> (corte oficial 20/40).`;
+        coachMsg = `Sua próxima missão é o <strong>Dia ${ch.day} (${ch.dateLabel}): ${escapeHtml(ch.title)}</strong>. Meta na escrita: <strong>25+/40</strong> (corte oficial 20/40).`;
       } else if (st.overdue.length === 1) {
         coachCls = "warn";
         coachTitle = `🟡 Atenção: 1 módulo pendente (Dia ${st.overdue[0].day} — ${st.overdue[0].dateLabel})`;
@@ -849,7 +851,7 @@
         }
         return `<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding:11px 12px; border:1px solid ${ex.recommended ? "var(--amber)" : "var(--border-soft)"}; border-radius:12px; background:${ex.recommended ? "var(--amber-soft)" : "var(--surface-alt)"};">
           <div>
-            <strong>${ex.title}</strong><br>
+            <strong>${escapeHtml(ex.title)}</strong><br>
             <small style="color:var(--muted)">${ex.badge} • Corte: 20/40 | Meta: 25+/40</small>
           </div>
           <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
@@ -871,8 +873,8 @@
         <section class="hero">
           <div>
             <span style="display:inline-block; background:rgba(255,255,255,0.18); padding:4px 11px; border-radius:999px; font-size:12px; font-weight:800;">ETEC DE TABOÃO DA SERRA • 2ª SÉRIE M-TEC-PI (DS)</span>
-            <h1 style="margin:10px 0 6px 0; font-size:24px; line-height:1.25;">${!diagDone ? "Comece pelo Diagnóstico Oficial de Taboão (40Q)!" : `Próxima Missão: Dia ${ch.day} — ${ch.title}`}</h1>
-            <p style="margin:0 0 15px 0; opacity:0.93; font-size:14px;">${!diagDone ? "Plataforma 100% recalibrada sobre as provas reais de Taboão da Serra (2022–2025) e o Plano de Curso 612 — com 4 provas 40Q, 16 dias reais e Laboratório completo para a 2ª Fase (08/12)!" : ch.storyIntro}</p>
+            <h1 style="margin:10px 0 6px 0; font-size:24px; line-height:1.25;">${!diagDone ? "Comece pelo Diagnóstico Oficial de Taboão (40Q)!" : `Próxima Missão: Dia ${ch.day} — ${escapeHtml(ch.title)}`}</h1>
+            <p style="margin:0 0 15px 0; opacity:0.93; font-size:14px;">${!diagDone ? "Plataforma 100% recalibrada sobre as provas reais de Taboão da Serra (2022–2025) e o Plano de Curso 612 — com 4 provas 40Q, 16 dias reais e Laboratório completo para a 2ª Fase (08/12)!" : escapeHtml(ch.storyIntro)}</p>
             <div style="display:flex; gap:10px; flex-wrap:wrap;">${heroBtns}</div>
           </div>
           <div class="countdown-box">
@@ -950,8 +952,8 @@
               <span>Dia ${String(ch.day).padStart(2,"0")} • ${ch.dateLabel || fmtBr(cDate)}</span>
               <div><span class="tag-pill ${pillCls}">${pillTxt}</span>${scoreBadge}</div>
             </div>
-            <h3 style="margin:7px 0 5px 0; font-size:15.5px;">${ch.title}</h3>
-            <p style="margin:0; font-size:13px; color:var(--muted);">${ch.storyIntro}</p>
+            <h3 style="margin:7px 0 5px 0; font-size:15.5px;">${escapeHtml(ch.title)}</h3>
+            <p style="margin:0; font-size:13px; color:var(--muted);">${escapeHtml(ch.storyIntro)}</p>
           </div>
           <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-soft); padding-top:9px; gap:8px;">
             <small style="color:var(--muted);"><strong>${ch.weight}</strong> • Quiz ${ch.challengeRefs.length}Q</small>
@@ -1070,8 +1072,8 @@
         </div>
 
         <section class="panel">
-          <h2 style="margin:0 0 6px 0;">Dia ${ch.day} (${ch.dateLabel || ""}): ${ch.title}</h2>
-          <p style="margin:0 0 14px 0; color:var(--muted); font-size:14px;">${ch.storyIntro}</p>
+          <h2 style="margin:0 0 6px 0;">Dia ${ch.day} (${ch.dateLabel || ""}): ${escapeHtml(ch.title)}</h2>
+          <p style="margin:0 0 14px 0; color:var(--muted); font-size:14px;">${escapeHtml(ch.storyIntro)}</p>
 
           <div class="stepper">
             <button class="step-pill ${chapterStep === 1 ? "active" : (chapterStep > 1 ? "done" : "")}" onclick="chapterStep=1; renderMain();">1. 📖 Lição</button>
@@ -1257,7 +1259,7 @@
 
       const lines = [
         `📊 *DIAGNÓSTICO ETEC TABOÃO DA SERRA*`,
-        `📝 Prova: ${ex.title}`,
+        `📝 Prova: ${escapeHtml(ex.title)}`,
         `🎯 Placar: *${hits}/${total} (${pct}%)* | Corte: ${cutoff}/${total} | Meta: ${target}+/${total}`,
         `📌 Status: ${status}`,
       ];
@@ -1339,7 +1341,7 @@
 
           return `<div class="q-card">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:6px;">
-              <span style="font-size:12px; font-weight:800; color:var(--primary);">Revanche ${idx + 1}/${displayKeys.length} • ${ex.title} (Q${qNum})</span>
+              <span style="font-size:12px; font-weight:800; color:var(--primary);">Revanche ${idx + 1}/${displayKeys.length} • ${escapeHtml(ex.title)} (Q${qNum})</span>
               <span class="tag-pill ${ansObj && ansObj.isCorrect ? "done" : "late"}">${ansObj && ansObj.isCorrect ? "✅ Superada" : areaTitle(q.area)}</span>
             </div>
             <div>${q.stemHtml}</div>
@@ -1368,8 +1370,8 @@
 
       if (!simSession) {
         const wrongCount = (pState.wrongQueue || []).length;
-        const primaryIds = D.primaryExamIds || ["taboao2026", "taboao2025", "sim_taboao2027", "mtec2022"];
-        const extraIds = D.extraExamIds || ["ds2025", "info2025", "ds2019", "apostas", "sim1", "sim2"];
+        const primaryIds = D.primaryExamIds || ["taboao2026", "taboao2025", "sim_taboao2027"];
+        const extraIds = D.extraExamIds || ["mtec2022", "ds2025", "info2025", "ds2019", "apostas", "sim1", "sim2"];
 
         const buildExamCard = (id) => {
           const ex = D.exams[id];
@@ -1381,8 +1383,8 @@
           return `<div class="${cardCls}">
             <div>
               <span class="tag-pill ${ex.recommended ? "amber" : (sc ? "done" : "today")}">${ex.badge}</span>
-              <h3 style="margin:8px 0 6px 0; font-size:16px;">${ex.title}</h3>
-              <p style="margin:0; font-size:13.5px; color:var(--muted);">${ex.desc}</p>
+              <h3 style="margin:8px 0 6px 0; font-size:16px;">${escapeHtml(ex.title)}</h3>
+              <p style="margin:0; font-size:13.5px; color:var(--muted);">${escapeHtml(ex.desc)}</p>
             </div>
             <div style="display:grid; gap:8px; border-top:1px solid var(--border-soft); padding-top:10px;">
               <div style="font-size:12.5px; font-weight:700;">
@@ -1413,13 +1415,13 @@
 
           <section class="panel">
             <h2 style="margin-top:0;">🎯 Provas Oficiais &amp; Premonição — Padrão Etec Taboão (40 Questões)</h2>
-            <p style="color:var(--muted); font-size:14px; margin-top:0;">Estas <strong>4 provas de 40 questões (160Q no total)</strong> seguem exatamente o molde da prova de <strong>04/12/2026</strong> (corte eliminatório <strong>20/40</strong> • meta segura <strong>25+/40</strong>). Ao entregar, você pode copiar seu diagnóstico pronto para o WhatsApp!</p>
+            <p style="color:var(--muted); font-size:14px; margin-top:0;">Estas <strong>3 provas de 40 questões (120Q no total)</strong> seguem exatamente o molde da prova de <strong>04/12/2026</strong> (corte eliminatório <strong>20/40</strong> • meta segura <strong>25+/40</strong>). Ao entregar, você pode copiar seu diagnóstico pronto para o WhatsApp!</p>
             <div class="story-map">${primaryCards}</div>
           </section>
 
           <details class="extra-exams-box">
-            <summary><span>📂 Treino Técnico Extra (6 Provas FAT &amp; Simulados Anteriores — 180Q)</span><span class="tag-pill">Opcional • Histórico preservado</span></summary>
-            <p style="color:var(--muted); font-size:13.5px; margin:10px 0 12px 0;">Provas técnicas modulares (30Q cada) da Fundação FAT mantidas para reforço extra e preservação do seu histórico anterior. Priorize sempre as <strong>4 provas de 40Q de Taboão</strong> acima!</p>
+            <summary><span>📂 Treino Extra (7 provas de outras Etecs / FAT — NÃO são padrão Taboão)</span><span class="tag-pill">Opcional • Histórico preservado</span></summary>
+            <p style="color:var(--muted); font-size:13.5px; margin:10px 0 12px 0;">Provas técnicas modulares (30Q cada) da Fundação FAT mantidas para reforço extra e preservação do seu histórico anterior. Priorize sempre as <strong>3 provas de Taboão</strong> acima!</p>
             <div class="story-map">${extraCards}</div>
           </details>
         `;
@@ -1499,7 +1501,7 @@
       root.innerHTML = `
         <section class="panel">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
-            <div><strong>${ex.title}</strong> <span class="tag-pill">${simSession.mode === "instant" ? "⚡ Treino" : "⏱️ Prova Real"}</span></div>
+            <div><strong>${escapeHtml(ex.title)}</strong> <span class="tag-pill">${simSession.mode === "instant" ? "⚡ Treino" : "⏱️ Prova Real"}</span></div>
             <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
               <span class="tag-pill today" id="simTimerDisplay">⏱️ ${fmtTimer(simSession.secLeft)}</span>
               ${!simSession.submitted ? `<button class="btn sm green" onclick="submitSim()">✅ Entregar Prova</button>` : ""}
