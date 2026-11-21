@@ -203,6 +203,15 @@
     .lesson-body code { background: var(--inline-code-bg); color: var(--inline-code-fg); padding: 2px 5px; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 90%; }
     .lesson-body pre { background: var(--code-bg); color: var(--code-fg); padding: 13px; border-radius: 10px; overflow-x: auto; font-size: 13px; line-height: 1.5; border: 1px solid #334155; }
     .lesson-body pre code { background: transparent; color: var(--code-fg); padding: 0; }
+    .lesson-body pre, .lesson-body pre code, .lesson-body pre span, .q-exp pre, .q-exp code, pre.q-code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "DejaVu Sans Mono", "Liberation Mono", monospace !important; }
+    .lesson-body div.sourceCode { margin: 10px 0; }
+    .lesson-body pre { white-space: pre; tab-size: 4; }
+    code span.kw, code span.cf, code span.dt { color: #93c5fd; }   /* palavras-chave e tipos */
+    code span.st, code span.ch { color: #fcd34d; }                  /* textos entre aspas */
+    code span.co { color: #94a3b8; font-style: italic; }           /* comentários */
+    code span.dv, code span.fl, code span.bn { color: #f9a8d4; }    /* números */
+    code span.fu { color: #6ee7b7; }                                /* funções */
+    code span.op { color: #e2e8f0; }
     .table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 12px 0 16px 0; border-radius: 10px; border: 1px solid var(--border); }
     .q-table { width: 100%; border-collapse: collapse; margin: 0; font-size: 13.5px; min-width: 480px; }
     .q-table th { background: #1e3a8a; color: #fff; padding: 8px 10px; text-align: left; border-bottom: 1px solid #1e3a8a; }
@@ -238,6 +247,15 @@
 
     /* Questions & Simulator */
     .q-card { border: 1px solid var(--border); border-radius: 14px; padding: 16px; background: var(--surface); margin-bottom: 14px; }
+    .q-card, .lesson-body p, .lesson-body li { overflow-wrap: anywhere; }
+    .q-card pre { background: var(--code-bg); color: var(--code-fg); padding: 11px 12px; border-radius: 9px; overflow-x: auto; font-size: 12.5px; line-height: 1.5; border: 1px solid #334155; }
+    .q-card pre code { background: transparent; color: var(--code-fg); padding: 0; }
+    .q-card code { background: var(--inline-code-bg); color: var(--inline-code-fg); padding: 1px 4px; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 90%; }
+    .q-card table { border-collapse: collapse; font-size: 13px; }
+    .q-card th, .q-card td { border: 1px solid var(--border); padding: 5px 8px; text-align: left; vertical-align: top; }
+    .q-card blockquote { margin: 8px 0; padding: 6px 12px; border-left: 4px solid var(--border); color: var(--text); }
+    .q-exp .callout { margin: 0 0 8px 0; }
+    .q-exp p:first-child { margin-top: 0; }
     .q-card img { max-width: 100%; height: auto; display: block; margin: 12px auto; border-radius: 10px; background: #ffffff; padding: 6px; border: 1px solid var(--border); }
     .q-quote { border-left: 4px solid #64748b; background: var(--surface-alt); padding: 10px 12px; margin: 8px 0; border-radius: 6px; font-size: 14px; }
     .q-code { background: var(--code-bg); color: var(--code-fg); padding: 12px; border-radius: 10px; overflow-x: auto; font-size: 13px; white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; border: 1px solid #334155; }
@@ -356,7 +374,7 @@
     <button class="mb-btn" data-tab="cards" onclick="goTab('cards')"><span class="mb-ico">🃏</span><span>Cards</span></button>
   </nav>
 
-  <script src="./dados_plataforma.js?v=20261121a"></script>
+  <script src="./dados_plataforma.js?v=20261121b"></script>
   <script>
     const D = window.ETEC_DATA;
     if (!D) {
@@ -1462,7 +1480,7 @@
       }).join("");
 
       const expHtml = showCorrection
-        ? `<div class="q-exp ${picked === curQ.answer ? "ok" : "bad"}"><strong>${picked === curQ.answer ? "✅ Acertou!" : `❌ Gabarito oficial: (${"ABCDE"[curQ.answer]}).`}</strong> ${curQ.explain}</div>`
+        ? `<div class="q-exp ${picked === curQ.answer ? "ok" : "bad"}"><strong>${picked === curQ.answer ? "✅ Acertou!" : `❌ Resposta certa: (${"ABCDE"[curQ.answer]}).`}</strong> ${curQ.explain}</div>`
         : "";
 
       let summaryHtml = "";
