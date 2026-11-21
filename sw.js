@@ -1,4 +1,4 @@
-const CACHE_NAME = "etec-ds-henrique-v4";
+const CACHE_NAME = "etec-ds-henrique-v5";
 const CORE_ASSETS = [
   "./",
   "./index.html",
@@ -11,7 +11,9 @@ const CORE_ASSETS = [
   "./img/t26_p6_i1.png",
   "./img/t26_p6_i2.png",
   "./img/t26_p7_i1.png",
-  "./img/t25_p8_i1.jpg"
+  "./img/t25_p8_i1.jpg",
+  "./img/r21_q4.jpg", "./img/r21_q6a.jpg", "./img/r21_q6b.jpg", "./img/r21_q7.jpg", "./img/r21_q15.png", "./img/r21_q19.png", "./img/r21_q20.png",
+  "./img/r22_q21.png", "./img/inf25_tirinha.png", "./img/inf25_grafico.png", "./img/ipi24_triangulos.png", "./img/ipi25_marte.jpg"
 ];
 
 self.addEventListener("install", (event) => {

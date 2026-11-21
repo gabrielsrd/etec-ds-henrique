@@ -65,10 +65,13 @@ As duas provas mais recentes de Taboão para DS tiveram esta divisão:
 
 Repare em duas coisas:
 
-- **A parte técnica é o maior bloco** (16 a 20 questões) e é onde você mais consegue subir, porque as perguntas são diretas e **se repetem de um ano para o outro**. Exemplo: "Qual hexadecimal corresponde a 187?" e "O que caracteriza uma interface CLI?" caíram em dez/2024 **e** em dez/2025, com o mesmo enunciado. As 4 questões de Matemática de dez/2024 são as mesmas das provas de 2018 e de 2021.
+- **A parte técnica é o maior bloco** (16 a 20 questões) e é onde você mais consegue subir, porque as perguntas são diretas e **se repetem de um ano para o outro**. Exemplo: "Qual hexadecimal corresponde a 187?" e "O que caracteriza uma interface CLI?" caíram em dez/2024 **e** em dez/2025, com o mesmo enunciado. As 4 questões de Matemática de dez/2024 são as mesmas das provas de 2021 e de dez/2023. A plataforma tem um treino só com as questões que já se repetiram.
 - **A Base Comum é espalhada** (2 questões de cada matéria). Não dá para virar especialista em tudo em 12 dias — e nem precisa. A estratégia é garantir as que são de leitura e raciocínio (Português, Pesquisa, Arte, Ed. Física, Inglês) e treinar os modelos de exatas que se repetem.
 
 **Uma conta realista para passar:** 11 ou mais acertos na parte técnica + 10 ou mais na Base Comum = 21 ou mais. A meta da plataforma é **24+**, para ter folga.
+
+> [!NOTE]
+> **Os gabaritos da Etec às vezes erram.** Revisando as provas de 2021 a 2025, encontramos várias questões em que o gabarito oficial marcou a letra errada (por exemplo, traduzir *actually* como "atualmente"). Na plataforma, cada caso está explicado. O edital permite **recurso em até 48 horas** depois da divulgação do gabarito, por e-mail. Atenção: o edital exige **devolver o caderno de questões** e proíbe anotar respostas em papel próprio. Então, **depois de sair da sala**, anote de memória as questões e respostas de que você lembrar. Quando o gabarito sair, a gente confere junto e, se houver erro, manda o recurso. Perto do corte de 20, um ponto pode decidir.
 
 ### 4. Como fazer o diagnóstico hoje
 

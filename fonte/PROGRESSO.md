@@ -12,7 +12,7 @@ Informação do Henrique (20/11): um amigo que estuda na Etec disse que há vaga
 - Dica estratégica: após 04/12, conferir o gabarito e mandar recurso em 48h (e293acad@cps.sp.gov.br).
 - Gabarito oficial publicado de dez/2025 NÃO confere com o caderno (outra versão). Usamos gabarito revisado.
 - Biologia cai (dez/2024 Q11–12, dez/2025 Q21–22) apesar de não estar na grade do 1º ano.
-- O Plano 612 aceita Java, C#, C++ ou Python; C# aparece nas provas de 2018 e dez/2024.
+- O Plano 612 aceita Java, C#, C++ ou Python; C# aparece nas provas de dez/2023 e dez/2024 (não aparece em dez/2025).
 
 ## Etapas
 - [x] 1. Hotfix publicado em 20/11 (commit e386140)

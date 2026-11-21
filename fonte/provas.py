@@ -39,16 +39,16 @@ AREAS = [
     {"id": "design", "title": "Design Digital e UX", "short": "Design/UX", "tech": True, "recommendedDay": 7},
     {"id": "fund", "title": "Fundamentos da Informática (bases numéricas, SO, hardware)", "short": "Fundamentos", "tech": True, "recommendedDay": 8},
     # base comum
-    {"id": "port", "title": "Português", "short": "Português", "tech": False, "recommendedDay": 9},
-    {"id": "ing", "title": "Inglês", "short": "Inglês", "tech": False, "recommendedDay": 9},
-    {"id": "pesq", "title": "Investigação Científica e Empreendedorismo", "short": "Pesquisa/Empreend.", "tech": False, "recommendedDay": 10},
+    {"id": "port", "title": "Português", "short": "Português", "tech": False, "recommendedDay": 10},
+    {"id": "ing", "title": "Inglês", "short": "Inglês", "tech": False, "recommendedDay": 10},
+    {"id": "pesq", "title": "Investigação Científica e Empreendedorismo", "short": "Pesquisa/Empreend.", "tech": False, "recommendedDay": 13},
     {"id": "arte", "title": "Arte", "short": "Arte", "tech": False, "recommendedDay": 10},
-    {"id": "edf", "title": "Educação Física", "short": "Ed. Física", "tech": False, "recommendedDay": 10},
+    {"id": "edf", "title": "Educação Física", "short": "Ed. Física", "tech": False, "recommendedDay": 13},
     {"id": "mat", "title": "Matemática", "short": "Matemática", "tech": False, "recommendedDay": 11},
     {"id": "fis", "title": "Física", "short": "Física", "tech": False, "recommendedDay": 12},
     {"id": "qui", "title": "Química", "short": "Química", "tech": False, "recommendedDay": 12},
     {"id": "bio", "title": "Biologia e Ecologia", "short": "Biologia", "tech": False, "recommendedDay": 12},
-    {"id": "hist", "title": "História e Geografia", "short": "História/Geo", "tech": False, "recommendedDay": 12},
+    {"id": "hist", "title": "História, Geografia e Filosofia", "short": "Humanas", "tech": False, "recommendedDay": 13},
 ]
 AREA_IDS = {a["id"] for a in AREAS}
 TECH_IDS = {a["id"] for a in AREAS if a["tech"]}

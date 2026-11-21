@@ -356,7 +356,7 @@
     <button class="mb-btn" data-tab="cards" onclick="goTab('cards')"><span class="mb-ico">🃏</span><span>Cards</span></button>
   </nav>
 
-  <script src="./dados_plataforma.js?v=20261120b"></script>
+  <script src="./dados_plataforma.js?v=20261121a"></script>
   <script>
     const D = window.ETEC_DATA;
     if (!D) {
@@ -444,6 +444,12 @@
           if (!obj.completedDays) obj.completedDays = [];
           if (!obj.qHistory) obj.qHistory = {};
           if (!obj.wrongQueue) obj.wrongQueue = [];
+          // Remove erros pendentes de provas/questões que não existem mais (provas FAT e simulados antigos removidos)
+          obj.wrongQueue = obj.wrongQueue.filter((k) => {
+            const i = k.lastIndexOf("_");
+            const ex = D.exams[k.slice(0, i)];
+            return !!(ex && ex.questions.some((q) => q.num === Number(k.slice(i + 1))));
+          });
           if (!obj.vfHistory) obj.vfHistory = {};
           if (!obj.checks) obj.checks = {};
           return obj;
@@ -776,12 +782,13 @@
           else if (r.pct >= 50) { color = "var(--amber)"; tagCls = "amber"; statusTxt = `🟡 Atenção (${r.hits}/${r.total} • ${r.pct}%)`; }
           else { color = "var(--red)"; tagCls = "late"; statusTxt = `🔴 Reforçar (${r.hits}/${r.total} • ${r.pct}%)`; }
         }
-        return `<div style="padding:11px; border:1px solid var(--border-soft); border-radius:12px; background:var(--surface-alt);">
-          <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:6px;">
-            <strong style="font-size:13.5px;">${r.title}</strong>
-            <span class="tag-pill ${tagCls}">${statusTxt}</span>
+        const shortTxt = r.total > 0 ? `${r.hits}/${r.total}` : "—";
+        return `<div title="${escapeHtml(r.title)} — ${escapeHtml(statusTxt)}" style="padding:8px 9px; border:1px solid var(--border-soft); border-radius:10px; background:var(--surface-alt); ${r.tech ? "" : ""}">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:5px; font-size:12.5px;">
+            <strong>${escapeHtml(r.short || r.title)}</strong>
+            <span style="color:var(--muted); font-weight:700;">${shortTxt}</span>
           </div>
-          <div class="track"><div class="fill" style="width:${r.pct ?? 0}%; background:${color};"></div></div>
+          <div class="track" style="height:7px;"><div class="fill" style="width:${r.pct ?? 0}%; background:${color};"></div></div>
         </div>`;
       }).join("");
 
@@ -790,18 +797,19 @@
             <div><strong>${weakest.pct < 75 ? "🎯 Prioridade de Reforço:" : "🏆 Ponto a Manter:"}</strong> <strong>${weakest.title}</strong> (<strong>${weakest.pct}%</strong> em ${weakest.total} itens).</div>
             <button class="btn sm ${weakest.pct < 50 ? "red" : "amber"}" onclick="openChapter(${weakest.recommendedDay}, 1)">Ir ao Dia ${weakest.recommendedDay} ▶</button>
           </div>`
-        : `<div class="callout callout-note" style="margin:10px 0 12px 0;">Faça a <strong>Prova Diagnóstica Taboão 2026 (05/12/2025)</strong> ou responda questões dos módulos para calibrar automaticamente seu Radar!</div>`;
+        : `<div class="callout callout-note" style="margin:10px 0 12px 0;">Faça o <strong>diagnóstico (prova de 05/12/2025)</strong> ou responda os quizzes da trilha para o radar mostrar onde você está forte e onde precisa estudar mais.</div>`;
 
       return `<section class="panel">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-          <h2 style="margin:0; font-size:18px;">📊 Radar Taboão da Serra (6 Blocos Oficiais)</h2>
+          <h2 style="margin:0; font-size:18px;">📊 Radar por matéria</h2>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <button class="btn sm ${wrongCnt > 0 ? "red" : "green"}" onclick="openRevanche()">🩹 Caderno de Erros (${wrongCnt})</button>
             <button class="btn sm purple" onclick="goTab('cards'); cardsMode='vf'; renderMain();">⚡ Verdade ou Fake (${vfCnt})</button>
           </div>
         </div>
         ${diagHtml}
-        <div class="lab-grid">${barsHtml}</div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:7px;">${barsHtml}</div>
+        <p style="font-size:12px; color:var(--muted); margin:8px 0 0 0;">Verde: 75% ou mais • Amarelo: 50–74% • Vermelho: abaixo de 50%. As 6 primeiras são da parte técnica.</p>
       </section>`;
     }
 
@@ -812,7 +820,7 @@
       const doneCount = pState.completedDays.length;
       const doneP1 = st.phase1Chapters.filter((c) => pState.completedDays.includes(c.day)).length;
       const diagDone = !!pState.examScores["taboao2026"];
-      const primaryIds = D.primaryExamIds || ["taboao2026", "taboao2025", "sim_taboao2027"];
+      const primaryIds = D.primaryExamIds || [];
 
       let coachCls = "ok", coachTitle = "", coachMsg = "";
       if (!diagDone && st.diffPhase1 > 0) {
@@ -820,13 +828,13 @@
         coachMsg = "Faça a prova real mais recente da Etec de Taboão em <strong>Modo Prova Real</strong> (sem consultar), clique em <strong>📋 Copiar Diagnóstico p/ WhatsApp</strong> no final e descubra exatamente onde subir +10 pontos até 04/12! Lembre: o corte eliminatório é <strong>20/40 (50%)</strong>.";
       } else if (st.diffPhase1 < 0 && st.diffPhase2 >= 0) {
         coachTitle = "🛠️ FOCO TOTAL NA 2ª FASE (08/12 — Laboratório Prático + Entrevista)!";
-        coachMsg = "A escrita já passou! Nos últimos 3 anos, <strong>0 de 7 candidatos</strong> passaram na prática em Taboão porque não treinaram código. Faça os <strong>Dias 14 a 16</strong> e treine na aba <strong>🛠️ 2ª Fase</strong> (HTML+CSS, C# Console, DER+SQL e Entrevista)!";
+        coachMsg = "A escrita já passou! Nos últimos 4 anos, nenhum dos 9 candidatos que passaram da escrita foi aprovado na prática. Faça os <strong>Dias 14 a 16</strong> no computador e treine na aba <strong>🛠️ 2ª Fase</strong> (HTML+CSS, C#, banco de dados e entrevista).";
       } else if (st.pendingAll.length === 0) {
         coachTitle = "🏆 Trilha Completa de 16 Dias Concluída!";
-        coachMsg = "Você completou toda a preparação para a 1ª Fase (04/12) e a 2ª Fase (08/12). Revise a Cola de Bolso e ensaie a entrevista em voz alta!";
+        coachMsg = "Você completou toda a preparação para a 1ª fase (04/12) e a 2ª fase (08/12). Refaça o Treino das Repetidas e ensaie a entrevista em voz alta!";
       } else if (st.overdue.length === 0) {
         coachTitle = `🟢 Ritmo Perfeito para Taboão da Serra (${fmtBr(st.today)})!`;
-        coachMsg = `Sua próxima missão é o <strong>Dia ${ch.day} (${ch.dateLabel}): ${escapeHtml(ch.title)}</strong>. Meta na escrita: <strong>25+/40</strong> (corte oficial 20/40).`;
+        coachMsg = `Sua próxima missão é o <strong>Dia ${ch.day} (${ch.dateLabel}): ${escapeHtml(ch.title)}</strong>. Meta na escrita: <strong>24+/40</strong> (corte oficial 20/40).`;
       } else if (st.overdue.length === 1) {
         coachCls = "warn";
         coachTitle = `🟡 Atenção: 1 módulo pendente (Dia ${st.overdue[0].day} — ${st.overdue[0].dateLabel})`;
@@ -835,7 +843,7 @@
         coachCls = "danger";
         const rescue = st.overdue.slice(0, 2).map((x) => `Dia ${x.day}`).join(" e ");
         coachTitle = `🔴 ${st.overdue.length} módulos pendentes — Plano de Resgate Ativo!`;
-        coachMsg = `Priorize <strong>${rescue}</strong> hoje (os 6 blocos técnicos de Taboão rendem 14 a 18 pontos diretos na prova!).`;
+        coachMsg = `Priorize <strong>${rescue}</strong> hoje. Se o tempo estiver curto, faça a aula e o quiz e deixe a prática para depois.`;
       }
 
       const simVal = simDateOverride || toIso(st.today);
@@ -845,14 +853,14 @@
         const sc = pState.examScores[ex.id];
         let badgeHtml = `<span class="tag-pill">Não feita</span>`;
         if (sc) {
-          if (sc.hits >= (ex.target || 25)) badgeHtml = `<span class="tag-pill done">🏆 ${sc.hits}/${sc.total} (${sc.pct}%)</span>`;
+          if (sc.hits >= (ex.target || 24)) badgeHtml = `<span class="tag-pill done">🏆 ${sc.hits}/${sc.total} (${sc.pct}%)</span>`;
           else if (sc.hits >= (ex.cutoff || 20)) badgeHtml = `<span class="tag-pill amber">✅ ${sc.hits}/${sc.total} (${sc.pct}%)</span>`;
           else badgeHtml = `<span class="tag-pill late">🎯 ${sc.hits}/${sc.total} (${sc.pct}%)</span>`;
         }
         return `<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding:11px 12px; border:1px solid ${ex.recommended ? "var(--amber)" : "var(--border-soft)"}; border-radius:12px; background:${ex.recommended ? "var(--amber-soft)" : "var(--surface-alt)"};">
           <div>
             <strong>${escapeHtml(ex.title)}</strong><br>
-            <small style="color:var(--muted)">${ex.badge} • Corte: 20/40 | Meta: 25+/40</small>
+            <small style="color:var(--muted)">${ex.badge}${ex.questions.length === 40 ? " • Corte: 20/40 | Meta: 24+/40" : ""}</small>
           </div>
           <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
             ${badgeHtml}
@@ -862,19 +870,19 @@
       }).join("");
 
       const heroBtns = !diagDone
-        ? `<button class="btn lg amber" onclick="startExamInSim('taboao2026', 'real')">⭐ Fazer Diagnóstico Taboão 2026 (40Q)</button>
+        ? `<button class="btn lg amber" onclick="startExamInSim('taboao2026', 'real')">⭐ Fazer o diagnóstico (prova de 05/12/2025)</button>
            <button class="btn lg green" onclick="openChapter(${ch.day}, 1)">▶ Trilha Dia ${ch.day}</button>
            <button class="btn lg purple" onclick="goTab('phase2')">🛠️ Ver 2ª Fase (08/12)</button>`
         : `<button class="btn lg green" onclick="openChapter(${ch.day}, 1)">▶ Continuar Dia ${ch.day} (${ch.dateLabel})</button>
            <button class="btn lg purple" onclick="goTab('phase2')">🛠️ Treinar 2ª Fase (08/12)</button>
-           <button class="btn lg amber" onclick="goTab('apostila'); selectApostila('cola')">⚡ Cola de Bolso</button>`;
+           <button class="btn lg amber" onclick="startExamInSim('repetidas', 'instant')">🔁 Treino das Repetidas</button>`;
 
       root.innerHTML = `
         <section class="hero">
           <div>
             <span style="display:inline-block; background:rgba(255,255,255,0.18); padding:4px 11px; border-radius:999px; font-size:12px; font-weight:800;">ETEC DE TABOÃO DA SERRA • 2ª SÉRIE M-TEC-PI (DS)</span>
-            <h1 style="margin:10px 0 6px 0; font-size:24px; line-height:1.25;">${!diagDone ? "Comece pelo Diagnóstico Oficial de Taboão (40Q)!" : `Próxima Missão: Dia ${ch.day} — ${escapeHtml(ch.title)}`}</h1>
-            <p style="margin:0 0 15px 0; opacity:0.93; font-size:14px;">${!diagDone ? "Plataforma 100% recalibrada sobre as provas reais de Taboão da Serra (2022–2025) e o Plano de Curso 612 — com 4 provas 40Q, 16 dias reais e Laboratório completo para a 2ª Fase (08/12)!" : escapeHtml(ch.storyIntro)}</p>
+            <h1 style="margin:10px 0 6px 0; font-size:24px; line-height:1.25;">${!diagDone ? "Comece pelo diagnóstico: a prova real de Taboão de dezembro/2025" : `Próxima Missão: Dia ${ch.day} — ${escapeHtml(ch.title)}`}</h1>
+            <p style="margin:0 0 15px 0; opacity:0.93; font-size:14px;">${!diagDone ? "Tudo aqui foi montado a partir das provas reais da Etec de Taboão de 2021 a 2025: 16 dias de trilha, as provas com gabarito conferido, o treino das questões que se repetem e o laboratório da 2ª fase." : escapeHtml(ch.storyIntro)}</p>
             <div style="display:flex; gap:10px; flex-wrap:wrap;">${heroBtns}</div>
           </div>
           <div class="countdown-box">
@@ -883,7 +891,7 @@
               <div class="countdown-num">${st.diffPhase1 > 0 ? `${st.diffPhase1}d` : (st.diffPhase1 === 0 ? "HOJE" : "OK")}</div>
             </div>
             <div class="cd-row">
-              <div><div style="font-size:11px; opacity:0.85; font-weight:700;">2ª FASE • LAB PRÁTICO + ENTREVISTA</div><div style="font-size:12.5px;">Ter 08/12 • Menção <strong>R, B ou MB</strong></div></div>
+              <div><div style="font-size:11px; opacity:0.85; font-weight:700;">2ª FASE • LAB PRÁTICO + ENTREVISTA</div><div style="font-size:12.5px;">Ter 08/12 • Prática no computador + entrevista</div></div>
               <div class="countdown-num">${st.diffPhase2 > 0 ? `${st.diffPhase2}d` : (st.diffPhase2 === 0 ? "HOJE" : "OK")}</div>
             </div>
             <div style="font-size:12px; opacity:0.9; text-align:center;">Trilha: <strong>${doneCount}/${D.chapters.length}</strong> dias • Cards: <strong>${cState.known.length}/${D.flashcards.length}</strong> • ⭐ <strong>${cState.xp} XP</strong></div>
@@ -905,14 +913,14 @@
           <div class="kpi"><div class="kpi-label">1ª Fase (Escrita 04/12)</div><div class="kpi-val">${doneP1} / 13 dias</div><div class="track"><div class="fill" style="width:${Math.round(doneP1/13*100)}%"></div></div></div>
           <div class="kpi"><div class="kpi-label">2ª Fase (Lab 08/12)</div><div class="kpi-val">${doneCount - doneP1} / 3 dias</div><div class="track"><div class="fill" style="width:${Math.round((doneCount - doneP1)/3*100)}%; background:var(--purple)"></div></div></div>
           <div class="kpi"><div class="kpi-label">Flashcards Taboão</div><div class="kpi-val">${cState.known.length} / ${D.flashcards.length}</div><div class="track"><div class="fill" style="width:${Math.round(cState.known.length/D.flashcards.length*100)}%; background:var(--primary)"></div></div></div>
-          <div class="kpi"><div class="kpi-label">Provas 40Q Feitas</div><div class="kpi-val">${primaryIds.filter((id) => !!pState.examScores[id]).length} / ${primaryIds.length}</div><small style="color:var(--muted)">+6 provas extras disponíveis</small></div>
+          <div class="kpi"><div class="kpi-label">Provas principais feitas</div><div class="kpi-val">${primaryIds.filter((id) => !!pState.examScores[id]).length} / ${primaryIds.length}</div><small style="color:var(--muted)">+ provas antigas de Taboão na aba Provas</small></div>
         </section>
 
         ${buildRadarHtml()}
 
         <section class="panel">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
-            <h2 style="margin:0; font-size:18px;">📝 Provas Oficiais &amp; Premonição — Padrão Taboão (40 Questões)</h2>
+            <h2 style="margin:0; font-size:18px;">📝 Provas reais de Taboão e treino das repetidas</h2>
             <div style="display:flex; gap:6px; flex-wrap:wrap;">
               <button class="btn sm outline" onclick="goTab('apostila')">📖 Apostila &amp; Cola</button>
               <button class="btn sm outline" onclick="goTab('labs')">🧪 Micro-Labs</button>
@@ -968,7 +976,7 @@
       root.innerHTML = `
         <section class="panel">
           <h2 style="margin-top:0;">🗺️ Fase 1 — Rumo à Prova Escrita (Dias 1 a 13 • 21/11 → 03/12)</h2>
-          <p style="color:var(--muted); font-size:14px; margin-top:0;">100% alinhado às 6 matérias técnicas + Base Comum do 1º ano de <strong>Taboão da Serra (Plano 612)</strong>. Cada dia tem <strong>1. Lição + Caixas "Sua Vez" &rarr; 2. Prática Interativa &rarr; 3. Quiz Real (8–10Q)</strong>.</p>
+          <p style="color:var(--muted); font-size:14px; margin-top:0;">Montado a partir das provas reais de Taboão (2021–2025). Cada dia tem <strong>1. Aula (com caixas "Sua vez") &rarr; 2. Prática &rarr; 3. Quiz com questões reais</strong>.</p>
           <div class="story-map">${p1Cards}</div>
         </section>
 
@@ -1087,10 +1095,11 @@
 
       const body = document.getElementById("chapterStepBody");
       if (chapterStep === 1) {
-        const day1DiagCta = ch.day === 1
+        const task = ch.examTask;
+        const day1DiagCta = task && D.exams[task.examId]
           ? `<div class="callout callout-warning" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-              <div><strong>⭐ Missão Principal do Dia 1:</strong> Faça a <strong>Prova Real Taboão 2026 (05/12/2025 — 40Q)</strong> para gerar seu Diagnóstico Inicial!</div>
-              <button class="btn sm amber" onclick="startExamInSim('taboao2026', 'real')">▶ Abrir Prova Diagnóstica</button>
+              <div><strong>⭐ Missão principal de hoje:</strong> ${escapeHtml(task.label)}. Modo prova real: 4 horas, sem consulta.</div>
+              <button class="btn sm amber" onclick="startExamInSim('${task.examId}', 'real')">▶ Abrir a prova</button>
             </div>`
           : "";
         body.innerHTML = `
@@ -1102,9 +1111,7 @@
           </div>
         `;
       } else if (chapterStep === 2) {
-        const extraSimHtml = ch.day === 13
-          ? `<div class="callout callout-note" style="margin-bottom:14px;"><strong>Simulados Finais Recomendados (Véspera 03/12):</strong> <button class="btn sm green" onclick="startExamInSim('taboao2025', 'real')">📝 Prova Real Taboão 2025 (40Q)</button> <button class="btn sm purple" onclick="startExamInSim('sim_taboao2027', 'real')">🎯 Premonição Taboão 2027 (40Q)</button></div>`
-          : "";
+        const extraSimHtml = "";
         body.innerHTML = `${extraSimHtml}<div id="chapPracticeTarget"></div>
           <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-top:18px; border-top:1px solid var(--border-soft); padding-top:14px;">
             <button class="btn outline" onclick="chapterStep=1; renderMain(); window.scrollTo({top:0,behavior:'smooth'});">◀ Voltar à Lição</button>
@@ -1255,7 +1262,7 @@
 
       const status = hits >= target
         ? "🏆 ACIMA DA META SEGURA!"
-        : (hits >= cutoff ? "✅ APROVADO NO CORTE (≥ 50%) — vamos subir para a meta segura!" : "🎯 ABAIXO DO CORTE POR ENQUANTO — ótimo diagnóstico para focar certo!");
+        : (hits >= cutoff ? "✅ ACIMA DO CORTE (≥ 50%) — agora é subir para a meta de 24+" : "🎯 ABAIXO DO CORTE POR ENQUANTO — ótimo diagnóstico para focar certo!");
 
       const lines = [
         `📊 *DIAGNÓSTICO ETEC TABOÃO DA SERRA*`,
@@ -1370,8 +1377,8 @@
 
       if (!simSession) {
         const wrongCount = (pState.wrongQueue || []).length;
-        const primaryIds = D.primaryExamIds || ["taboao2026", "taboao2025", "sim_taboao2027"];
-        const extraIds = D.extraExamIds || ["mtec2022", "ds2025", "info2025", "ds2019", "apostas", "sim1", "sim2"];
+        const primaryIds = D.primaryExamIds || [];
+        const extraIds = D.extraExamIds || [];
 
         const buildExamCard = (id) => {
           const ex = D.exams[id];
@@ -1414,14 +1421,14 @@
           </section>
 
           <section class="panel">
-            <h2 style="margin-top:0;">🎯 Provas Oficiais &amp; Premonição — Padrão Etec Taboão (40 Questões)</h2>
-            <p style="color:var(--muted); font-size:14px; margin-top:0;">Estas <strong>3 provas de 40 questões (120Q no total)</strong> seguem exatamente o molde da prova de <strong>04/12/2026</strong> (corte eliminatório <strong>20/40</strong> • meta segura <strong>25+/40</strong>). Ao entregar, você pode copiar seu diagnóstico pronto para o WhatsApp!</p>
+            <h2 style="margin-top:0;">🎯 Provas reais recentes e treino das repetidas</h2>
+            <p style="color:var(--muted); font-size:14px; margin-top:0;">As duas provas mais recentes de Taboão (40 questões, mesmo formato de 04/12: corte <strong>20/40</strong>, meta <strong>24+/40</strong>) e o treino com as questões que a Etec já repetiu. Ao entregar, copie o diagnóstico e mande para o Gabriel.</p>
             <div class="story-map">${primaryCards}</div>
           </section>
 
           <details class="extra-exams-box">
-            <summary><span>📂 Treino Extra (7 provas de outras Etecs / FAT — NÃO são padrão Taboão)</span><span class="tag-pill">Opcional • Histórico preservado</span></summary>
-            <p style="color:var(--muted); font-size:13.5px; margin:10px 0 12px 0;">Provas técnicas modulares (30Q cada) da Fundação FAT mantidas para reforço extra e preservação do seu histórico anterior. Priorize sempre as <strong>3 provas de Taboão</strong> acima!</p>
+            <summary><span>📂 Provas anteriores de Taboão (2021, 2022 e 2023)</span><span class="tag-pill">Treino extra</span></summary>
+            <p style="color:var(--muted); font-size:13.5px; margin:10px 0 12px 0;">Provas reais mais antigas da própria Etec de Taboão. Muitas questões delas voltaram nas provas recentes. Os erros de gabarito oficial estão explicados em cada questão.</p>
             <div class="story-map">${extraCards}</div>
           </details>
         `;
@@ -1489,7 +1496,7 @@
             <div class="meter-mark" style="left:${targetPct}%; background:var(--green);"></div>
           </div>
           <div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--muted);">
-            <span>0</span><span>Corte: ${rep.cutoff}/${rep.total} (${cutoffPct}%)</span><span>Meta Segura: ${rep.target}/${rep.total}</span><span>${rep.total}</span>
+            <span>0</span><span>Corte: ${rep.cutoff}/${rep.total} (${cutoffPct}%)</span><span>Meta: ${rep.target}/${rep.total}</span><span>${rep.total}</span>
           </div>
           ${splitHtml}
           <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;">${areaChips}</div>
