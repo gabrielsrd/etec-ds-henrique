@@ -438,6 +438,7 @@ Pegue a ficha de inscrição que você fez ontem (`index.html`) e dê estilo a e
    - uma **media query** que, em telas de até 600 px, coloca o header em coluna (`flex-direction: column`).
 4. Abra a página no navegador, aperte **F12**, clique no botão de **celular** (ícone de dispositivo, no topo do DevTools) e veja a versão mobile.
 5. **Bônus de JavaScript:** um botão que, ao ser clicado, troca o texto do `<h1>`.
+6. **Jogo:** abra **flexboxfroggy.com** (escolha português no canto) e jogue até a **fase 12**. Cada fase é um exercício de `justify-content`, `align-items` e `flex-direction` — exatamente o que cai.
 
 <details class="recall-box">
 <summary>✅ Um modelo de style.css (confira depois de tentar)</summary>
