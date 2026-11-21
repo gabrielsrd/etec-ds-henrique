@@ -20,12 +20,6 @@ from cards import FLASHCARDS, VF, PAIRS  # noqa: E402
 from fase2 import PHASE2  # noqa: E402
 
 OLD_JS = BASE / "dados_plataforma.js"
-LEGADO = json.loads((FONTE / "legado.json").read_text(encoding="utf-8"))
-
-
-def load_old():
-    raw = OLD_JS.read_text(encoding="utf-8")
-    return json.loads(raw[len("window.ETEC_DATA = "):].rstrip().rstrip(";"))
 
 
 def norm(html):
@@ -52,6 +46,7 @@ def build_exams():
             "minutes": em.get("minutes", 240),
             "cutoff": em.get("cutoff", 20),
             "target": em.get("target", 24),
+            "pdf": em.get("pdf", ""),
             "questions": qs,
         }
     # Simulados inéditos (fonte/simulados/*.md usam o mesmo formato)
@@ -143,20 +138,12 @@ def build_repeat_exam(exams, reps):
     }
 
 
-def lesson_html(day, old=None):
+def lesson_html(day):
     md_path = FONTE / "aulas" / f"dia_{day:02d}.md"
-    if md_path.exists():
-        return md_to_html(md_path.read_text(encoding="utf-8")), True
-    leg = {c["day"]: c["lessonHtml"] for c in LEGADO["chapters"]}
-    mapa = {9: [], 10: [9], 13: [10, 13]}
-    origem = mapa.get(day, [day])
-    if not origem:
-        return "<p>Hoje o estudo é a prova: abra a aba Provas e faça a prova indicada no topo deste dia.</p>", False
-    return "<hr>".join(leg[d] for d in origem), False
+    return md_to_html(md_path.read_text(encoding="utf-8")), True
 
 
 def main():
-    old = load_old()
     exams = build_exams()
     reps = find_repeats(exams)
     exams["repetidas"] = build_repeat_exam(exams, reps)
@@ -164,7 +151,7 @@ def main():
     chapters = []
     novas = []
     for d in DIAS:
-        html, nova = lesson_html(d["day"], old)
+        html, nova = lesson_html(d["day"])
         if nova:
             novas.append(d["day"])
         refs = d["quiz"]

@@ -375,11 +375,11 @@
     <button class="mb-btn" data-tab="cards" onclick="goTab('cards')"><span class="mb-ico">🃏</span><span>Cards</span></button>
   </nav>
 
-  <script src="./dados_plataforma.js?v=20261121j"></script>
+  <script src="./dados_plataforma.js?v=20261121k"></script>
   <script>
     const D = window.ETEC_DATA;
     if (!D) {
-      document.getElementById("appRoot").innerHTML = "<div class='panel'><h2>Erro ao carregar dados_plataforma.js</h2><p>Extraia todo o arquivo .zip antes de abrir o COMECE_AQUI.html.</p></div>";
+      document.getElementById("appRoot").innerHTML = "<div class='panel'><h2>Erro ao carregar os dados da plataforma</h2><p>Atualize a página (F5). Se continuar, abra pelo link do GitHub Pages.</p></div>";
       throw new Error("ETEC_DATA missing");
     }
 
@@ -1427,6 +1427,7 @@
               <div style="display:flex; gap:6px; flex-wrap:wrap;">
                 <button class="btn sm green" onclick="startExamInSim('${ex.id}', 'real')">⏱️ Modo Prova Real</button>
                 <button class="btn sm" onclick="startExamInSim('${ex.id}', 'instant')">⚡ Treino (Corrige na hora)</button>
+                ${ex.pdf ? `<a class="btn sm outline" href="${ex.pdf}" target="_blank" rel="noopener">📄 PDF original</a>` : ""}
               </div>
             </div>
           </div>`;
@@ -2162,7 +2163,7 @@
     let l2Stack = [10];
     function renderLab02Into(el) {
       el.innerHTML = `
-        <h3>🧮 Lab C# / Algoritmos — Teste de Mesa, Matriz int[,] e Pilha LIFO</h3>
+        <h3>🧮 Lab C# / Algoritmos — Teste de Mesa e Matriz int[,]</h3>
         <div class="lab-grid">
           <div class="q-card">
             <strong>1. Teste de Mesa Linha a Linha (Decimal → Binário / Hex)</strong><br><br>
@@ -2171,7 +2172,7 @@
             <pre class="q-code" id="l2MesaOut">Clique para rastrear passo a passo...</pre>
           </div>
           <div class="q-card">
-            <strong>2. Matriz C# int[,] (Taboão 2025 Q22) &amp; Pilha LIFO</strong><br><br>
+            <strong>2. Matriz C# int[,] e pilha (extra)</strong><br><br>
             <button class="btn sm green" onclick="l2Stack.push(Math.floor(Math.random()*90)+10); updateL2Stack()">PUSH(novo)</button>
             <button class="btn sm red" onclick="l2Stack.pop(); updateL2Stack()">POP() (remove topo)</button>
             <pre class="q-code" id="l2StackOut"></pre>
@@ -2195,7 +2196,7 @@
       document.getElementById("l2MesaOut").textContent = out.join("\n");
     }
     function updateL2Stack() {
-      document.getElementById("l2StackOut").textContent = `Pilha LIFO: [${l2Stack.join(", ")}] (topo = ${l2Stack.length ? l2Stack[l2Stack.length - 1] : "vazia"})\n\nMatriz C# Taboão 2025 Q22:\nint[,] m = {{1,2,3}, {4,5,6}, {7,8,9}};\nm[1, 2] -> Linha 1, Coluna 2 => 6!`;
+      document.getElementById("l2StackOut").textContent = `Pilha LIFO: [${l2Stack.join(", ")}] (topo = ${l2Stack.length ? l2Stack[l2Stack.length - 1] : "vazia"})\n\nMatriz C# int[,] — m[linha, coluna]:\nint[,] m = {{1,2,3}, {4,5,6}, {7,8,9}};\nm[1, 2] -> Linha 1, Coluna 2 => 6!`;
     }
 
     let l3Rows = [{ id: 1, nome: "Henrique", turma: "2º DS" }, { id: 2, nome: "Ana Paula", turma: "2º DS" }, { id: 3, nome: "Lucas", turma: "1º DS" }];
@@ -2447,7 +2448,7 @@
     function lmMathDemo(kind) {
       const el = document.getElementById("lmMathOut");
       if (kind === "venn") el.textContent = "Venn Taboão: Total=170, A=92, B=88, Nenhum=20\n1) 170 - 20 = 150 leem algo\n2) 92 + 88 = 180\n3) Interseção (os dois) = 180 - 150 = 30!";
-      else if (kind === "log") el.textContent = "Log Taboão: log_a(m)=11, log_a(n)=6\nlog_a(m² · n²) = 2·log_a(m) + 2·log_a(n)\n= 2(11) + 2(6) = 22 + 12 = 34!";
+      else if (kind === "log") el.textContent = "Log Taboão: log_a(m)=11, log_a(n)=6\nlog_a(m² · n²) = 2·log_a(m) + 2·log_a(n)\n= 2(11) + 2(6) = 22 + 12 = 34\n\nATENÇÃO: na prova de Taboão esta questão tem defeito — 34 não está nas alternativas.\nO gabarito oficial marcou C (45) em 2021, dez/2023 e dez/2024 (seria log_a(m³n²) = 33 + 12).\nSe cair igual, marque C.";
       else el.textContent = "Gases Taboão (repetiu 2x!):\n(P₁·V₁)/T₁ = (P₂·V₂)/T₂ (T sempre em Kelvin!)\nSe P é constante e V dobra (V -> 2V), então T também DOBRA: 300 K -> 600 K!";
     }
     function lmOptics() {

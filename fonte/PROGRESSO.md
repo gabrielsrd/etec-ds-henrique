@@ -18,10 +18,10 @@ Informação do Henrique (20/11): um amigo que estuda na Etec disse que há vaga
 - [x] 1. Hotfix publicado em 20/11 (commit e386140)
 - [x] 2. Banco: 8 arquivos em fonte/provas/*.md (296 questões, gabarito verificado, explicações didáticas)
 - [x] 3. Repetições: treino automático (22 grupos) em build.py + MANUAL_GROUPS/EXTRA_OCCURRENCES em dias.py
-- [ ] 4. Aulas (fonte/aulas/dia_NN.md): 1–8 prontas e publicadas (C# verificado com fonte/verificar_csharp.py via Docker; SQL via sqlite3). Faltam 9–16.
-- [ ] 5. Simulados novos + banco de repetidas + cards
-- [ ] 6. 2ª fase (labs + entrevista)
-- [ ] 7. Limpeza (FAT, Portugol, cards-app, micro-labs FAT), testes no navegador, publicação
+- [x] 4. Aulas 1–16 em fonte/aulas/dia_NN.md (C# verificado no compilador via Docker; SQL via sqlite3)
+- [x] 5. Simulados de previsão (fonte/simulados/previsao_*.md), banco de questões inéditas, página aulas/mapa_da_prova.md, cards/VF/pares reescritos (fonte/cards.py)
+- [x] 6. 2ª fase: fonte/fase2.py (3 provas práticas simuladas + entrevista) e Dias 14–16
+- [x] 7. Limpeza feita (FAT, apostila antiga, cards-app, micro-labs avulsos, .bat); PDFs de Taboão em provas-reais/; vídeos revisados (oEmbed + duração)
 
 ## Decisões de design (20/11)
 - Ids de prova: taboao2026 (dez/2025, diagnóstico), taboao2025 (dez/2024, simulado do Dia 9), taboao2023, mtec2022 (mantido por compatibilidade), taboao2021; irmãs = grupo "banco" (só para quizzes).
@@ -33,3 +33,7 @@ Informação do Henrique (20/11): um amigo que estuda na Etec disse que há vaga
 - Build: `python3 fonte/build.py` → dados_plataforma.js; depois `cp COMECE_AQUI.html index.html` e trocar `?v=` do script.
 - Verificar C#: `VERIF_TMP=<scratch> python3 fonte/verificar_csharp.py dia_NN.md` (marcar blocos ilustrativos com ```csharp nocheck e entradas com in=a|b).
 - Banco de questões inéditas: fonte/simulados/banco_novo.md (id novas, grupo bank).
+
+## Pendências / ideias
+- Depois do diagnóstico do Henrique (21/11), recalibrar: ver o relatório e reforçar as áreas vermelhas.
+- As listas de resultado (com nomes e CPFs) ficam só em fonte/provas_taboao/ (ignorado pelo Git). Não publicar.
